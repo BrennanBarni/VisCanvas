@@ -1,96 +1,67 @@
-#include "stdafx.h"
+#include "ColorCustom.h"
+#include <vector>
 
 // create the color
 ColorCustom::ColorCustom() {
-	colorComponents = new float[4];
-	colorComponents[0] = 0.5f;
-	colorComponents[1] = 0.5f;
-	colorComponents[2] = 0.5f;
-	colorComponents[3] = 0.0f;
+	colorComponents = std::vector<double>();
+	colorComponents.push_back(0.5);
+	colorComponents.push_back(0.5);
+	colorComponents.push_back(0.5);
+	colorComponents.push_back(1.0);
 }
 
 // delete the color
 ColorCustom::~ColorCustom()
 {
-	delete colorComponents;
 }
 
-// get a pointer to the start of a copy of the color component array
-float* ColorCustom::getColorComponents() {
-	float* copyColorComponents = new float[4];
-	copyColorComponents[0] = getRed();
-	copyColorComponents[1] = getGreen();
-	copyColorComponents[2] = getBlue();
-	copyColorComponents[3] = getAlpha();
+// gets vector of the color components
+std::vector<double>* ColorCustom::getColorComponents()
+{
 
-	return copyColorComponents;
-}
-
-// set the color components to the passed array
-void ColorCustom::setColorComponents(float * newComponents) {
-	colorComponents = newComponents;
-}
-
-// get the red color component value
-const float ColorCustom::getRed() {
-	return colorComponents[0];
-}
-
-// get the green color component value
-const float ColorCustom::getGreen() {
-	return colorComponents[1];
-}
-
-// get the blue color component value
-const float ColorCustom::getBlue() {
-	return colorComponents[2];
-}
-
-// get the alpha component value
-const float ColorCustom::getAlpha() {
-	return colorComponents[3];
+	return &colorComponents;
 }
 
 // set the red color component value
-void ColorCustom::setRed(float newValue) {
-	if (newValue < 0.0f) {
-		newValue = 0.0f;
+void ColorCustom::setRed(double newValue) {
+	if (newValue < 0.0) {
+		newValue = 0.0;
 	}
-	else if (newValue > 1.0f) {
-		newValue = 1.0f;
+	else if (newValue > 1.0) {
+		newValue = 1.0;
 	}
 	colorComponents[0] = newValue;
 }
 
 // set the green color component value
-void ColorCustom::setGreen(float newValue) {
-	if (newValue < 0.0f) {
-		newValue = 0.0f;
+void ColorCustom::setGreen(double newValue) {
+	if (newValue < 0.0) {
+		newValue = 0.0;
 	}
-	else if (newValue > 1.0f) {
-		newValue = 1.0f;
+	else if (newValue > 1.0) {
+		newValue = 1.0;
 	}
 	colorComponents[1] = newValue;
 }
 
 // set the blue color component value
-void ColorCustom::setBlue(float newValue) {
-	if (newValue < 0.0f) {
-		newValue = 0.0f;
+void ColorCustom::setBlue(double newValue) {
+	if (newValue < 0.0) {
+		newValue = 0.0;
 	}
-	else if (newValue > 1.0f) {
-		newValue = 1.0f;
+	else if (newValue > 1.0) {
+		newValue = 1.0;
 	}
 	colorComponents[2] = newValue;
 }
 
 // set the alpha component value
-void ColorCustom::setAlpha(float newValue) {
-	if (newValue < 0.0f) {
-		newValue = 0.0f;
+void ColorCustom::setAlpha(double newValue) {
+	if (newValue < 0.0) {
+		newValue = 0.0;
 	}
-	else if (newValue > 1.0f) {
-		newValue = 1.0f;
+	else if (newValue > 1.0) {
+		newValue = 1.0;
 	}
 	colorComponents[3] = newValue;
 }

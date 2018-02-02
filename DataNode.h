@@ -18,9 +18,9 @@ public:
 	~DataNode();
 
 	// gets the data held by the node
-	const double getData();
+	double getData() const;
 	// gets the data that the node was originally set to hold
-	const double getOriginalData();
+	double getOriginalData() const;
 	// sets the data the node holds, alters the original data
 	void setData(double newData);
 	// multiplies the data held by the node, by the passed value(multiplier)

@@ -1,8 +1,8 @@
 #pragma once
 
 /*
-Author: Shane Vance and Nico Espitia
-Last Update: 2018/27/01
+Authors: Shane Vance, Nico Espitia, Brennan Barni, Daniel Ortyn
+Last Update: 2018/29/01
 Purpose: CS 481 Project
 */
 
@@ -41,7 +41,7 @@ namespace OpenGLForm
 			// create the actual window
 			this->CreateHandle(cp);
 
-			// set the initial height and width for later
+			// set the world height and width for later
 			this->worldWidth = iWidth;
 			this->worldHeight = iHeight;
 
@@ -54,8 +54,7 @@ namespace OpenGLForm
 			{
 				MySetPixelFormat(m_hDC);
 				Reshape(iWidth, iHeight);
-				glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-				//Init();
+				Init();
 			}
 		}
 
@@ -64,26 +63,109 @@ namespace OpenGLForm
 		{	
 			// read the file
 			this->file->readFile(&filepath);
-
-			// clear the view and initialize GL
-			glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-			Init();
 		}
+		
+		// BUTTON METHODS GO HERE //
 
-		/// TEST BUTTON ///
-		System::Void testButtonMethod()
+		System::Void incrementSelectedSet(System::Void)
 		{
-				 int setAmount = file->getSetAmount();
-				 if(5>setAmount)
-				 {
-					 // do nothing
-				 }else
-				 {
-					 double mean = file->getMean(5);
-					 file->level(5,mean);
-				 }
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			selectedSetIndex++;
+			if(selectedSetIndex>=this->file->getSetAmount()){
+				selectedSetIndex = 0;
+			}
+			this->file->setSelectedSetIndex(selectedSetIndex);
 		}
 
+		System::Void decrementSelectedSet(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			selectedSetIndex--;
+			if(selectedSetIndex<0){
+				selectedSetIndex = this->file->getSetAmount()-1;
+			}
+			this->file->setSelectedSetIndex(selectedSetIndex);
+		} 
+
+		System::Void ascendingSort(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			this->file->sortAscending(selectedSetIndex);
+		}
+		System::Void descendingSort(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			this->file->sortDescending(selectedSetIndex);
+		}
+
+		System::Void originalSort(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			this->file->sortOriginal();
+		}
+
+		System::Void mean(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			double meanOfSet = this->file->getMean(selectedSetIndex);
+			this->file->level(selectedSetIndex, meanOfSet);
+		}
+
+		System::Void median(System::Void)
+		{
+			int selectedSetIndex = this->file->getSelectedSetIndex();
+			double medianOfSet = this->file->getMedian(selectedSetIndex);
+			this->file->level(selectedSetIndex, medianOfSet);
+		}
+
+		System::Void originalData(System::Void)
+		{
+			this->file->zeroShifts();
+		}
+
+		System::Void hypercube(System::Void)
+		{
+			// do something
+			MessageBox::Show("hypercube");
+		}
+
+		/*
+		System::Void save(System::Void)
+		{
+		std::string fileName = "testOutput.txt";
+		file->readFile(&fileName);
+		std::cout << "VisCanvas Custom Output" << std::endl;
+		for(unsigned int i = 0; i < file->getSetAmount(); i++)
+		{
+		std::cout << file->getSetName(i);
+		for(unsigned int j = 0; j < file->getDimensionAmount(); j++)
+		{
+		if(j == 0)
+		{
+		std::cout << file->getSetName(i) << ",";
+		}
+		else if(j == file->getDimensionAmount() - 1)
+		{
+		std::cout << file->getData(i,j) << std::endl;
+		}
+		else
+		{
+		std::cout << file->getDimensionData(i,j) << ",";
+		}
+		}
+		}
+
+		}
+		*/
+
+		// Sets the background color
+		System::Void Background(int R, int G, int B)
+		{
+			GLfloat Red = R / 255.0f;
+			GLfloat Green = G / 255.0f;
+			GLfloat Blue = B / 255.0f;
+			glClearColor(Red, Green, Blue, 0.0f);
+		}
 
 		// SET THE RGB VALUES FOR THE COLOR PALETTE
 		System::Void SetRGB(GLdouble Red, GLdouble Green, GLdouble Blue) 
@@ -93,118 +175,25 @@ namespace OpenGLForm
 			this->B = Blue;
 		}
 
-		// RED BALUE 
-		int getRed()
+		// This is if the options panel is open
+		System::Void ReshapeToPanels(int width, int height)
 		{
-			return (int) this->R;
+			Reshape(width, height);
 		}
 
-		// GREEN VALUE
-		int getGreen()
-		{
-			return (int) this->G;
-		}
-
-		// BLUE VALUE
-		int getBlue()
-		{
-			return (int) this->B;
-		}
 
 		// THIS ALLOWS FOR THE CHILD WINDOW TO BE RESIZED ACCORDINGLY 
 		System::Void Resize(int x, int y, int width, int height, UINT uFlags)		
 		{
 			this->worldHeight = height;
-			this->worldWidth= width;
+			this->worldWidth = width;
 			SetWindowPos((HWND)this->Handle.ToPointer(), NULL, x, y, width, height, uFlags);
 			Reshape((GLsizei)width, (GLsizei)height);
 		}
 
-		System::Void Display(System::Void)
+		System::Void Render(System::Void)
 		{
-			//Set the lines that will mark the x values of the window
-			glClear(GL_COLOR_BUFFER_BIT);
-
-			glColor3f(0.0, 0.0, 0.0);
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(40, worldHeight * 0.75);
-			glVertex2d(40, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(80, worldHeight * 0.75);
-			glVertex2d(80, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(120, worldHeight * 0.75);
-			glVertex2d(120, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(160, worldHeight * 0.75);
-			glVertex2d(160, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(200, worldHeight * 0.75);
-			glVertex2d(200, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(240, worldHeight * 0.75);
-			glVertex2d(240, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(280, worldHeight * 0.75);
-			glVertex2d(280, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(320, worldHeight * 0.75);
-			glVertex2d(320, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(360, worldHeight * 0.75);
-			glVertex2d(360, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(400, worldHeight * 0.75);
-			glVertex2d(400, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(440, worldHeight * 0.75);
-			glVertex2d(440, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(480, worldHeight * 0.75);
-			glVertex2d(480, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(520, worldHeight * 0.75);
-			glVertex2d(520, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(560, worldHeight * 0.75);
-			glVertex2d(560, worldHeight * 0.1);
-			glEnd();
-
-			glBegin(GL_LINE_STRIP);
-			glVertex2d(600, worldHeight * 0.75);
-			glVertex2d(600, worldHeight * 0.1);
-			glEnd();
-
-
-			drawData();
-
-			glFlush();
+			Display();
 		}
 
 
@@ -214,18 +203,13 @@ namespace OpenGLForm
 		}
 
 	private:
-		double worldWidth;  // Gets the initial window width
-		double worldHeight; // Gets the initial window height
+
+		double worldWidth;  // Set the world width
+		double worldHeight; // Set the world height
 
 		GLdouble R; // Red
 		GLdouble G; // Green
 		GLdouble B; // Blue
-
-		/* TODO: Convert to OpenGL RGB */
-		/* to do this follow the example (ex: 233/255.0f where 233 is the RGB value */ 
-		// GLdouble ogR; // Red
-		// GLdouble ogG; // Green
-		// GLdouble ogB; // Blue
 
 		/* Create the DataInterface for reading the file */
 		DataInterface* file;
@@ -295,53 +279,75 @@ namespace OpenGLForm
 			return 1;
 		}
 
-
+		
 		// THIS IS WHERE ANY BUTTON CLICKS GO // the parent window will need to handle the other key presses
 		virtual void WndProc( Message %msg ) override
 		{
 			switch (msg.Msg)
 			{
-				// left click
+
 			case WM_LBUTTONDOWN:
-				{						
-					MessageBox::Show("THIS IS A TEST: LEFT BUTTON");
+				{			
+				//	MessageBox::Show("THIS IS A TEST: LEFT BUTTON");
 				}
 				break;
 			}
 
 			NativeWindow::WndProc( msg );
 		}
+		
 
 
 
-
-
-
-		// INITIALIZE THE GL SETTINGS
-		GLvoid Init(GLvoid)										
+		GLvoid Display(GLvoid)
 		{
-			glClearColor(1.0f, 1.0f, 1.0f, 0.0f);			    // background is white
-			glColor3f(0.0f, 0.0f, 0.0f);				        // drawing color is black
-			glPointSize(2.0);						            // 'dot' is 2x2 pixels
+			//Set the lines that will mark the x values of the window
+			glLineWidth(2.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
+			glColor3f(0.0f, 0.0f, 0.0f);
+
+			for (int i = 0; i < file->getDimensionAmount(); i++)
+			{
+				double shiftAmount = this->file->getDimensionShift(i);
+				glBegin(GL_LINE_STRIP);
+				glVertex2d((xAxisIncrement) * i, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75);
+				glVertex2d((xAxisIncrement) * i, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.1);
+				glEnd();
+			}
+
+			drawData();
+			glFlush();
+
 		}
 
-
-		void drawData() 
+		// Graphs the data to the world
+		GLvoid drawData(GLvoid) 
 		{
-
-			for (int j = 0; j < file->getSetAmount(); j++){
-				//const float* color = file->getColor(file->getSetClass(j));
+			glLineWidth(3.0);
+			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
+			for (int j = 0; j < file->getSetAmount(); j++)
+			{
+				std::vector<double>* colorOfCurrent = this->file->getSetColor(j);
+				glColor4d((*colorOfCurrent)[0],(*colorOfCurrent)[1],(*colorOfCurrent)[2], (*colorOfCurrent)[3]);
 				glBegin(GL_LINE_STRIP); // begins drawing lines
-				glColor3f(0.8f,0.1f,0.1f);
-				for (int i = 0; i < file->getDimensionAmount(); i++){
-					double currentData = file->getData(j, i);
-					glVertex2d(40.0 * (i + 1), currentData * (worldHeight * 0.5) + (0.175 * worldHeight));
+				for (int i = 0; i < file->getDimensionAmount(); i++)
+				{
+					double currentData = this->file->getData(j, i);
+					glVertex2d((xAxisIncrement) * i, currentData * (worldHeight * 0.5) + (0.175 * worldHeight));
 				}
 				glEnd(); // ends drawing line
 			}
 		}
 
 
+		// INITIALIZE THE GL SETTINGS
+		GLvoid Init(GLvoid)										
+		{
+			Background(194, 206, 218);	             		    // background is white
+			glColor3f(0.0f, 0.0f, 0.0f);				        // drawing color is black
+			glPointSize(4.0);						            // 'dot' is 2x2 pixels
+		}
 
 		// RESIZE AND INITIALIZE THE GL WINDOW
 		GLvoid Reshape(GLsizei width, GLsizei height)		    
@@ -358,8 +364,7 @@ namespace OpenGLForm
 			// set the orthosphere and keep center of the screen
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluOrtho2D((GLdouble)-width / 2.0f, (GLdouble)width, (GLdouble)-height / 2.0f, (GLdouble)height); // center the ortho
-
+			gluOrtho2D(((GLdouble)-width + 100.0) / 2.0, (GLdouble) width + 100.0, ((GLdouble)-height + 100.0) / 2.0, (GLdouble)height + 100.0);
 		}
 	};
 }

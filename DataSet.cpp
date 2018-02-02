@@ -1,9 +1,10 @@
-#include "stdafx.h"
+#include "DataSet.h"
 
 DataSet::DataSet()
 {
 	currentIndex = -1;
 	originalIndex = -1;
+	setClass = 0;
 	name = "-1";
 }
 
@@ -11,48 +12,41 @@ DataSet::DataSet(int setIndex, int classIndex)
 {
 	currentIndex = setIndex;
 	originalIndex = setIndex;
+	setClass = classIndex;
 	name = std::to_string(setIndex);
 }
 
-DataSet::~DataSet()
-{
+DataSet::~DataSet() {
 }
 
-const int DataSet::getClass(){
+int DataSet::getClass() const {
 	return setClass;
 }
 
-int DataSet::setDataClass(int newClass){
+int DataSet::setDataClass(int newClass) {
 	int previousClass = setClass;
 	setClass = newClass;
 	return previousClass;
 }
 
-const int DataSet::getIndex()
-{
+int DataSet::getIndex() const {
 	return currentIndex;
 }
 
-
-int DataSet::setIndex(int newIndex)
-{
+int DataSet::setIndex(int newIndex) {
 	int previousIndex = currentIndex;
+	currentIndex = newIndex;
 	return previousIndex;
 }
 
-const int DataSet::getOriginalIndex()
-{
+int DataSet::getOriginalIndex() const {
 	return originalIndex;
 }
 
-const std::string * DataSet::getName()
-{
-	return &name;
+std::string* DataSet::getName() {
+	return &(this->name);
 }
 
-std::string * DataSet::setName(std::string * newName)
-{
-	std::string previousName = name;
-	name = *newName;
-	return &name;
+void DataSet::setName(std::string &newName) {
+	name = newName;
 }

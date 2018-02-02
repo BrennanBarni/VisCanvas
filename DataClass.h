@@ -23,15 +23,17 @@ public:
 	// sets the index of the class, returns previous index
 	int setIndex(int newIndex);
 	// gets a copy of the color components for this class
-	float* getColor();
+	std::vector<double>* getColor();
 	// sets the color for this class
-	void setColor(float* newColor);
+	void setColor(std::vector<double> &newColor);
+	// sets the color for this class
+	void setColor(std::vector<double>* newColor);
 	// gets the name of the class
 	std::string* getName();
 	// sets the name of the class, returns previous name
-	std::string* setName(std::string* newName);
+	void setName(std::string* newName);
 	// gets the number of sets in this class
-	const int getSetNumber();
+	int getSetNumber() const;
 	// increments the number of sets in this class, and returns the new number of sets
 	int incrementSetNumber();
 	// decrements the number of sets in this class, and returns the new number of sets
@@ -41,7 +43,7 @@ private:
 	// the vector holding all the data
 	int index;
 	// gets the color data of this class should be painted
-	ColorCustom* color;
+	ColorCustom color;
 	// gets the name of this class
 	std::string name;
 	//a field holding the number of sets in this data class

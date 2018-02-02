@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "DataNode.h"
 
 // create a node with data of 0.0
 DataNode::DataNode() {
@@ -17,12 +17,12 @@ DataNode::~DataNode() {
 }
 
 // gets the data held by the node
-const double DataNode::getData() {
+double DataNode::getData() const {
 	return currentData;
 }
 
 // gets the data that the node was originally set to hold
-const double DataNode::getOriginalData() {
+double DataNode::getOriginalData() const {
 	return originalData;
 }
 

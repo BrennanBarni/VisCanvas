@@ -1,25 +1,39 @@
-#include "stdafx.h"
+#include "Dimension.h"
+#include "DataNode.h"
+#include <vector>
+#include <string>
 
 using namespace std;
 
 // create a dimension of size 0 at index 0
-Dimension::Dimension()
-{
+Dimension::Dimension() {
 	originalIndex = 0;
-	currentIndex = 0;
-
+	name = std::to_string(originalIndex);
 	data = vector<DataNode*>();
+	shiftAmount = 0.0;
+	isInverted = false;
+
+	useArtificialCalibration = false;
+	artificialMaximum = 1.0;
+	artificialMinimum = 0.0;
 }
 
 // create a dimension for the pass index(index) and passed size(size)
 Dimension::Dimension(int index, int size) {
 	originalIndex = index;
-	currentIndex = index;
+
+	name = std::to_string(index);
 
 	data = vector<DataNode*>();
 	for (int i = 0; i < size; i++) {
 		data.push_back(new DataNode(0.0));
 	}
+	shiftAmount = 0.0;
+	isInverted = false;
+
+	useArtificialCalibration = false;
+	artificialMaximum = 1.0;
+	artificialMinimum = 0.0;
 }
 
 // delete the object
@@ -27,29 +41,22 @@ Dimension::~Dimension() {
 	for (unsigned int i = 0; i < data.size(); i++) {
 		delete data[i];
 	}
-}
-
-// get the index of the current position of the dimension
-const int Dimension::getIndex() {
-	return currentIndex;
+	data.clear();
 }
 
 // get the index of the the dimension was created with
-const int Dimension::getOriginalIndex() {
+int Dimension::getOriginalIndex() const {
 	return originalIndex;
-}
-
-// set the index of the current position of the dimension and returns the previous index
-const int Dimension::changeIndex(int newIndex) {
-	int previousIndex = currentIndex;
-	currentIndex = newIndex;
-	return currentIndex;
 }
 
 // calibrate the data to the [0,1] space
 void Dimension::calibrateData() {
 	double maximum = getMaximum();
 	double minimum = getMinimum();
+	if (false) {
+		maximum = artificialMaximum;
+		minimum = artificialMinimum;
+	}
 	double range = maximum - minimum;
 	for (unsigned int i = 0; i < data.size(); i++) {
 		(*data[i]).addToData(-minimum);
@@ -58,28 +65,59 @@ void Dimension::calibrateData() {
 }
 
 // gets the data for the set of the passed index(dataIndex)
-const double Dimension::getData(unsigned int dataIndex) {
-	if (dataIndex >= this->getDimensionSize()) {
+double Dimension::getData(int dataIndex) const {
+	if (dataIndex >= size() || dataIndex < 0) {
 		return 0.0;
 	}
-	return (*data[dataIndex]).getData();
+	double dataReturn = (*data[dataIndex]).getData();
+	dataReturn += shiftAmount;
+	if (isInverted) {
+		dataReturn = 1 - dataReturn;
+	}
+	return dataReturn;
+}
+
+// gets the data calibrated, but not inverted or shifted data for the set of the passed index(dataIndex)
+double Dimension::getCalibratedData(int dataIndex) const {
+	if (dataIndex >= size() || dataIndex < 0) {
+		return 0.0;
+	}
+	double dataReturn = (*data[dataIndex]).getData();
+	if (isInverted) {
+		dataReturn = 1 - dataReturn;
+	}
+	return dataReturn;
 }
 
 // gets the original data for the set of the passed index(dataIndex)
-const double Dimension::getOriginalData(unsigned int dataIndex) {
-	if (dataIndex >= this->getDimensionSize()) {
+double Dimension::getOriginalData(int dataIndex) const {
+	if (dataIndex >= size() || dataIndex < 0) {
 		return 0.0;
 	}
 	return (*data[dataIndex]).getOriginalData();
 }
 
+// gets the name
+string * Dimension::getName() {
+	return &name;
+}
+
+
+// sets the name and returns the old name
+void Dimension::setName(string * newName) {
+	name = *newName;
+}
+
 // sets the data of the set at the passed index(dataIndex) to the passed value(newData), alters the original data
-void Dimension::setData(unsigned int dataIndex, double newData) {
-	if (dataIndex >= this->getDimensionSize()) {
+void Dimension::setData(int dataIndex, double newData) {
+	if (dataIndex >= size() || dataIndex < 0) {
 		return;
 	}
 	return (*data[dataIndex]).setData(newData);
 }
+
+
+
 
 // multiplies all the data in the dimension by the passed double, does not alter original data
 void Dimension::multiplyData(double multiplier) {
@@ -102,22 +140,59 @@ void Dimension::addToData(double addend) {
 	}
 }
 
-// gets the number of sets in the dimensions
-int Dimension::getDimensionSize() {
-	return data.size();
+// adds the amount passed(shiftAmount) to the data shift amount
+void Dimension::shiftDataBy(double modToShiftAmount) {
+	shiftAmount += modToShiftAmount;
+}
+
+// gets the amount data shift amount
+double Dimension::getShift() {
+	return shiftAmount;
+}
+
+// toggles whether the data is inverted
+void Dimension::invertData() {
+	isInverted = !isInverted;
 }
 
 
-// private:
+
+
+// gets the number of sets in the dimensions
+int Dimension::size() const {
+	return data.size();
+}
+
+// sets the calibration to use the data's(not the artificial) maximum and minimum
+void Dimension::clearArtificialCalibration() {
+	useArtificialCalibration = false;
+}
+
+// sets the bounds to be used for artificial calibration
+void Dimension::setCalibrationBounds(double newMaximum, double newMinimum) {
+	useArtificialCalibration = true;
+	artificialMaximum = newMaximum;
+	artificialMinimum = newMinimum;
+}
+
+// gets the artficial calibration maximum for the dimension
+double Dimension::getArtificialMaximum() const {
+	return artificialMaximum;
+}
+
+// gets the artficial calibration maximum for the dimension
+double Dimension::getArtificialMinimum() const {
+	return artificialMinimum;
+}
 
 // gets the maximum data value in the dimension
-const double Dimension::getMaximum() {
-	if (this->getDimensionSize() == 0) {
+double Dimension::getMaximum() const {
+	if (size() == 0) {
 		return 0.0;
 	}
 	double maximum = (*data[0]).getData();
 	for (unsigned int i = 1; i < data.size(); i++) {
-		if (maximum >(*data[i]).getData()) {
+		if (maximum > (*data[i]).getData()) {
 			maximum = (*data[i]).getData();
 		}
 	}
@@ -125,8 +200,8 @@ const double Dimension::getMaximum() {
 }
 
 // gets the minimum data value in the dimension
-const double Dimension::getMinimum() {
-	if (this->getDimensionSize() == 0) {
+double Dimension::getMinimum() const {
+	if (this->size() == 0) {
 		return 0.0;
 	}
 	double minimum = (*data[0]).getData();
@@ -137,3 +212,6 @@ const double Dimension::getMinimum() {
 	}
 	return minimum;
 }
+
+// private:
+
