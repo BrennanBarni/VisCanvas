@@ -1,0 +1,73 @@
+  VisCanvas.Settings.resources - Embedded, ContainedInManifestFile, 
+  VisCanvas.VisCanvas.resources - Embedded, ContainedInManifestFile, 
+ImageRuntimeVersion: v4.0.30319
+Assembly VisCanvas, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly Microsoft.VisualBasic, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Barcode, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Chart, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Diagram, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Grid, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Host.WinForm, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Presentation, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Schedule, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.Text, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly Nevron.Nov.WinFormControls, Version=18.1.18.12, Culture=neutral, PublicKeyToken=b33b1a04bb5ca8ad: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly System.Runtime.Serialization.Formatters.Soap, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a: 
+	hash=None, flags=None
+Assembly System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly UIAutomationProvider, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly UIAutomationTypes, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Class OpenGLForm.COpenGL: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.NativeWindow
+    Void .ctor(System.Windows.Forms.Form, Int32, Int32): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.IDisposable
+  Methods:
+    SetFilePath(basic_string<char\,std::char_traits<char>\,std::allocator<char> >*): PrivateScope, Public, HideBySig
+    incrementSelectedSet(): PrivateScope, Public, HideBySig
+    decrementSelectedSet(): PrivateScope, Public, HideBySig
+    ascendingSort(): PrivateScope, Public, HideBySig
+    descendingSort(): PrivateScope, Public, HideBySig
+    originalSort(): PrivateScope, Public, HideBySig
+    mean(): PrivateScope, Public, HideBySig
+    median(): PrivateScope, Public, HideBySig
+    originalData(): PrivateScope, Public, HideBySig
+    hypercube(): PrivateScope, Public, HideBySig
+    Background(Int32, Int32, Int32): PrivateScope, Public, HideBySig
+    SetRGB(Double, Double, Double): PrivateScope, Public, HideBySig
+    Resize(Int32, Int32, Int32, Int32, UInt32): PrivateScope, Public, HideBySig
+    Render(): PrivateScope, Public, HideBySig
+    SwapOpenGLBuffers(): PrivateScope, Public, HideBySig
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
+Class VisCanvas.Settings: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(OpenGLForm.COpenGL): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class VisCanvas.VisCanvas: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Forms.Form
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
