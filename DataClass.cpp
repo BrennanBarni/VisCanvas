@@ -1,42 +1,71 @@
 #include "stdafx.h"
+#include "DataClass.h"
+#include "ColorCustom.h"
 
 DataClass::DataClass() {
-	index = -1;
-	name = "-1";
-	color = new ColorCustom();
+	this->index = -1;
+	this->name = "-1";
+	this->color = ColorCustom();
 }
 
 DataClass::DataClass(int index, std::string name) {
 	this->index = index;
 	this->name = name;
-	this->color = new ColorCustom();
+	this->color = ColorCustom();
 }
 
 DataClass::~DataClass() {
-
 }
 
-float* DataClass::getColor() {
-	return (*(this->color)).getColorComponents();
+
+int DataClass::getIndex() {
+	return this->index;
 }
 
-void DataClass::setColor(float* newColor) {
-	(*(this->color)).setColorComponents(newColor);
+int DataClass::setIndex(int newIndex) {
+	int previousIndex = getIndex();
+	index = newIndex;
+	return previousIndex;
 }
 
-std::string* DataClass::getName()
-{
-	return &name;
+std::vector<double>* DataClass::getColor() {
+	return color.getColorComponents();
 }
 
-std::string* DataClass::setName(std::string * newName)
-{
-	std::string previousName = name;
+void DataClass::setColor(std::vector<double>& newColor) {
+	if (newColor.size() != 4) {
+		return;
+	}
+	color.setRed(newColor[0]);
+	color.setGreen(newColor[1]);
+	color.setBlue(newColor[2]);
+	color.setAlpha(newColor[3]);
+}
+
+void DataClass::setColor(std::vector<double>* newColor) {
+	if (newColor == nullptr) {
+		return;
+	}
+	if (newColor->size() != 4) {
+		return;
+	}
+	color.setRed((*newColor)[0]);
+	color.setGreen((*newColor)[1]);
+	color.setBlue((*newColor)[2]);
+	color.setAlpha((*newColor)[3]);
+}
+
+std::string * DataClass::getName() {
+	return &(this->name);
+}
+
+void DataClass::setName(std::string * newName){
 	name = *newName;
-	return &previousName;
 }
 
-const int DataClass::getSetNumber()
+
+
+int DataClass::getSetNumber() const
 {
 	return setNumber;
 }
@@ -51,14 +80,4 @@ int DataClass::decrementSetNumber()
 {
 	setNumber--;
 	return setNumber;
-}
-
-int DataClass::getIndex() {
-	return this->index;
-}
-
-int DataClass::setIndex(int newIndex) {
-	int previousIndex = getIndex();
-	index = newIndex;
-	return previousIndex;
 }

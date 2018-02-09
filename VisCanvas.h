@@ -2,12 +2,13 @@
 
 /*
 Author: Shane Vance
-Last Update: 2018/26/01
+Last Update: 2018/05/02
 Purpose: CS 481 Project
 */
 
 #include "OpenGL.h"
 #include <string>
+#include "Settings.h"
 
 namespace VisCanvas {
 
@@ -28,15 +29,16 @@ namespace VisCanvas {
 	///          the designers will not be able to interact properly with localized
 	///          resources associated with this form.
 	/// </summary>
-	public ref class VisCanvas : public System::Windows::Forms::Form
-	{
+	public ref class VisCanvas : public System::Windows::Forms::Form {
+
 	public:
 
-		VisCanvas(void)
-		{
+		VisCanvas(void) {
 			InitializeComponent();		
 			/* Setup OpenGL for this Parent Window */
-			OpenGL = gcnew COpenGL(this, this->Width, this->Height); 
+			OpenGL = gcnew COpenGL(this, this->Width, this->Height - this->menubar->Height);
+			/* Setup the settings window */
+			settingsWindow = gcnew Settings(OpenGL);
 		}
 
 	protected:
@@ -44,76 +46,104 @@ namespace VisCanvas {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~VisCanvas()
-		{
-			if (components)
-			{
+		~VisCanvas() {
+			if (components) {
 				delete components;
 			}
 		}
 
 	private: System::ComponentModel::IContainer^  components;
 	protected: 
+
+		// TIMER FOR PAINTING OPENGL
 	private: System::Windows::Forms::Timer^  timer1;
+
+			 // STATUS STRIP
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
-	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	private: System::Windows::Forms::MenuStrip^  menubar;
-	private: System::Windows::Forms::ToolStripMenuItem^  fileToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  openToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  saveToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  saveAsToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  editToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  viewToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem;
+
+			 // PANELS
 	private: System::Windows::Forms::Panel^  Tools;
-
-
-
-
-
 	private: System::Windows::Forms::Panel^  Options;
 
+			 // CHECK LIST ITEMS
 
 
-
-	private: System::Windows::Forms::CheckedListBox^  checkedListBox1;
-	private: System::Windows::Forms::ToolStripMenuItem^  toolsToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  optionsToolStripMenuItem;
-
-	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem1;
-	private: System::Windows::Forms::ToolStripMenuItem^  resetToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  parallelCoordinatesToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  shiftedParallelCoordinatesToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  toolsToolStripMenuItem1;
-	private: System::Windows::Forms::ToolStripMenuItem^  sortingToolStripMenuItem;
-
-
-
-	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::RadioButton^  radioButton1;
-	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::Label^  label2;
-	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1; // color selector
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown3;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
+			 // LABELS
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label5;
 
-	private: System::Windows::Forms::RadioButton^  radioButton2;
+			 // COLOR SELECTOR
+			 // CLASS SELECTOR
+	private: Nevron::Nov::WinFormControls::NColorBoxControl^  nColorBoxControl1; // BACKGROUND SELECTOR
 
+			 // I DO NOT KNOW WHAT THIS IS FOR
+	private: System::Windows::Forms::TextBox^  textBox1;	
 
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem1;
-	private: Nevron::Nov::WinFormControls::NButtonControl^  nButtonControl1;
-	private: Nevron::Nov::WinFormControls::NToggleButtonControl^  reorderNToggleButtonControl1;
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem2;
-	private: System::Windows::Forms::ToolStripMenuItem^  colorblindFilterToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  descendingSortToolStripMenuItem;
+			 // MENU BAR ITEMS
+	private: System::Windows::Forms::MenuStrip^  menubar;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem4;	
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem3;
 	private: System::Windows::Forms::ToolStripMenuItem^  reorderToolStripMenuItem;
-	private: Nevron::Nov::WinFormControls::NColorBoxControl^  nColorBoxControl1;
-	private: Nevron::Nov::WinFormControls::NButtonControl^  nButtonControl2;
+	private: System::Windows::Forms::ToolStripMenuItem^  descendSortToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  colorblindFilterToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  fileToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  openToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  saveToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  viewToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  toolsToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  optionsToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  helpToolStripMenuItem1;
+	private: System::Windows::Forms::ToolStripMenuItem^  toolsToolStripMenuItem1;
+	private: System::Windows::Forms::ToolStripMenuItem^  ascendSortToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  exitToolStripMenuItem;	
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem5;
+	private: System::Windows::Forms::ToolStripMenuItem^  meanLevelToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  medianLevelToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  originalDataToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem6;
+	private: System::Windows::Forms::ToolStripMenuItem^  dimensionShiftingToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem1;
+	private: System::Windows::Forms::ToolStripMenuItem^  settingsToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  sortOriginalToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem2;
+	private: System::Windows::Forms::ToolStripMenuItem^  hypercubeToolStripMenuItem;
+
+			 // TOOL BUTTONS
+
+
+
+
+
+
+
+
+	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1;
+
+	private: System::Windows::Forms::CheckedListBox^  checkedListBox1;
+	private: System::Windows::Forms::Button^  manualSort;
+	private: System::Windows::Forms::Button^  manualShift;
+	private: System::Windows::Forms::Button^  sortAscend;
+	private: System::Windows::Forms::Button^  sortDescend;
+	private: System::Windows::Forms::Button^  sortOrig;
+	private: System::Windows::Forms::Button^  hypercube;
+	private: System::Windows::Forms::Button^  meanLevel;
+	private: System::Windows::Forms::Button^  medianLevel;
+	private: System::Windows::Forms::Button^  origData;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -123,6 +153,7 @@ namespace VisCanvas {
 		/// </summary>
 
 		OpenGLForm::COpenGL ^ OpenGL;
+		Settings^ settingsWindow;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -135,55 +166,55 @@ namespace VisCanvas {
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(VisCanvas::typeid));
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->menubar = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->saveAsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->editToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->resetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem4 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->viewToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->parallelCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->shiftedParallelCoordinatesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->toolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 			this->toolsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->colorblindFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->settingsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolsToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->sortingToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->reorderToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->dimensionShiftingToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem6 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->ascendSortToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->descendSortToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->sortOriginalToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->hypercubeToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripMenuItem5 = (gcnew System::Windows::Forms::ToolStripSeparator());
+			this->meanLevelToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->medianLevelToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->originalDataToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->Tools = (gcnew System::Windows::Forms::Panel());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
-			this->Options = (gcnew System::Windows::Forms::Panel());
-			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->numericUpDown3 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown2 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
-			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->checkedListBox1 = (gcnew System::Windows::Forms::CheckedListBox());
-			this->reorderNToggleButtonControl1 = (gcnew Nevron::Nov::WinFormControls::NToggleButtonControl());
-			this->nButtonControl1 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
-			this->nButtonControl2 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
-			this->toolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripSeparator());
-			this->colorblindFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->descendingSortToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->reorderToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->origData = (gcnew System::Windows::Forms::Button());
 			this->nColorBoxControl1 = (gcnew Nevron::Nov::WinFormControls::NColorBoxControl());
-			this->statusStrip1->SuspendLayout();
+			this->sortAscend = (gcnew System::Windows::Forms::Button());
+			this->medianLevel = (gcnew System::Windows::Forms::Button());
+			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->manualShift = (gcnew System::Windows::Forms::Button());
+			this->meanLevel = (gcnew System::Windows::Forms::Button());
+			this->sortDescend = (gcnew System::Windows::Forms::Button());
+			this->manualSort = (gcnew System::Windows::Forms::Button());
+			this->hypercube = (gcnew System::Windows::Forms::Button());
+			this->sortOrig = (gcnew System::Windows::Forms::Button());
+			this->Options = (gcnew System::Windows::Forms::Panel());
+			this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
+			this->checkedListBox1 = (gcnew System::Windows::Forms::CheckedListBox());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->menubar->SuspendLayout();
 			this->Tools->SuspendLayout();
 			this->Options->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown3))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// timer1
@@ -194,23 +225,16 @@ namespace VisCanvas {
 			// 
 			// statusStrip1
 			// 
-			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
 			this->statusStrip1->Location = System::Drawing::Point(0, 667);
 			this->statusStrip1->Name = L"statusStrip1";
 			this->statusStrip1->Size = System::Drawing::Size(1184, 22);
 			this->statusStrip1->TabIndex = 0;
 			this->statusStrip1->Text = L"statusStrip1";
 			// 
-			// toolStripStatusLabel1
-			// 
-			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(143, 17);
-			this->toolStripStatusLabel1->Text = L"Mouse Position goes here";
-			// 
 			// menubar
 			// 
-			this->menubar->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->fileToolStripMenuItem, 
-				this->editToolStripMenuItem, this->viewToolStripMenuItem, this->toolsToolStripMenuItem1, this->helpToolStripMenuItem});
+			this->menubar->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->fileToolStripMenuItem, 
+				this->viewToolStripMenuItem, this->toolsToolStripMenuItem1, this->helpToolStripMenuItem});
 			this->menubar->Location = System::Drawing::Point(0, 0);
 			this->menubar->Name = L"menubar";
 			this->menubar->RenderMode = System::Windows::Forms::ToolStripRenderMode::System;
@@ -220,8 +244,8 @@ namespace VisCanvas {
 			// 
 			// fileToolStripMenuItem
 			// 
-			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->openToolStripMenuItem, 
-				this->saveToolStripMenuItem, this->saveAsToolStripMenuItem});
+			this->fileToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->openToolStripMenuItem, 
+				this->saveToolStripMenuItem, this->toolStripMenuItem4, this->exitToolStripMenuItem});
 			this->fileToolStripMenuItem->Name = L"fileToolStripMenuItem";
 			this->fileToolStripMenuItem->Size = System::Drawing::Size(37, 20);
 			this->fileToolStripMenuItem->Text = L"File";
@@ -241,58 +265,35 @@ namespace VisCanvas {
 			this->saveToolStripMenuItem->Size = System::Drawing::Size(146, 22);
 			this->saveToolStripMenuItem->Text = L"Save";
 			// 
-			// saveAsToolStripMenuItem
+			// toolStripMenuItem4
 			// 
-			this->saveAsToolStripMenuItem->Name = L"saveAsToolStripMenuItem";
-			this->saveAsToolStripMenuItem->Size = System::Drawing::Size(146, 22);
-			this->saveAsToolStripMenuItem->Text = L"Save As";
+			this->toolStripMenuItem4->Name = L"toolStripMenuItem4";
+			this->toolStripMenuItem4->Size = System::Drawing::Size(143, 6);
 			// 
-			// editToolStripMenuItem
+			// exitToolStripMenuItem
 			// 
-			this->editToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->resetToolStripMenuItem});
-			this->editToolStripMenuItem->Name = L"editToolStripMenuItem";
-			this->editToolStripMenuItem->Size = System::Drawing::Size(39, 20);
-			this->editToolStripMenuItem->Text = L"Edit";
-			this->editToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::editToolStripMenuItem_Click);
-			// 
-			// resetToolStripMenuItem
-			// 
-			this->resetToolStripMenuItem->Name = L"resetToolStripMenuItem";
-			this->resetToolStripMenuItem->Size = System::Drawing::Size(102, 22);
-			this->resetToolStripMenuItem->Text = L"Reset";
+			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(146, 22);
+			this->exitToolStripMenuItem->Text = L"Exit";
+			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::exitToolStripMenuItem_Click);
 			// 
 			// viewToolStripMenuItem
 			// 
-			this->viewToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(7) {this->parallelCoordinatesToolStripMenuItem, 
-				this->shiftedParallelCoordinatesToolStripMenuItem, this->toolStripMenuItem2, this->colorblindFilterToolStripMenuItem, this->toolStripMenuItem1, 
-				this->toolsToolStripMenuItem, this->optionsToolStripMenuItem});
+			this->viewToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(6) {this->toolsToolStripMenuItem, 
+				this->optionsToolStripMenuItem, this->toolStripMenuItem3, this->colorblindFilterToolStripMenuItem, this->toolStripMenuItem1, 
+				this->settingsToolStripMenuItem});
 			this->viewToolStripMenuItem->Name = L"viewToolStripMenuItem";
 			this->viewToolStripMenuItem->Size = System::Drawing::Size(44, 20);
 			this->viewToolStripMenuItem->Text = L"View";
-			// 
-			// parallelCoordinatesToolStripMenuItem
-			// 
-			this->parallelCoordinatesToolStripMenuItem->Name = L"parallelCoordinatesToolStripMenuItem";
-			this->parallelCoordinatesToolStripMenuItem->Size = System::Drawing::Size(219, 22);
-			this->parallelCoordinatesToolStripMenuItem->Text = L"Parallel Coordinates";
-			// 
-			// shiftedParallelCoordinatesToolStripMenuItem
-			// 
-			this->shiftedParallelCoordinatesToolStripMenuItem->Name = L"shiftedParallelCoordinatesToolStripMenuItem";
-			this->shiftedParallelCoordinatesToolStripMenuItem->Size = System::Drawing::Size(219, 22);
-			this->shiftedParallelCoordinatesToolStripMenuItem->Text = L"Shifted Parallel Coordinates";
-			// 
-			// toolStripMenuItem1
-			// 
-			this->toolStripMenuItem1->Name = L"toolStripMenuItem1";
-			this->toolStripMenuItem1->Size = System::Drawing::Size(216, 6);
 			// 
 			// toolsToolStripMenuItem
 			// 
 			this->toolsToolStripMenuItem->Checked = true;
 			this->toolsToolStripMenuItem->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->toolsToolStripMenuItem->Name = L"toolsToolStripMenuItem";
-			this->toolsToolStripMenuItem->Size = System::Drawing::Size(219, 22);
+			this->toolsToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
+				| System::Windows::Forms::Keys::T));
+			this->toolsToolStripMenuItem->Size = System::Drawing::Size(214, 22);
 			this->toolsToolStripMenuItem->Text = L"Tools Panel";
 			this->toolsToolStripMenuItem->ToolTipText = L"Tools Panel";
 			this->toolsToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::toolsToolStripMenuItem_Click);
@@ -302,23 +303,121 @@ namespace VisCanvas {
 			this->optionsToolStripMenuItem->Checked = true;
 			this->optionsToolStripMenuItem->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->optionsToolStripMenuItem->Name = L"optionsToolStripMenuItem";
-			this->optionsToolStripMenuItem->Size = System::Drawing::Size(219, 22);
+			this->optionsToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
+				| System::Windows::Forms::Keys::O));
+			this->optionsToolStripMenuItem->Size = System::Drawing::Size(214, 22);
 			this->optionsToolStripMenuItem->Text = L"Options Panel";
 			this->optionsToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::classesToolStripMenuItem_Click);
 			// 
+			// toolStripMenuItem3
+			// 
+			this->toolStripMenuItem3->Name = L"toolStripMenuItem3";
+			this->toolStripMenuItem3->Size = System::Drawing::Size(211, 6);
+			// 
+			// colorblindFilterToolStripMenuItem
+			// 
+			this->colorblindFilterToolStripMenuItem->Name = L"colorblindFilterToolStripMenuItem";
+			this->colorblindFilterToolStripMenuItem->Size = System::Drawing::Size(214, 22);
+			this->colorblindFilterToolStripMenuItem->Text = L"Colorblind Filter";
+			// 
+			// toolStripMenuItem1
+			// 
+			this->toolStripMenuItem1->Name = L"toolStripMenuItem1";
+			this->toolStripMenuItem1->Size = System::Drawing::Size(211, 6);
+			// 
+			// settingsToolStripMenuItem
+			// 
+			this->settingsToolStripMenuItem->Name = L"settingsToolStripMenuItem";
+			this->settingsToolStripMenuItem->Size = System::Drawing::Size(214, 22);
+			this->settingsToolStripMenuItem->Text = L"Settings";
+			this->settingsToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::settingsToolStripMenuItem_Click);
+			// 
 			// toolsToolStripMenuItem1
 			// 
-			this->toolsToolStripMenuItem1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->sortingToolStripMenuItem, 
-				this->descendingSortToolStripMenuItem, this->reorderToolStripMenuItem});
+			this->toolsToolStripMenuItem1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(12) {this->reorderToolStripMenuItem, 
+				this->dimensionShiftingToolStripMenuItem, this->toolStripMenuItem6, this->ascendSortToolStripMenuItem, this->descendSortToolStripMenuItem, 
+				this->sortOriginalToolStripMenuItem, this->toolStripMenuItem2, this->hypercubeToolStripMenuItem, this->toolStripMenuItem5, this->meanLevelToolStripMenuItem, 
+				this->medianLevelToolStripMenuItem, this->originalDataToolStripMenuItem});
 			this->toolsToolStripMenuItem1->Name = L"toolsToolStripMenuItem1";
 			this->toolsToolStripMenuItem1->Size = System::Drawing::Size(47, 20);
 			this->toolsToolStripMenuItem1->Text = L"Tools";
 			// 
-			// sortingToolStripMenuItem
+			// reorderToolStripMenuItem
 			// 
-			this->sortingToolStripMenuItem->Name = L"sortingToolStripMenuItem";
-			this->sortingToolStripMenuItem->Size = System::Drawing::Size(160, 22);
-			this->sortingToolStripMenuItem->Text = L"Ascending Sort";
+			this->reorderToolStripMenuItem->Name = L"reorderToolStripMenuItem";
+			this->reorderToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->reorderToolStripMenuItem->Text = L"Manual Sort";
+			// 
+			// dimensionShiftingToolStripMenuItem
+			// 
+			this->dimensionShiftingToolStripMenuItem->Name = L"dimensionShiftingToolStripMenuItem";
+			this->dimensionShiftingToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->dimensionShiftingToolStripMenuItem->Text = L"Manual Shift";
+			// 
+			// toolStripMenuItem6
+			// 
+			this->toolStripMenuItem6->Name = L"toolStripMenuItem6";
+			this->toolStripMenuItem6->Size = System::Drawing::Size(172, 6);
+			// 
+			// ascendSortToolStripMenuItem
+			// 
+			this->ascendSortToolStripMenuItem->Name = L"ascendSortToolStripMenuItem";
+			this->ascendSortToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->ascendSortToolStripMenuItem->Text = L"Sort Ascending";
+			this->ascendSortToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::sortingToolStripMenuItem_Click);
+			// 
+			// descendSortToolStripMenuItem
+			// 
+			this->descendSortToolStripMenuItem->Name = L"descendSortToolStripMenuItem";
+			this->descendSortToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->descendSortToolStripMenuItem->Text = L"Sort Descending";
+			this->descendSortToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::descendSortToolStripMenuItem_Click);
+			// 
+			// sortOriginalToolStripMenuItem
+			// 
+			this->sortOriginalToolStripMenuItem->Name = L"sortOriginalToolStripMenuItem";
+			this->sortOriginalToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->sortOriginalToolStripMenuItem->Text = L"Sort Original";
+			this->sortOriginalToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::sortOriginalToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this->toolStripMenuItem2->Name = L"toolStripMenuItem2";
+			this->toolStripMenuItem2->Size = System::Drawing::Size(172, 6);
+			// 
+			// hypercubeToolStripMenuItem
+			// 
+			this->hypercubeToolStripMenuItem->Name = L"hypercubeToolStripMenuItem";
+			this->hypercubeToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::H));
+			this->hypercubeToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->hypercubeToolStripMenuItem->Text = L"Hypercube";
+			this->hypercubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::hypercubeToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem5
+			// 
+			this->toolStripMenuItem5->Name = L"toolStripMenuItem5";
+			this->toolStripMenuItem5->Size = System::Drawing::Size(172, 6);
+			// 
+			// meanLevelToolStripMenuItem
+			// 
+			this->meanLevelToolStripMenuItem->Name = L"meanLevelToolStripMenuItem";
+			this->meanLevelToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->meanLevelToolStripMenuItem->Text = L"Mean Level";
+			this->meanLevelToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::meanLevelToolStripMenuItem_Click);
+			// 
+			// medianLevelToolStripMenuItem
+			// 
+			this->medianLevelToolStripMenuItem->Name = L"medianLevelToolStripMenuItem";
+			this->medianLevelToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->medianLevelToolStripMenuItem->Text = L"Median Level";
+			this->medianLevelToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::medianLevelToolStripMenuItem_Click);
+			// 
+			// originalDataToolStripMenuItem
+			// 
+			this->originalDataToolStripMenuItem->Name = L"originalDataToolStripMenuItem";
+			this->originalDataToolStripMenuItem->Size = System::Drawing::Size(175, 22);
+			this->originalDataToolStripMenuItem->Text = L"Reset";
+			this->originalDataToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::originalDataToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -344,22 +443,73 @@ namespace VisCanvas {
 			// Tools
 			// 
 			this->Tools->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+			this->Tools->Controls->Add(this->origData);
 			this->Tools->Controls->Add(this->nColorBoxControl1);
-			this->Tools->Controls->Add(this->nButtonControl2);
-			this->Tools->Controls->Add(this->nButtonControl1);
-			this->Tools->Controls->Add(this->reorderNToggleButtonControl1);
+			this->Tools->Controls->Add(this->sortAscend);
+			this->Tools->Controls->Add(this->medianLevel);
 			this->Tools->Controls->Add(this->label4);
+			this->Tools->Controls->Add(this->manualShift);
+			this->Tools->Controls->Add(this->meanLevel);
+			this->Tools->Controls->Add(this->sortDescend);
+			this->Tools->Controls->Add(this->manualSort);
+			this->Tools->Controls->Add(this->hypercube);
+			this->Tools->Controls->Add(this->sortOrig);
 			this->Tools->Dock = System::Windows::Forms::DockStyle::Left;
 			this->Tools->Location = System::Drawing::Point(0, 24);
 			this->Tools->Name = L"Tools";
-			this->Tools->Size = System::Drawing::Size(71, 643);
+			this->Tools->Size = System::Drawing::Size(72, 643);
 			this->Tools->TabIndex = 2;
+			// 
+			// origData
+			// 
+			this->origData->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->origData->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
+			this->origData->Location = System::Drawing::Point(4, 526);
+			this->origData->Name = L"origData";
+			this->origData->Size = System::Drawing::Size(62, 40);
+			this->origData->TabIndex = 23;
+			this->origData->Text = L"Reset";
+			this->origData->UseVisualStyleBackColor = false;
+			this->origData->Click += gcnew System::EventHandler(this, &VisCanvas::button9_Click);
+			// 
+			// nColorBoxControl1
+			// 
+			this->nColorBoxControl1->AutoSize = false;
+			this->nColorBoxControl1->DesignTimeState = resources->GetString(L"nColorBoxControl1.DesignTimeState");
+			this->nColorBoxControl1->Location = System::Drawing::Point(4, 587);
+			this->nColorBoxControl1->Name = L"nColorBoxControl1";
+			this->nColorBoxControl1->Size = System::Drawing::Size(62, 40);
+			this->nColorBoxControl1->TabIndex = 13;
+			this->nColorBoxControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &VisCanvas::nColorBoxControl1_SelectedColorChanged);
+			// 
+			// sortAscend
+			// 
+			this->sortAscend->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->sortAscend->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortAscend.Image")));
+			this->sortAscend->Location = System::Drawing::Point(14, 159);
+			this->sortAscend->Name = L"sortAscend";
+			this->sortAscend->Size = System::Drawing::Size(45, 45);
+			this->sortAscend->TabIndex = 19;
+			this->sortAscend->UseVisualStyleBackColor = false;
+			this->sortAscend->Click += gcnew System::EventHandler(this, &VisCanvas::button3_Click);
+			// 
+			// medianLevel
+			// 
+			this->medianLevel->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->medianLevel->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
+			this->medianLevel->Location = System::Drawing::Point(4, 465);
+			this->medianLevel->Name = L"medianLevel";
+			this->medianLevel->Size = System::Drawing::Size(62, 40);
+			this->medianLevel->TabIndex = 22;
+			this->medianLevel->Text = L"Median";
+			this->medianLevel->UseVisualStyleBackColor = false;
+			this->medianLevel->Click += gcnew System::EventHandler(this, &VisCanvas::button8_Click);
 			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
 			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
-			this->label4->Location = System::Drawing::Point(54, 3);
+			this->label4->Location = System::Drawing::Point(55, 2);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(14, 17);
 			this->label4->TabIndex = 7;
@@ -368,147 +518,100 @@ namespace VisCanvas {
 			this->label4->MouseLeave += gcnew System::EventHandler(this, &VisCanvas::leavingToolBoxHoverColor1);
 			this->label4->MouseHover += gcnew System::EventHandler(this, &VisCanvas::toolBoxExitHoverColor1);
 			// 
-			// radioButton1
+			// manualShift
 			// 
-			this->radioButton1->AutoSize = true;
-			this->radioButton1->Checked = true;
-			this->radioButton1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->radioButton1->Location = System::Drawing::Point(13, 38);
-			this->radioButton1->Name = L"radioButton1";
-			this->radioButton1->Size = System::Drawing::Size(99, 36);
-			this->radioButton1->TabIndex = 6;
-			this->radioButton1->TabStop = true;
-			this->radioButton1->Text = L"Parallel\r\nCoordinates";
-			this->radioButton1->UseVisualStyleBackColor = true;
-			this->radioButton1->CheckedChanged += gcnew System::EventHandler(this, &VisCanvas::radioButton1_CheckedChanged);
+			this->manualShift->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->manualShift->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"manualShift.Image")));
+			this->manualShift->Location = System::Drawing::Point(14, 98);
+			this->manualShift->Name = L"manualShift";
+			this->manualShift->Size = System::Drawing::Size(45, 45);
+			this->manualShift->TabIndex = 18;
+			this->manualShift->UseVisualStyleBackColor = false;
+			// 
+			// meanLevel
+			// 
+			this->meanLevel->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->meanLevel->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
+			this->meanLevel->Location = System::Drawing::Point(4, 404);
+			this->meanLevel->Name = L"meanLevel";
+			this->meanLevel->Size = System::Drawing::Size(62, 40);
+			this->meanLevel->TabIndex = 21;
+			this->meanLevel->Text = L"Mean";
+			this->meanLevel->UseVisualStyleBackColor = false;
+			this->meanLevel->Click += gcnew System::EventHandler(this, &VisCanvas::button7_Click);
+			// 
+			// sortDescend
+			// 
+			this->sortDescend->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->sortDescend->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortDescend.Image")));
+			this->sortDescend->Location = System::Drawing::Point(14, 222);
+			this->sortDescend->Name = L"sortDescend";
+			this->sortDescend->Size = System::Drawing::Size(45, 45);
+			this->sortDescend->TabIndex = 5;
+			this->sortDescend->UseVisualStyleBackColor = false;
+			this->sortDescend->Click += gcnew System::EventHandler(this, &VisCanvas::button4_Click);
+			// 
+			// manualSort
+			// 
+			this->manualSort->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->manualSort->FlatAppearance->BorderColor = System::Drawing::Color::White;
+			this->manualSort->FlatAppearance->BorderSize = 2;
+			this->manualSort->FlatAppearance->MouseOverBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(128)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(128)), static_cast<System::Int32>(static_cast<System::Byte>(255)));
+			this->manualSort->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"manualSort.Image")));
+			this->manualSort->Location = System::Drawing::Point(14, 36);
+			this->manualSort->Name = L"manualSort";
+			this->manualSort->Size = System::Drawing::Size(45, 45);
+			this->manualSort->TabIndex = 4;
+			this->manualSort->UseVisualStyleBackColor = false;
+			this->manualSort->Click += gcnew System::EventHandler(this, &VisCanvas::button1_Click);
+			// 
+			// hypercube
+			// 
+			this->hypercube->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->hypercube->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"hypercube.Image")));
+			this->hypercube->Location = System::Drawing::Point(14, 343);
+			this->hypercube->Name = L"hypercube";
+			this->hypercube->Size = System::Drawing::Size(45, 45);
+			this->hypercube->TabIndex = 20;
+			this->hypercube->UseVisualStyleBackColor = false;
+			this->hypercube->Click += gcnew System::EventHandler(this, &VisCanvas::button6_Click);
+			// 
+			// sortOrig
+			// 
+			this->sortOrig->BackColor = System::Drawing::SystemColors::ButtonFace;
+			this->sortOrig->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortOrig.Image")));
+			this->sortOrig->Location = System::Drawing::Point(14, 283);
+			this->sortOrig->Name = L"sortOrig";
+			this->sortOrig->Size = System::Drawing::Size(45, 45);
+			this->sortOrig->TabIndex = 5;
+			this->sortOrig->UseVisualStyleBackColor = false;
+			this->sortOrig->Click += gcnew System::EventHandler(this, &VisCanvas::button5_Click);
 			// 
 			// Options
 			// 
 			this->Options->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->Options->BackColor = System::Drawing::SystemColors::Control;
-			this->Options->Controls->Add(this->radioButton2);
-			this->Options->Controls->Add(this->label5);
-			this->Options->Controls->Add(this->radioButton1);
-			this->Options->Controls->Add(this->numericUpDown3);
-			this->Options->Controls->Add(this->numericUpDown2);
-			this->Options->Controls->Add(this->numericUpDown1);
-			this->Options->Controls->Add(this->textBox1);
 			this->Options->Controls->Add(this->nHsbColorPickerControl1);
-			this->Options->Controls->Add(this->label3);
-			this->Options->Controls->Add(this->label2);
-			this->Options->Controls->Add(this->label1);
 			this->Options->Controls->Add(this->checkedListBox1);
+			this->Options->Controls->Add(this->label5);
+			this->Options->Controls->Add(this->textBox1);
 			this->Options->Dock = System::Windows::Forms::DockStyle::Right;
-			this->Options->Location = System::Drawing::Point(1020, 24);
+			this->Options->Location = System::Drawing::Point(1048, 24);
 			this->Options->Name = L"Options";
-			this->Options->Size = System::Drawing::Size(164, 643);
+			this->Options->Size = System::Drawing::Size(136, 643);
 			this->Options->TabIndex = 3;
 			this->Options->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &VisCanvas::Classes_Paint);
-			// 
-			// radioButton2
-			// 
-			this->radioButton2->AutoSize = true;
-			this->radioButton2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->radioButton2->Location = System::Drawing::Point(13, 82);
-			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(119, 36);
-			this->radioButton2->TabIndex = 17;
-			this->radioButton2->TabStop = true;
-			this->radioButton2->Text = L"Shifted Parallel \r\nCoordinates";
-			this->radioButton2->UseVisualStyleBackColor = true;
-			// 
-			// label5
-			// 
-			this->label5->AutoSize = true;
-			this->label5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
-			this->label5->Location = System::Drawing::Point(147, 3);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(14, 17);
-			this->label5->TabIndex = 16;
-			this->label5->Text = L"x";
-			this->label5->Click += gcnew System::EventHandler(this, &VisCanvas::label5_Click);
-			this->label5->MouseLeave += gcnew System::EventHandler(this, &VisCanvas::label5_MouseLeave);
-			this->label5->MouseHover += gcnew System::EventHandler(this, &VisCanvas::label5_MouseHover);
-			// 
-			// numericUpDown3
-			// 
-			this->numericUpDown3->Location = System::Drawing::Point(114, 502);
-			this->numericUpDown3->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
-			this->numericUpDown3->Name = L"numericUpDown3";
-			this->numericUpDown3->Size = System::Drawing::Size(38, 20);
-			this->numericUpDown3->TabIndex = 15;
-			// 
-			// numericUpDown2
-			// 
-			this->numericUpDown2->Location = System::Drawing::Point(63, 502);
-			this->numericUpDown2->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
-			this->numericUpDown2->Name = L"numericUpDown2";
-			this->numericUpDown2->Size = System::Drawing::Size(38, 20);
-			this->numericUpDown2->TabIndex = 14;
-			// 
-			// numericUpDown1
-			// 
-			this->numericUpDown1->Location = System::Drawing::Point(13, 502);
-			this->numericUpDown1->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(38, 20);
-			this->numericUpDown1->TabIndex = 13;
-			// 
-			// textBox1
-			// 
-			this->textBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
-				static_cast<System::Int32>(static_cast<System::Byte>(0)));
-			this->textBox1->Enabled = false;
-			this->textBox1->Location = System::Drawing::Point(13, 456);
-			this->textBox1->Multiline = true;
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(139, 22);
-			this->textBox1->TabIndex = 12;
 			// 
 			// nHsbColorPickerControl1
 			// 
 			this->nHsbColorPickerControl1->AutoSize = false;
 			this->nHsbColorPickerControl1->DesignTimeState = nullptr;
-			this->nHsbColorPickerControl1->Location = System::Drawing::Point(13, 325);
+			this->nHsbColorPickerControl1->Location = System::Drawing::Point(3, 177);
 			this->nHsbColorPickerControl1->Name = L"nHsbColorPickerControl1";
-			this->nHsbColorPickerControl1->Size = System::Drawing::Size(139, 126);
-			this->nHsbColorPickerControl1->TabIndex = 11;
-			this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &VisCanvas::nHsbColorPickerControl1_SelectedColorChanged_1);
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(111, 483);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(20, 16);
-			this->label3->TabIndex = 10;
-			this->label3->Text = L"B:";
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->label2->Location = System::Drawing::Point(60, 483);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(21, 16);
-			this->label2->TabIndex = 9;
-			this->label2->Text = L"G:";
-			// 
-			// label1
-			// 
-			this->label1->AutoSize = true;
-			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.5F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->label1->Location = System::Drawing::Point(10, 483);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(21, 16);
-			this->label1->TabIndex = 8;
-			this->label1->Text = L"R:";
+			this->nHsbColorPickerControl1->Size = System::Drawing::Size(130, 115);
+			this->nHsbColorPickerControl1->TabIndex = 17;
+			this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &VisCanvas::nHsbColorPickerControl1_SelectedColorChanged);
 			// 
 			// checkedListBox1
 			// 
@@ -517,75 +620,41 @@ namespace VisCanvas {
 			this->checkedListBox1->FormattingEnabled = true;
 			this->checkedListBox1->Items->AddRange(gcnew cli::array< System::Object^  >(5) {L"Class 1", L"Class 2", L"Class 3", L"Class 4", 
 				L"Class 5"});
-			this->checkedListBox1->Location = System::Drawing::Point(13, 155);
+			this->checkedListBox1->Location = System::Drawing::Point(3, 36);
 			this->checkedListBox1->Name = L"checkedListBox1";
-			this->checkedListBox1->Size = System::Drawing::Size(139, 140);
+			this->checkedListBox1->Size = System::Drawing::Size(130, 123);
 			this->checkedListBox1->TabIndex = 0;
 			// 
-			// reorderNToggleButtonControl1
+			// label5
 			// 
-			this->reorderNToggleButtonControl1->AutoSize = false;
-			this->reorderNToggleButtonControl1->DesignTimeState = resources->GetString(L"reorderNToggleButtonControl1.DesignTimeState");
-			this->reorderNToggleButtonControl1->Location = System::Drawing::Point(17, 47);
-			this->reorderNToggleButtonControl1->Name = L"reorderNToggleButtonControl1";
-			this->reorderNToggleButtonControl1->Size = System::Drawing::Size(36, 36);
-			this->reorderNToggleButtonControl1->TabIndex = 10;
+			this->label5->AutoSize = true;
+			this->label5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
+			this->label5->Location = System::Drawing::Point(119, 2);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(14, 17);
+			this->label5->TabIndex = 16;
+			this->label5->Text = L"x";
+			this->label5->Click += gcnew System::EventHandler(this, &VisCanvas::label5_Click);
+			this->label5->MouseLeave += gcnew System::EventHandler(this, &VisCanvas::label5_MouseLeave);
+			this->label5->MouseHover += gcnew System::EventHandler(this, &VisCanvas::label5_MouseHover);
 			// 
-			// nButtonControl1
+			// textBox1
 			// 
-			this->nButtonControl1->AutoSize = false;
-			this->nButtonControl1->DesignTimeState = resources->GetString(L"nButtonControl1.DesignTimeState");
-			this->nButtonControl1->Location = System::Drawing::Point(17, 99);
-			this->nButtonControl1->Name = L"nButtonControl1";
-			this->nButtonControl1->Size = System::Drawing::Size(36, 36);
-			this->nButtonControl1->TabIndex = 11;
-			// 
-			// nButtonControl2
-			// 
-			this->nButtonControl2->AutoSize = false;
-			this->nButtonControl2->DesignTimeState = resources->GetString(L"nButtonControl2.DesignTimeState");
-			this->nButtonControl2->Location = System::Drawing::Point(17, 150);
-			this->nButtonControl2->Name = L"nButtonControl2";
-			this->nButtonControl2->Size = System::Drawing::Size(36, 36);
-			this->nButtonControl2->TabIndex = 12;
-			// 
-			// toolStripMenuItem2
-			// 
-			this->toolStripMenuItem2->Name = L"toolStripMenuItem2";
-			this->toolStripMenuItem2->Size = System::Drawing::Size(216, 6);
-			// 
-			// colorblindFilterToolStripMenuItem
-			// 
-			this->colorblindFilterToolStripMenuItem->Name = L"colorblindFilterToolStripMenuItem";
-			this->colorblindFilterToolStripMenuItem->Size = System::Drawing::Size(219, 22);
-			this->colorblindFilterToolStripMenuItem->Text = L"Colorblind Filter";
-			// 
-			// descendingSortToolStripMenuItem
-			// 
-			this->descendingSortToolStripMenuItem->Name = L"descendingSortToolStripMenuItem";
-			this->descendingSortToolStripMenuItem->Size = System::Drawing::Size(160, 22);
-			this->descendingSortToolStripMenuItem->Text = L"Descending Sort";
-			// 
-			// reorderToolStripMenuItem
-			// 
-			this->reorderToolStripMenuItem->Name = L"reorderToolStripMenuItem";
-			this->reorderToolStripMenuItem->Size = System::Drawing::Size(160, 22);
-			this->reorderToolStripMenuItem->Text = L"Reorder";
-			// 
-			// nColorBoxControl1
-			// 
-			this->nColorBoxControl1->AutoSize = false;
-			this->nColorBoxControl1->DesignTimeState = resources->GetString(L"nColorBoxControl1.DesignTimeState");
-			this->nColorBoxControl1->Location = System::Drawing::Point(8, 206);
-			this->nColorBoxControl1->Name = L"nColorBoxControl1";
-			this->nColorBoxControl1->Size = System::Drawing::Size(55, 34);
-			this->nColorBoxControl1->TabIndex = 13;
+			this->textBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(0)), 
+				static_cast<System::Int32>(static_cast<System::Byte>(0)));
+			this->textBox1->Enabled = false;
+			this->textBox1->Location = System::Drawing::Point(3, 298);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(130, 27);
+			this->textBox1->TabIndex = 12;
 			// 
 			// VisCanvas
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoValidate = System::Windows::Forms::AutoValidate::EnablePreventFocusChange;
+			this->BackColor = System::Drawing::SystemColors::ButtonFace;
 			this->ClientSize = System::Drawing::Size(1184, 689);
 			this->Controls->Add(this->Options);
 			this->Controls->Add(this->Tools);
@@ -593,58 +662,47 @@ namespace VisCanvas {
 			this->Controls->Add(this->menubar);
 			this->DoubleBuffered = true;
 			this->MainMenuStrip = this->menubar;
-			this->MinimumSize = System::Drawing::Size(1200, 726);
+			this->MinimumSize = System::Drawing::Size(900, 726);
 			this->Name = L"VisCanvas";
 			this->Text = L"VisCanvas";
+			this->Load += gcnew System::EventHandler(this, &VisCanvas::VisCanvas_Load);
 			this->Resize += gcnew System::EventHandler(this, &VisCanvas::ResizeMe);
-			this->statusStrip1->ResumeLayout(false);
-			this->statusStrip1->PerformLayout();
 			this->menubar->ResumeLayout(false);
 			this->menubar->PerformLayout();
 			this->Tools->ResumeLayout(false);
 			this->Tools->PerformLayout();
 			this->Options->ResumeLayout(false);
 			this->Options->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown3))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
+
 		/* PAINTS TO THE VIEWING WINDOW */
-	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e)
-			 {
+	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 /* DISPLAY OUR OPENGL TO THE PARENT FORM */
-				 OpenGL->Display();	
+
+				 adjustPanels();
+
+				 // display our OpenGL to the Parent Form
+				 OpenGL->Render();	
 				 OpenGL->SwapOpenGLBuffers();				 
 			 }
 			 /* THIS WILL RESIZE THE SCREEN */
 	private: System::Void ResizeMe(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 OpenGL->Resize(0, 0, this->Width, this->Height, SWP_NOSENDCHANGING | SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOMOVE);
+				 adjustPanels();
 			 }
-			 /* CREATES A CHECKED OR UNCHECKED STATE */
+			 /* CREATES A CHECKED OR UNCHECKED STATE - OPTIONS PANEL */
 	private: System::Void classesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 if (this->optionsToolStripMenuItem->Checked) 
-				 {
-					 this->Options->Dock = System::Windows::Forms::DockStyle::None;
-					 this->optionsToolStripMenuItem->Checked = false;
-				 } 
-				 else
-				 {
-					 this->Options->Dock = System::Windows::Forms::DockStyle::Right;
-					 this->optionsToolStripMenuItem->Checked = true;
-				 }
-				 this->Options->Visible = this->optionsToolStripMenuItem->Checked;
-
+				 optionPanel();
 			 }
+			 /* TODO: UPDATE THIS MAYBE? */
 	private: System::Void editToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
 
@@ -652,51 +710,14 @@ namespace VisCanvas {
 	private: System::Void openToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 // TODO: last used directory method
-				 OpenFileDialog^ ofd = gcnew OpenFileDialog;
-				 ofd->InitialDirectory = ""; // NOTE "c:\\" for future reference.
-				 ofd->Filter="Text Files (*.csv, *.txt, *text)|(*.csv; *txt; *text)|All Files (*.*)|*.*";
-				 ofd->FilterIndex=1;
-				 ofd->RestoreDirectory = true;
-
-				 if(ofd->ShowDialog() == System::Windows::Forms::DialogResult::OK)
-				 {
-					 /* Convert System::String^ to a std::string */
-					 System::String^ path = ofd->FileName;
-					 const char* location = (const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( path ).ToPointer();
-					 std::string FILE_PATH(location);
-
-					 /* Pass the FILE_PATH to OpenGL for reading the file */
-					 OpenGL->SetFilePath(FILE_PATH);
-
-					 /* Clean up the const char* location memory */
-					 System::Runtime::InteropServices::Marshal::FreeHGlobal(IntPtr((void*)location));
-				 }
+				 openFile();
 			 }
 
+			 /* NOT USING ANYMORE */
 	private: System::Void radioButton1_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 			 }
 	private: System::Void numericUpDown1_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
 
-			 }
-
-			 /* This allows us to change colors using a color palette */
-	private: System::Void nHsbColorPickerControl1_SelectedColorChanged_1(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
-				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
-				 System::String^ hex = selectedColor.GetHEX();
-				 const char* toRGB = (const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( hex ).ToPointer(); // converts System::String^ to char*
-				 std::string s(toRGB);
-				 s = s.substr(1, s.length());
-				 char* str = (char*)s.c_str();
-				 int r, g, b;
-				 sscanf_s(str, "%02x%02x%02x", &r, &g, &b); // convert hex to RGB	
-				 OpenGL->SetRGB((GLdouble)r, (GLdouble)g, (GLdouble)b);
-
-				 /* update the textbox color on RGB update */
-				 this->textBox1->BackColor = System::Drawing::Color::FromArgb(OpenGL->getRed(), OpenGL->getGreen(), OpenGL->getBlue());
-
-				 /* Clean up the const char* toRGB memory */
-				 System::Runtime::InteropServices::Marshal::FreeHGlobal(IntPtr((void*)toRGB));
 			 }
 
 	private: System::Void Classes_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
@@ -714,60 +735,24 @@ namespace VisCanvas {
 				 UNREFERENCED_PARAMETER(e);
 				 this->label4->ForeColor = System::Drawing::Color::Black;		 
 			 }
+			 /* TOOLS PANEL HIDE BUTTON */
 	private: System::Void label4_Click(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 if (this->toolsToolStripMenuItem->Checked) 
-				 {
-					 this->Tools->Dock = System::Windows::Forms::DockStyle::None;
-					 this->toolsToolStripMenuItem->Checked = false;
-				 } 
-				 else
-				 {
-					 this->Tools->Dock = System::Windows::Forms::DockStyle::Left;
-					 this->toolsToolStripMenuItem->Checked = true;
-				 }
-				 this->Tools->Visible = this->toolsToolStripMenuItem->Checked;
+				 toolPanel();
 			 }
+			 /* PUT A CHECK IN THE MENU BAR FOR THE TOOL PANEL VIEW */
 	private: System::Void toolsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 if (this->toolsToolStripMenuItem->Checked) 
-				 {
-					 this->Tools->Dock = System::Windows::Forms::DockStyle::None;
-					 this->toolsToolStripMenuItem->Checked = false;
-				 } 
-				 else
-				 {
-					 this->Tools->Dock = System::Windows::Forms::DockStyle::Left;
-					 this->toolsToolStripMenuItem->Checked = true;
-				 }
-				 this->Tools->Visible = this->toolsToolStripMenuItem->Checked;
+				 toolPanel();
 			 }
-
-
+			 /* OPTIONS PANEL HIDE BUTTON */
 	private: System::Void label5_Click(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
 				 UNREFERENCED_PARAMETER(e);
-				 if (this->optionsToolStripMenuItem->Checked) 
-				 {
-					 this->Options->Dock = System::Windows::Forms::DockStyle::None;
-					 this->optionsToolStripMenuItem->Checked = false;
-				 } 
-				 else
-				 {
-					 this->Options->Dock = System::Windows::Forms::DockStyle::Right;
-					 this->optionsToolStripMenuItem->Checked = true;
-				 }
-				 this->Options->Visible = this->optionsToolStripMenuItem->Checked;
+				 optionPanel();
 			 }
-			 /* ABOUT DIALOG */
-	private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-				 UNREFERENCED_PARAMETER(sender);
-				 UNREFERENCED_PARAMETER(e);
-				 MessageBox::Show(L"Design By: Shane Vance, Daniel Ortyn, Nico Espitia and Brennan Barni\r                                         For Dr. Boris Kovalerchuk\r                                                  2018 © VisCanvas");
-			 }
-
 			 /* WHEN THE USER HOVERS OVER THE EXIT COMMAND IT WILL HIGHLIGHT GRAY (OPTIONS PANEL) */
 	private: System::Void label5_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 				 UNREFERENCED_PARAMETER(sender);
@@ -780,5 +765,279 @@ namespace VisCanvas {
 				 UNREFERENCED_PARAMETER(e);
 				 this->label5->ForeColor = System::Drawing::Color::Black;
 			 }
+			 /* ABOUT DIALOG */
+	private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 MessageBox::Show("Design by Shane Vance, Daniel Ortyn, Nico Espitia and Brennan Barni\r                                         "
+					 + "For Dr. Boris Kovalerchuk\r                                                 2018 © VisCanvas");
+			 }
+	private: System::Void nHsbColorPickerControl1_SelectedColorChanged(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+				 System::String^ hex = selectedColor.GetHEX();
+				 std::string s = toStandardString(hex); // convert HEX to std::string
+				 s = s.substr(1, s.length()); // remove the "#" from the front of the string
+				 char* str = (char*)s.c_str(); // convert back to a dynamic char array
+				 int R, G, B;
+				 sscanf_s(str, "%02x%02x%02x", &R, &G, &B); // convert HEX to RGB	
+				 setColorBox(R, G, B);
+			 }
+
+
+
+			 /* Exits the program */
+	private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 this->Close();
+			 }
+
+			 /* Sort ascending (menu item) */
+	private: System::Void sortingToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->ascendingSort();
+			 }
+			 /* Sort descending (menu item) */
+	private: System::Void descendSortToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->descendingSort();
+			 }
+			 /* Sort original (menu item) */
+	private: System::Void sortOriginalToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->originalSort();
+			 }
+			 /* Mean level (menu item) */
+	private: System::Void meanLevelToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->mean();
+			 }
+			 /* Median level (menu item) */
+	private: System::Void medianLevelToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->median();
+			 }
+			 /* Original data (menu item) */
+	private: System::Void originalDataToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->originalData();
+			 }
+			 /* Background color */
+	private: System::Void nColorBoxControl1_SelectedColorChanged(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+				 System::String^ hex = selectedColor.GetHEX();
+				 std::string s = toStandardString(hex); // convert HEX to std::string
+				 s = s.substr(1, s.length()); // remove the "#" from the front of the string
+				 char* str = (char*)s.c_str(); // convert back to a dynamic char array
+				 int R, G, B;
+				 sscanf_s(str, "%02x%02x%02x", &R, &G, &B); // convert HEX to RGB	
+				 OpenGL->Background(R, G, B);
+			 }
+
+			 /* Show the settings dialog */
+	private: System::Void settingsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	
+				 settingsWindow->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+				 settingsWindow->ShowDialog();
+
+			 }
+
+	private: System::Void hypercubeToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->hypercube();
+			 }
+
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+			 }
+			 /* Sort Ascending */
+	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->ascendingSort();
+			 }
+			 /* Sort Descending */
+	private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->descendingSort();
+			 }
+			 /* Sort Original */
+	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->originalSort();
+			 }
+			 /* Hypercube Analysis */
+	private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->hypercube();
+			 }
+			 /* Mean Level */
+	private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->mean();
+			 }
+			 /* Median Level */
+	private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->median();
+			 }
+			 /* Reset to original data */
+	private: System::Void button9_Click(System::Object^  sender, System::EventArgs^  e) {
+				 UNREFERENCED_PARAMETER(sender);
+				 UNREFERENCED_PARAMETER(e);
+				 OpenGL->originalData();
+			 }
+			 /* Capture event when the form loads */
+	private: System::Void VisCanvas_Load(System::Object^  sender, System::EventArgs^  e) {
+				 System::Windows::Forms::Cursor::Current = System::Windows::Forms::Cursors::Default;
+				 System::Windows::Forms::ToolTip^ toolTip = gcnew System::Windows::Forms::ToolTip;
+				 // Set up the delays for the ToolTip.
+				 toolTip->AutoPopDelay = 5000;
+				 toolTip->InitialDelay = 1000;
+				 toolTip->ReshowDelay = 500;
+				 // Force the ToolTip text to be displayed whether or not the form is active.
+				 toolTip->ShowAlways = true;
+
+				 // Set up the ToolTip text for the Button and Checkbox.
+				 toolTip->SetToolTip(this->label4, "hide");
+				 toolTip->SetToolTip(this->label5, "hide");
+				 toolTip->SetToolTip(this->sortAscend, "Sort Ascending");
+				 toolTip->SetToolTip(this->sortDescend, "Sort Descending");
+				 toolTip->SetToolTip(this->sortOrig, "Reset Prior to Sorting Data");
+				 toolTip->SetToolTip(this->hypercube, "Hypercube Analysis (Ctrl + H)");
+				 toolTip->SetToolTip(this->meanLevel, "Mean Level");
+				 toolTip->SetToolTip(this->medianLevel, "Median Level");
+				 toolTip->SetToolTip(this->origData, "Reset Prior to Leveling Data");
+				 toolTip->SetToolTip(this->sortAscend, "Sort Ascending");
+			 }
+
+	protected:
+
+		/* HOTKEYS: GET THE KEY COMBINATION AND THEN WE'LL SEND A MESSAGE TO THE OTHER CLASS */
+		virtual bool ProcessCmdKey(Message% msg, Keys keyData) override {
+
+			UNREFERENCED_PARAMETER(msg);
+
+			// Open File Dialog
+			if (keyData == (Keys::Control | Keys::O)) {
+				openFile();				 
+			}
+			// Save File Dialog
+			if (keyData == (Keys::Control | Keys::S)) {
+				// TODO: add the savefiledialog stuff here
+				//OpenGL->save();
+			}
+			// Tools Panel
+			if (keyData == (Keys::Control | Keys::Alt | Keys::T)) {
+				toolPanel();				
+			}
+			// Options Panel
+			if  (keyData == (Keys::Control | Keys::Alt | Keys::O)) {
+				optionPanel();
+			}		
+			if (keyData == (Keys::W) || keyData == (Keys::Up))
+			{
+				OpenGL->incrementSelectedSet();
+			}
+			if (keyData == (Keys::S) || keyData == (Keys::Down))
+			{
+				OpenGL->decrementSelectedSet();
+			}
+			if (keyData == (Keys::Control | Keys::H))
+			{
+				OpenGL->hypercube();
+			}
+			return true;
+		}
+
+	private:
+
+		System::Void adjustPanels(System::Void)
+		{
+			// adjust the canvas area according to the panels being open
+			if (this->Tools->Visible && this->Options->Visible) {
+				OpenGL->Resize(this->Tools->Width, 0, this->Width - this->Options->Width - this->Tools->Width - 15, this->Height, SWP_NOZORDER | SWP_NOACTIVATE);
+			} else if (this->Options->Visible && !this->Tools->Visible) {
+				OpenGL->Resize(0, 0, this->Width - this->Options->Width - 15, this->Height, SWP_NOZORDER | SWP_NOACTIVATE);
+			} else if (!this->Options->Visible && this->Tools->Visible) {
+				OpenGL->Resize(this->Tools->Visible + 25, 0, this->Width, this->Height, SWP_NOZORDER | SWP_NOACTIVATE);
+			} else {
+				OpenGL->Resize(this->Tools->Visible, 0, this->Width, this->Height, SWP_NOZORDER | SWP_NOACTIVATE);
+			}
+		}
+
+		/* Converts from System::String^ to std::string */
+		std::string toStandardString(System::String^ str)
+		{
+			const char* location = (const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( str ).ToPointer();
+			std::string temp(location);
+			/* Clean up the const char* location memory */
+			System::Runtime::InteropServices::Marshal::FreeHGlobal(IntPtr((void*)location));
+			return temp;
+		}
+
+		System::Void openFile(System::Void) {
+			// TODO: last used directory method
+			OpenFileDialog^ ofd = gcnew OpenFileDialog;
+			ofd->InitialDirectory = ""; // NOTE "c:\\" for future reference.
+			ofd->Filter = "Text Files (*.csv, *.txt, *.text)|*.csv; *.txt; *.text"; // we can add this later if needed (needs error handling if so) |All Files (*.*)|*.*";
+			ofd->FilterIndex = 1;
+			ofd->RestoreDirectory = true;
+
+			if(ofd->ShowDialog() == System::Windows::Forms::DialogResult::OK) {
+				/* Convert System::String^ to a std::string */
+				System::String^ path = ofd->FileName;
+
+				std::string FILE_PATH = toStandardString(path); // convert to std::string
+
+				/* Pass the FILE_PATH to OpenGL for reading the file */
+				OpenGL->SetFilePath(FILE_PATH);
+			}
+		}
+
+		System::Void toolPanel(System::Void) {
+			// is it checked 
+			if (this->toolsToolStripMenuItem->Checked) {
+				this->Tools->Dock = System::Windows::Forms::DockStyle::None;
+				this->toolsToolStripMenuItem->Checked = false;
+			} else {
+				this->Tools->Dock = System::Windows::Forms::DockStyle::Left;
+				this->toolsToolStripMenuItem->Checked = true;
+			}
+			this->Tools->Visible = this->toolsToolStripMenuItem->Checked;
+		}
+
+		System::Void optionPanel(System::Void) {
+			// is it checked
+			if (this->optionsToolStripMenuItem->Checked) {
+				this->Options->Dock = System::Windows::Forms::DockStyle::None;
+				this->optionsToolStripMenuItem->Checked = false;
+			} else {
+				this->Options->Dock = System::Windows::Forms::DockStyle::Right;
+				this->optionsToolStripMenuItem->Checked = true;
+			}
+			this->Options->Visible = this->optionsToolStripMenuItem->Checked;
+		}		
+		// This is for the color palette
+		System::Void setColorBox(int r, int g, int b) {
+			OpenGL->SetRGB((GLdouble)r, (GLdouble)g, (GLdouble)b);
+			/* update the textbox color on RGB update */
+			this->textBox1->BackColor = System::Drawing::Color::FromArgb(r, g, b);
+		}
+
 	};
+
 }

@@ -21,41 +21,70 @@ public:
 	// delete the object
 	~Dimension();
 
-	// get the index of the current position of the dimension
-	const int getIndex();
 	// get the index of the the dimension was created with
-	const int getOriginalIndex();
-	// set the index of the current position of the dimension and returns the previous index
-	const int changeIndex(int newIndex);
+	int getOriginalIndex() const;
 	// calibrate the data to the [0,1] space
 	void calibrateData();
 	// gets the data for the set of the passed index(dataIndex)
-	const double getData(unsigned int dataIndex);
+	double getData(int dataIndex) const;
+	// gets the data calibrated, but not inverted or shifted data for the set of the passed index(dataIndex)
+	double getCalibratedData(int dataIndex) const;
 	// gets the original data for the set of the passed index(dataIndex)
-	const double getOriginalData(unsigned int dataIndex);
+	double getOriginalData(int dataIndex) const;
+	// gets the name
+	string* getName();
+	// sets the name and returns the old name
+	void setName(string* newName);
 	// sets the data of the set at the passed index(dataIndex) to the passed value(newData), alters the original data
-	void setData(unsigned int dataIndex, double newData);
+	void setData(int dataIndex, double newData);
+
+
 	// multiplies all the data in the dimension by the passed double, does not alter original data
 	void multiplyData(double multiplier);
 	// divides all the data in the dimension by the passed double, does not alter original data
 	void divideData(double divisor);
 	// adds the passed double to all the data in the dimension, does not alter original data
 	void addToData(double addend);
+	// adds the amount passed(shiftAmount) to the data shift amount
+	void shiftDataBy(double modToShiftAmount);
+	// gets the amount data shift amount
+	double getShift();
+	// toggles whether the data is inverted
+	void invertData();
+
+
 	// gets the number of sets in the dimensions
-	int getDimensionSize();
+	int size() const;
+	// sets the calibration to use the data's(not the artificial) maximum and minimum
+	void clearArtificialCalibration();
+	// sets the bounds to be used for artificial calibration
+	void setCalibrationBounds(double newMaximum, double newMinimum);
+	// gets the artificial maximum
+	double getArtificialMaximum() const;
+	// gets the artificial minimum
+	double getArtificialMinimum() const;
+	// gets the maximum data value in the dimension
+	double getMaximum() const;
+	// gets the minimum data value in the dimension
+	double getMinimum() const;
 
 private:
 	// the vector holding all the data
 	vector<DataNode*> data;
+	// the amount to add to data when it is retrieved
+	double shiftAmount;
+	// holds whether the data is inverted or not
+	bool isInverted;
 	// gets the index the dimension was originally at
 	int originalIndex;
-	// gets the index the dimension is at
-	int currentIndex;
-	// gets the maximum data value in the dimension
-	const double getMaximum();
-	// gets the minimum data value in the dimension
-	const double getMinimum();
-
+	// the boolean checking whether to use artificial calibration
+	bool useArtificialCalibration;
+	// the maximum to calibrate the set with
+	double artificialMaximum;
+	// the minimum to calibrate the set with
+	double artificialMinimum;
+	// the name of the dimension
+	std::string name;
 };
 
 #endif

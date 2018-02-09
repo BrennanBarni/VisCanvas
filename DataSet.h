@@ -19,19 +19,19 @@ public:
 	// delete the object
 	~DataSet();
 	// gets the class(data class) of this set
-	const int getClass();
+	int getClass() const;
 	// sets the class(data class) of this set and returns the previous class
 	int setDataClass(int newClass);
 	// gets the index of the set
-	const int getIndex();
+	int getIndex() const;
 	// sets the index of the set, returns previous index
 	int setIndex(int newIndex);
 	// gets the original index of the set
-	const int getOriginalIndex();
+	int getOriginalIndex() const;
 	// gets the name of the set
-	const std::string* getName();
+	std::string* getName();
 	// sets the name returns previous name
-	std::string* setName(std::string* newName);
+	void setName(std::string &newName);
 
 
 private:
