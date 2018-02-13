@@ -218,6 +218,13 @@ namespace OpenGLForm
 
 		double worldWidth;  // Set the world width
 		double worldHeight; // Set the world height
+      double mouseX; // Holds mouse X coord
+		double mouseY; // Holds mouse Y coord
+
+		double worldMouseX; // Holds mouse X coord when mapped to world
+		double worldMouseY; // Holds mouse Y coord when mapped to world
+      
+      boolDrawingDragged = false; // Is made true via mouselistener when dragging the mouse
 
 		GLdouble R; // Red
 		GLdouble G; // Green
@@ -309,19 +316,139 @@ namespace OpenGLForm
 		}
 
 
+		double parseXMouse(double xMouse){
+			double xWorld = xMouse;
+			// divide by panel width to get the porportion of the window
+			xWorld /= worldWidth;
+			// multiply by the world width to parse the porportion of the window into the world
+			xWorld *= worldWidth;
+
+			return xWorld;
+		} // Converts raw mouse X coordinates to world coordinates
+
+		double parseYMouse(double yMouse){
+			double yWorld = yMouse;
+			// divide by panel height to get the proportion of the window
+			yWorld /= worldHeight;
+			// multiply by the world height to parse the proportion of the window into the world
+			yWorld *= worldHeight;
+
+			return yWorld;
+		} // Converts raw mouse Y coordinates to world coordinates
+      
+      // this method takes the passed mouse click coordinates and finds the dimension clicked on
+		int findClickedDimension(double xMouse, double yMouse){
+			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
+			double xMouseWorldPosition = parseXMouse(xMouse);
+			double yMouseWorldPosition = parseYMouse(yMouse);
 
 
-		GLvoid Display(GLvoid)
+			for (int i = 0; i < file->getDimensionAmount(); i++)
+			{
+				double shiftAmount = this->file->getDimensionShift(i);
+				double dimensionX = (xAxisIncrement) * i;
+				double dimensionYMax = (worldHeight * 0.5) + worldHeight * 0.75+shiftAmount;
+				double dimensionYMin = (worldHeight * 0.5) + worldHeight * 0.1+shiftAmount;
+
+				if ((xMouseWorldPosition - dimensionX) < (worldWidth/(file->getDimensionAmount() +2)/2.0) && (xMouseWorldPosition - dimensionX) > -.1
+					&& dimensionYMin <= yMouseWorldPosition && dimensionYMax >= yMouseWorldPosition) {
+						return i;
+				}
+			}
+			return -1;
+		}
+      
+      void drawDraggedDimension(double x, double y, int dimensionIndex)
 		{
-			//Set the lines that will mark the x values of the window
+			double shiftAmount = this->file->getDimensionShift(dimensionIndex);
+			glColor4d(0.0, 0.0, 0.0, 0.5);
+			glBegin(GL_LINE_STRIP);
+				glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75);
+				glVertex2d(x * i, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.1);
+			glEnd();
+
+			glLineWidth(3.0);
+			glPointSize(5.0);
+
+			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
+			for (int j = 0; j < file->getSetAmount(); j++)
+			{
+				std::vector<doubl>* colorOfCurrent = this->file->getSetColor(j);
+				double colorAlpha = (*colorOfCurrent)[3];
+				colorAlpha *= 0.5;
+				glColor4d((*colorOfCurrent)[0],(*colorOfCurrent)[1],(*colorOfCurrent)[2],colorAlpha);
+				glBegin(GL_POINTS); // draws points
+
+				double currentData = this->file->getData(j, dimensionIndex);
+				glVertex2d(x, currentData * (worldHeight * 0.5) + (0.175 * worldHeight));
+				
+				glEnd(); // ends drawing line
+		}
+      
+      void insertDimension(double x, double y){
+
+			double xAxisIncrement = worldWidth / (this->file->getDimensionAmount()+2);
+
+			// on mouse depress
+			int clickedDimensionIndex = findClickedDimension(getCursorPos()->(double)x, getCursorPos()->(double)y);
+
+			// on mouse release 
+			double newXMouseWorldPosition = parseXMouse(GetCursorPos->(double)x);	
+			double newYMouseWorldPosition = parseYMouse(GetCursorPos->(double)y);
+
+			// for each dimension, if new X position is between dimension i and its predecessor, insert current dimension between them
+			for (int i = 0; i < file->getDimensionAmount(); i++)
+			{
+				double shiftAmount = this->file->getDimensionShift(i);
+				double dimensionX = (xAxisIncrement) * i;
+				double dimensionXMinusOne = (xAxisIncrement) * (i-1);
+
+				// if dimension is "dropped" between dimension i and its predecessor, insert dimension between them
+				if (newXMouseWorldPosition < dimensionX && newXMouseWorldPosition > dimensionXMinusOne)
+				{
+					file->moveData(clickedDimensionIndex, i-1);
+				}
+			}
+			// then, redraw the visualization with altered data
+			glClear();
+			display();
+
+			// draw the moved line
 			glLineWidth(2.0);
 			glClear(GL_COLOR_BUFFER_BIT);
-			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
+			glColor3f(0.0f, 0.0f, 0.0f);
+			glBegin(GL_LINE_STRIP);
+			glVertex2d(((xAxisIncrement) * ClickedDimensionIndex)+shiftXBy, (shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75)+shiftYBy);
+			glVertex2d(((xAxisIncrement) * ClickedDimensionIndex)+shiftXBy, (shiftAmount * (worldHeight * 0.5) + worldHeight * 0.1)+shiftYBy);
+			glEnd();
+
+			// finally, call drawData() method to draw the line between all data points
+			drawData();
+			glFlush();
+	   }
+      
+      /*	TODO: MOUSE LISTENER METHOD
+			For every single listener method (common methods):
+				- set worldMouse coordinates (x any y) 
+				- at end of function, call display()
+			On depress:
+				- when initially getting click, set drawDragged to true
+			On release:
+				- set drawDragged to false
+				- call insertDimension method to move dimension
+			On drag: (when mouse is depressed and the mouse cursor is moving)
+				- Call the common methods
+		*/
+
+		void drawParallelLines()
+		{
+			glLineWidth(2.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
 			glColor3f(0.0f, 0.0f, 0.0f);
 
 			for (int i = 0; i < this->file->getDimensionAmount(); i++)
 			{
-
 				double shiftAmount = this->file->getDimensionShift(i);
 				glBegin(GL_LINE_STRIP);
 				// was (xAxisIncrement) * i
@@ -329,10 +456,13 @@ namespace OpenGLForm
 				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
 				glEnd();
 			}
+		} // draws parallel lines for dimensions (pulled out of Display function and made into its own function)
 
+		GLvoid Display(GLvoid)
+		{
+			drawParallelLines();
 			drawData();
 			glFlush();
-
 		}
 
 		// Graphs the data to the world
