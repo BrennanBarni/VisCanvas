@@ -160,7 +160,6 @@ namespace OpenGLForm
 		}
 		}
 		}
-
 		}
 		*/
 
@@ -316,8 +315,8 @@ namespace OpenGLForm
 		}
 
 
-		double parseXMouse(double xMouse){
-			double xWorld = xMouse;
+		double getWorldMouseX(){
+			double xWorld = GetCursorPos->(double)x;
 			// divide by panel width to get the porportion of the window
 			xWorld /= worldWidth;
 			// multiply by the world width to parse the porportion of the window into the world
@@ -326,8 +325,8 @@ namespace OpenGLForm
 			return xWorld;
 		} // Converts raw mouse X coordinates to world coordinates
 
-		double parseYMouse(double yMouse){
-			double yWorld = yMouse;
+		double getWorldMouseY(){
+			double yWorld = GetCursorPos->(double)y;
 			// divide by panel height to get the proportion of the window
 			yWorld /= worldHeight;
 			// multiply by the world height to parse the proportion of the window into the world
@@ -337,10 +336,10 @@ namespace OpenGLForm
 		} // Converts raw mouse Y coordinates to world coordinates
       
       // this method takes the passed mouse click coordinates and finds the dimension clicked on
-		int findClickedDimension(double xMouse, double yMouse){
+		int findClickedDimension(){
 			double xAxisIncrement = worldWidth/(this->file->getDimensionAmount()+2);
-			double xMouseWorldPosition = parseXMouse(xMouse);
-			double yMouseWorldPosition = parseYMouse(yMouse);
+			double xMouseWorldPosition = getWorldMouseX();
+			double yMouseWorldPosition = getWorldMouseY();
 
 
 			for (int i = 0; i < file->getDimensionAmount(); i++)
@@ -385,16 +384,16 @@ namespace OpenGLForm
 				glEnd(); // ends drawing line
 		}
       
-      void insertDimension(double x, double y){
+      void insertDimension(double x, double y, double newX, double newY){
 
 			double xAxisIncrement = worldWidth / (this->file->getDimensionAmount()+2);
 
 			// on mouse depress
-			int clickedDimensionIndex = findClickedDimension(getCursorPos()->(double)x, getCursorPos()->(double)y);
+			int clickedDimensionIndex = findClickedDimension();
 
 			// on mouse release 
-			double newXMouseWorldPosition = parseXMouse(GetCursorPos->(double)x);	
-			double newYMouseWorldPosition = parseYMouse(GetCursorPos->(double)y);
+			double newXMouseWorldPosition = getWorldMouseX(GetCursorPos->(double)x);	
+			double newYMouseWorldPosition = getWorldMouseY(GetCursorPos->(double)y);
 
 			// for each dimension, if new X position is between dimension i and its predecessor, insert current dimension between them
 			for (int i = 0; i < file->getDimensionAmount(); i++)
@@ -425,9 +424,34 @@ namespace OpenGLForm
 			// finally, call drawData() method to draw the line between all data points
 			drawData();
 			glFlush();
-	   }
-      
-      /*	TODO: MOUSE LISTENER METHOD
+	    }
+		
+		void clickAndDrag(){
+			worldMouseX = getWorldMouseX();
+			worldMouseY = getWorldMouseY();
+			int clickedDimension = findClickedDimension();
+			
+			// ensures that the clicked dimension is valid
+			if (clickedDimension != -1){
+				
+				// while the mouse left button is depressed
+				drawDragged = true;
+				while ((GetKeyState(VK_LBUTTON) & 0x80) != 0)
+					{
+						drawDraggedDimension(worldMouseX, worldMouseY, clickedDimension);
+					}
+				// upon the release of the left mouse button
+				drawDragged = false;
+				droppedDimension = findClickedDimension();
+				
+				if (droppedClickedDimension != -1){ 
+					file->insertDimension(clickedDimension,droppedDimension);
+				}
+			}
+		}
+		
+		/*	
+			MOUSE LISTENER METHOD
 			For every single listener method (common methods):
 				- set worldMouse coordinates (x any y) 
 				- at end of function, call display()
