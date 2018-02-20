@@ -1,0 +1,47 @@
+﻿  DataInterface.cpp
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(22): warning C4129: 'D': unrecognized character escape sequence
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(28): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(30): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(325): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(333): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(341): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(349): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(356): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(363): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(416): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(425): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(466): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(476): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(592): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(598): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(613): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(619): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(631): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(637): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(656): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(672): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(691): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(708): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(715): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(987): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1006): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1010): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1022): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1035): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1045): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1057): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1059): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1085): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1097): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1107): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1144): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1155): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1165): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1174): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1212): warning C4018: '>=': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1264): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(1266): warning C4018: '<': signed/unsigned mismatch
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(237): warning C4715: 'DataInterface::saveToFile': not all control paths return a value
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(360): warning C4715: 'DataInterface::getArtificialMaximum': not all control paths return a value
+d:\stuff\school\cs 481\datastructure 6\project1\project1\datainterface.cpp(367): warning C4715: 'DataInterface::getArtificialMinimum': not all control paths return a value
+  Project1.vcxproj -> D:\Stuff\School\CS 481\DataStructure 6\Project1\Debug\VisCanvas 1.exe
