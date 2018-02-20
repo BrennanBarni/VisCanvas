@@ -475,17 +475,17 @@ namespace OpenGLForm
 			glFlush();
 
 
-			if(this->drawingDragged /*&& Horiz. Shift button is depressed*/) {
+			if(this->drawingDragged && shiftHorizontal) {
 				
 				if (this->clickedDimension != -1){
 					drawDraggedDimension(this->worldMouseX, this->clickedDimension);
 					glFlush();
 				} 
 				
-			} /*else if (this->drawingDragged && Vertical Shift button is depressed) {
+			} else if (this->drawingDragged && shiftVertical) {
 					drawDraggedDimension(this->worldMouseY, this->clickedDimension);
 					glFlush();
-				} */
+				} 
 
 		}
 
