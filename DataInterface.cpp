@@ -146,36 +146,61 @@ double DataInterface::getData(int indexOfSet, int indexOfData) const {
 	return (*dataDimensions[indexOfData]).getData(indexOfSet);
 }
 
+// sets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData), to the passed value(newDataValue)
+double DataInterface::setData(int setIndex, int indexOfData, double newDataValue) {
+	// check if indexes are in bounds
+	if (setIndex >= getSetAmount() || setIndex < 0) {
+		return 0.0;
+	}
+	if (indexOfData >= getDimensionAmount() || indexOfData < 0) {
+		return 0.0;
+	}
+
+	// get data
+	double oldData = (*dataDimensions[indexOfData]).getData(setIndex);
+	(*dataDimensions[indexOfData]).setData(setIndex, newDataValue);
+	calibrateData();
+	return oldData;
+}
+
 /*
 moves the position of a dimensions from the passed index(indexOfDimension) to at the other passed index(indexOfInsertion)
 Note: the new position is calculated before the dimension being moved is removed from its place so if the data had dimensions 0,1,2,3
 and the call moveData(1, 3) was made the dimensions would become 0,2,1,3 not 0,2,3,1
 */
-void DataInterface::moveData(int indexOfDimension, int indexOfInsertion) {
-	if (indexOfDimension >= getDimensionAmount() || indexOfDimension < 0) {
-		return;
+bool DataInterface::moveData(int indexOfDimension, int indexOfInsertion) {
+	if (indexOfInsertion == -1 || indexOfDimension == -1) {
+		return false;
 	}
-	if (indexOfInsertion > getDimensionAmount()) {
+	/*if (indexOfInsertion > getDimensionAmount()) {
 		indexOfInsertion = getDimensionAmount();
-	}
-	if (indexOfInsertion < 0) {
-		indexOfInsertion = 0;
-	}
+	}*/
+	/*if (indexOfInsertion < 0) {
+		//indexOfInsertion = 0;
+		return false;
+	}*/
 	// check if the insertion at the end
-	if (indexOfInsertion == getDimensionAmount()) {
+	/*if (indexOfInsertion == getDimensionAmount()) {
 		dataDimensions.push_back(dataDimensions[indexOfDimension]);
 		dataDimensions.erase(dataDimensions.begin() + indexOfDimension);
-		return;
-	}
+		return false;
+	}*/
 	// place the dimension in the new position
-	dataDimensions.insert(dataDimensions.begin() + indexOfInsertion, dataDimensions[indexOfDimension]);
+	/*dataDimensions.insert(dataDimensions.begin() + indexOfInsertion, dataDimensions[indexOfDimension]);
 	// remove the dimension from the old position
 	if (indexOfDimension <= indexOfInsertion) {
 		dataDimensions.erase(dataDimensions.begin() + indexOfDimension);
 	}
 	else {
 		dataDimensions.erase(dataDimensions.begin() + indexOfDimension + 1);
-	}
+	}*/
+
+
+	// this will swap the data 
+	Dimension *temp = dataDimensions[indexOfDimension];
+	dataDimensions[indexOfDimension] = dataDimensions[indexOfInsertion];
+	dataDimensions[indexOfInsertion] = temp;
+	return true;
 }
 
 
@@ -243,10 +268,11 @@ void DataInterface::addToDimension(int dimensionIndex, double amountToAdd) {
 
 
 
+
 // gets the name of the class at the passed index
 // full implementation after file parsing
 string* DataInterface::getClassName(int classIndex) {
-	if (dataClasses.size() >= classIndex || classIndex < 0) {
+	if (classIndex  >= dataClasses.size()|| classIndex < 0) {
 		return nullptr;
 	}
 	return dataClasses[classIndex].getName();
@@ -261,15 +287,6 @@ void DataInterface::setClassName(int classIndex, string* newName) {
 	dataClasses[classIndex].setName(newName);
 }
 
-/*
-Gets the number of sets in the class at the passed index(classIndex)
-*/
-int DataInterface::getSetAmount(int classIndex) const {
-	if (classIndex < 0 || classIndex >= getClassAmount()) {
-		return -1;
-	}
-	return dataClasses[classIndex].getSetNumber();
-}
 
 // sets the name of the class at the passed index(classIndex) to the passed string(newName)
 std::vector<double>* DataInterface::getColor(int classIndex) {
@@ -287,6 +304,39 @@ void DataInterface::setColor(int classIndex, std::vector<double>* newColor) {
 	}
 
 	dataClasses[classIndex].setColor(newColor);
+}
+
+// adds a new class to the list of classes
+void DataInterface::addClass() {
+	dataClasses.push_back(DataClass(dataClasses.size(), "Class " + std::to_string(dataClasses.size())));
+}
+
+// delete a class from the list of classes
+void DataInterface::deleteClass(int classIndex) {
+	// do not allow deletion of default class
+	if (classIndex <= 0 || classIndex>=getClassAmount()) {
+		return;
+	}
+
+	// put the sets in the class to be deleted in the default class
+	for (int i = 0; i < this->getSetAmount(); i++) {
+		if (dataSets[i].getClass() == classIndex) {
+			dataSets[i].setDataClass(0);
+		}
+	}
+
+	// delete the class
+	dataClasses.erase(dataClasses.begin() + classIndex);
+}
+
+/*
+Gets the number of sets in the class at the passed index(classIndex)
+*/
+int DataInterface::getSetAmount(int classIndex) const {
+	if (classIndex < 0 || classIndex >= getClassAmount()) {
+		return -1;
+	}
+	return dataClasses[classIndex].getSetNumber();
 }
 
 

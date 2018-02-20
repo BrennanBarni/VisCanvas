@@ -47,8 +47,10 @@ public:
 	int getDimensionAmount() const;
 	// gets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData)
 	double getData(int setIndex, int indexOfData) const;
+	// sets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData), to the passed value(newDataValue)
+	double setData(int setIndex, int indexOfData, double newDataValue);
 	// moves the dimension at the passed index(indexOfDimension) to the spot after the other index(indexBeforeInsertion)
-	void moveData(int indexOfDimension, int indexBeforeInsertion);
+	bool moveData(int indexOfDimension, int indexBeforeInsertion);
 
 
 	// gets the name of the class at the passed index(classIndex)
@@ -73,6 +75,10 @@ public:
 	std::string* getClassName(int classIndex);
 	// sets the name of the class at the passed index(classIndex) to the passed string(newName)
 	void setClassName(int classIndex, std::string* newName);
+	// adds a new class to the list of classes
+	void addClass();
+	// delete a class from the list of classes
+	void deleteClass(int classIndex);
 	/*
 	Gets the number of sets in the class at the passed index(classIndex)
 	*/
@@ -81,6 +87,7 @@ public:
 	std::vector<double>* getColor(int classIndex);
 	// sets the color for the class at the passed class index(classIndex) to the passed color(newColor)
 	void setColor(int classIndex, std::vector<double>* newColor);
+
 
 
 

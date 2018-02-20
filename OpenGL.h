@@ -2,11 +2,12 @@
 
 /*
 Authors: Shane Vance, Nico Espitia, Brennan Barni, Daniel Ortyn
-Last Update: 2018/29/01
+Last Update: 2018/15/02
 Purpose: CS 481 Project
 */
 
 #include "stdafx.h"
+#include <vector>
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -47,6 +48,10 @@ namespace OpenGLForm
 
 			// Create the data interface
 			this->file = new DataInterface();
+
+
+			this->drawingDragged = false;
+			this->clickedDimension = -1;
 
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
@@ -110,6 +115,7 @@ namespace OpenGLForm
 			int selectedSetIndex = this->file->getSelectedSetIndex();
 			double meanOfSet = this->file->getMean(selectedSetIndex);
 			this->file->level(selectedSetIndex, meanOfSet);
+
 		}
 
 		System::Void median(System::Void)
@@ -164,16 +170,63 @@ namespace OpenGLForm
 		}
 		*/
 
-		int getDimensionSize(System::Void)
+
+		// Adds a class
+		System::Void addClass(System::Void)
+		{
+			this->file->addClass();	
+		}
+
+		// Delete a class
+		System::Void removeClass(int selectedIndex)
+		{
+			this->file->deleteClass(selectedIndex);
+		}
+
+		// Gets the color for the set
+		std::vector<double>* getSetColor(int setIndex)
+		{
+			return this->file->getSetColor(setIndex);
+		}
+
+
+		// Get the dimension amount for settings window
+		int getDimensionAmount(System::Void)
 		{
 			return this->file->getDimensionAmount();
 		}
 
 		// Get the dimension name for settings window
-		const char* getDimensionName(int dimensionIndex)
+		std::string* getDimensionName(int dimensionIndex)
 		{
-			std::string str = *this->file->getDimensionName(dimensionIndex);
-			return str.c_str();
+			std::string* str = this->file->getDimensionName(dimensionIndex);
+			return str;
+		}
+
+		// Get the set amount for settings window
+		int getSetAmount(System::Void)
+		{
+			return this->file->getSetAmount();
+		}
+
+		// Get the set name for settings window
+		std::string* getSetName(int setIndex)
+		{
+			std::string* str = this->file->getSetName(setIndex);
+			return str;
+		}
+
+		// Get the class amount for settings window
+		int getClassAmount(System::Void)
+		{
+			return this->file->getClassAmount();
+		}
+
+		// Get the class name for settings window
+		std::string* getClassName(int classIndex)
+		{
+			std::string* str = this->file->getClassName(classIndex);
+			return str;
 		}
 
 		// Sets the background color
@@ -222,9 +275,24 @@ namespace OpenGLForm
 		GLdouble R; // Red
 		GLdouble G; // Green
 		GLdouble B; // Blue
-		
+
 		/* Create the DataInterface for reading the file */
 		DataInterface* file;
+
+		int clickedDimension;
+
+		double mouseX; // Holds mouse X coord
+		double mouseY; // Holds mouse Y coord
+
+		double worldMouseX; // Holds mouse X coord when mapped to world
+		double worldMouseY; // Holds mouse Y coord when mapped to world
+
+
+
+
+
+		bool drawingDragged; // Is made true via mouselistener when dragging the mouse
+
 
 		HDC m_hDC;
 		HGLRC m_hglrc;
@@ -292,46 +360,130 @@ namespace OpenGLForm
 		}
 
 
-		// THIS IS WHERE ANY BUTTON CLICKS GO // the parent window will need to handle the other key presses
-		virtual void WndProc( Message %msg ) override
-		{
-			switch (msg.Msg)
+
+
+		
+		double getWorldMouseX(){
+
+			// this will get the mouse position relative to the child window
+			LPPOINT pts = new POINT;
+			GetCursorPos(pts);
+			::ScreenToClient((HWND)this->Handle.ToPointer(), pts);
+
+			double xWorld = pts->x - (worldWidth / 2.0); //::Control::MousePosition.X;
+			// divide by panel width to get the porportion of the window
+			xWorld /= worldWidth;
+			// multiply by the world width to parse the porportion of the window into the world
+			xWorld *= worldWidth;
+
+			return xWorld;
+		} // Converts raw mouse X coordinates to world coordinates
+
+		double getWorldMouseY(){
+
+			// this will get the mouse position relative to the child window
+			LPPOINT pts = new POINT;
+			GetCursorPos(pts);
+			::ScreenToClient((HWND)this->Handle.ToPointer(), pts);
+
+			double yWorld = pts->y - (worldHeight / 2.0); //::Control::MousePosition.Y;
+			// divide by panel height to get the proportion of the window
+			yWorld /= worldHeight;
+			// multiply by the world height to parse the proportion of the window into the world
+			yWorld *= worldHeight;
+
+			return yWorld;
+		} // Converts raw mouse Y coordinates to world coordinates
+
+
+		// this method takes the passed mouse click coordinates and finds the dimension clicked on
+		int findClickedDimension(double xMouseWorldPosition, double yMouseWorldPosition){
+			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
+
+			for (int i = 0; i < file->getDimensionAmount(); i++)
 			{
+				double shiftAmount = this->file->getDimensionShift(i);
+				double dimensionX = (-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1));
 
-			case WM_LBUTTONDOWN:
-				{			
-					//	MessageBox::Show("THIS IS A TEST: LEFT BUTTON");
+				double dimensionYMax = (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75);
+				double dimensionYMin = (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1);
+
+				// creates the bound for the parallel lines
+				if (xMouseWorldPosition - (dimensionX) >= -6 && xMouseWorldPosition - (dimensionX) <= 6) {
+					if ((dimensionYMax / 2.0) - dimensionYMin >= yMouseWorldPosition) {
+							return i;
+					}
 				}
-				break;
 			}
+			return -1;
+		}
 
-			NativeWindow::WndProc( msg );
+		GLvoid drawDraggedDimension(double x, double y, int dimensionIndex)
+		{			
+			
+			double xAxisIncrement = worldWidth / (this->file->getDimensionAmount() + 1);
+			double shiftAmount = this->file->getDimensionShift(dimensionIndex);
+
+			glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+			glBegin(GL_LINE_STRIP);
+				glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75);
+				glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.1);
+			glEnd();
+
+			glLineWidth(3.0);
+			glPointSize(3.0);
+
+			for (int j = 0; j < file->getSetAmount(); j++)
+			{
+				std::vector<double>* colorOfCurrent = this->file->getSetColor(j);
+
+				double colorAlpha = (*colorOfCurrent)[3];
+				colorAlpha *= 0.5;
+				double currentData = this->file->getData(j, dimensionIndex);
+				glColor4d((*colorOfCurrent)[0],(*colorOfCurrent)[1],(*colorOfCurrent)[2], colorAlpha);
+				glBegin(GL_POINTS); // draws points
+					glVertex2d(x, currentData * (worldHeight * 0.5) + (0.175 * worldHeight));
+				glEnd(); // ends drawing line
+			}
 		}
 
 
 
-
-		GLvoid Display(GLvoid)
-		{
+		GLvoid Display(GLvoid) {
 			//Set the lines that will mark the x values of the window
 			glLineWidth(2.0);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			// Enables the transparency using alpha
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable( GL_BLEND );
+
+
 			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
-			glColor3f(0.0f, 0.0f, 0.0f);
+			glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
 
 			for (int i = 0; i < this->file->getDimensionAmount(); i++)
 			{
-
 				double shiftAmount = this->file->getDimensionShift(i);
 				glBegin(GL_LINE_STRIP);
-				// was (xAxisIncrement) * i
-				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75));
-				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
+					// was (xAxisIncrement) * i
+					glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75));
+					glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
 				glEnd();
 			}
+			glFlush();
+
 
 			drawData();
 			glFlush();
+
+
+			if(this->drawingDragged) {
+				if (this->clickedDimension != -1){
+					drawDraggedDimension(this->worldMouseX, this->worldMouseY, this->clickedDimension);
+					glFlush();
+				}
+			}
 
 		}
 
@@ -340,7 +492,7 @@ namespace OpenGLForm
 		{
 			glLineWidth(3.0);
 			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount()+1);
-			if(this->file->isPaintCluster()) {
+			if (this->file->isPaintCluster()) {
 				std::vector<double>* colorOfCurrent = this->file->getClusterColor();
 				glColor4d((*colorOfCurrent)[0], (*colorOfCurrent)[1], (*colorOfCurrent)[2], (*colorOfCurrent)[3]);
 				// draw minimum of cluster
@@ -370,7 +522,7 @@ namespace OpenGLForm
 				}
 				glEnd(); // ends drawing line
 
-			}else{
+			} else {
 
 				for (int j = 0; j < this->file->getSetAmount(); j++)
 				{
@@ -384,6 +536,16 @@ namespace OpenGLForm
 					}
 					glEnd(); // ends drawing line
 				}
+				int selectedSetIndex = file->getSelectedSetIndex();
+				std::vector<double>* colorOfCurrent = this->file->getSetColor(selectedSetIndex);
+				glColor4d((*colorOfCurrent)[0], (*colorOfCurrent)[1], (*colorOfCurrent)[2], (*colorOfCurrent)[3]);
+				glBegin(GL_LINE_STRIP); // begins drawing lines
+				for (int i = 0; i < this->file->getDimensionAmount(); i++)
+				{
+					double currentData = this->file->getData(selectedSetIndex, i);
+					glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (currentData * (this->worldHeight * 0.5)) + (0.175 * this->worldHeight));
+				}
+				glEnd(); // ends drawing line
 			}
 		}
 
@@ -405,12 +567,80 @@ namespace OpenGLForm
 
 			// set the viewport to cover the new window
 			glViewport(0, 0, width, height);
-			
+
 			// set the orthosphere and keep center of the screen
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluOrtho2D((GLdouble)-width / 2.0, (GLdouble)width / 2.0, (GLdouble)-height / 4.0, (GLdouble)height + 100);
+			gluOrtho2D((GLdouble)-width / 2.0, (GLdouble)width / 2.0, (GLdouble)-height / 2.5, (GLdouble)height + 100);
 
 		}
+
+
+		// THIS IS WHERE ANY BUTTON CLICKS GO // the parent window will need to handle the other key presses
+		virtual void WndProc( Message %msg ) override
+		{
+
+
+			switch (msg.Msg)
+			{
+
+			case WM_LBUTTONDOWN:
+				{
+
+					// get the X and Y coordinates of the mouse position
+					this->worldMouseX = this->getWorldMouseX();
+					this->worldMouseY = this->getWorldMouseY();
+
+					// ensures that the clicked dimension is valid
+					this->clickedDimension = this->findClickedDimension(this->worldMouseX, this->worldMouseY); //1					
+											
+					this->drawingDragged = true;								
+				}
+				break;
+
+			case WM_MOUSEMOVE:
+				{					
+
+					// get the X and Y coordinates of the mouse position
+					this->worldMouseX = this->getWorldMouseX();
+					this->worldMouseY = this->getWorldMouseY();
+
+					// get the dropped dimension
+					int droppedDimension = this->findClickedDimension(this->worldMouseX, this->worldMouseY);
+
+					// update by swapping while passing over dimension
+					if (this->drawingDragged && this->file->moveData(this->clickedDimension, droppedDimension)) {
+						this->clickedDimension = droppedDimension;							
+					}					
+
+				}
+				break;
+			case WM_LBUTTONUP:
+				{
+
+
+					if (this->drawingDragged) {
+						// get the X and Y coordinates of the mouse position
+						/*this->worldMouseX = this->getWorldMouseX();
+						this->worldMouseY = this->getWorldMouseY();
+						int droppedDimension = this->findClickedDimension(this->worldMouseX, this->worldMouseY);
+						this->file->moveData(this->clickedDimension, droppedDimension);*/
+						this->drawingDragged = false;
+					}
+
+
+				}
+				break;
+			}
+
+
+
+			NativeWindow::WndProc( msg );
+
+		}
+
+
+
+
 	};
 }

@@ -54,7 +54,7 @@ int Dimension::getOriginalIndex() const {
 void Dimension::calibrateData() {
 	double maximum = getMaximum();
 	double minimum = getMinimum();
-	if (false) {
+	if (useArtificialCalibration) {
 		maximum = artificialMaximum;
 		minimum = artificialMinimum;
 	}
