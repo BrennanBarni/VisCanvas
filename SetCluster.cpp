@@ -4,22 +4,23 @@
 
 
 
-// creates a blank cluster
 SetCluster::SetCluster() {
 	color = ColorCustom();
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
 	maximumValues = std::vector<double>();
+	radius = 0;
 }
 
-// creates a cluster of the passed color
+// creates a blank cluster
 SetCluster::SetCluster(ColorCustom &clusterColor) {
 	color = clusterColor;
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
 	maximumValues = std::vector<double>();
+	radius = 0;
 }
 
 // creates the cluster with the passed sets
@@ -29,6 +30,8 @@ SetCluster::SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInClu
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
 	maximumValues = std::vector<double>();
+	radius = 0;
+
 	for (int i = 0; i < newSetsInCluster->size(); i++) {
 		setsInCluster.push_back((*newSetsInCluster)[i]);
 	}
@@ -38,20 +41,16 @@ SetCluster::SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInClu
 // creates the cluster with the passed sets and values from the passed dimensions
 SetCluster::SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInCluster, std::vector<Dimension*>* dimensionsToCalculateWith) {
 	// intialize fields
-	color = ColorCustom();
-	std::vector<double>* colorComponents = clusterColor.getColorComponents();
-	color.setRed((*colorComponents)[0]);
-	color.setGreen((*colorComponents)[1]);
-	color.setBlue((*colorComponents)[2]);
-	color.setAlpha((*colorComponents)[3]);
+	color = clusterColor;
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
 	maximumValues = std::vector<double>();
+	radius = 0;
 
 	// put sets into the cluster
 	for (int i = 0; i < newSetsInCluster->size(); i++) {
-		setsInCluster.push_back((*newSetsInCluster)[i]);
+		setsInCluster.push_back(newSetsInCluster->at(i));
 	}
 	std::sort(setsInCluster.begin(), setsInCluster.end());
 	// get the values from the dimensions
@@ -71,10 +70,6 @@ double SetCluster::getMinimumValue(Dimension* dimension, std::vector<int>* setIn
 	double minimum = 0.0;
 	std::sort(setIndexes->begin(), setIndexes->end());
 	// check if the dimension has enough sets for the sets in the passed vector(setIndexes)
-	if(setIndexes->size()==0)
-	{
-		return 0.0;
-	}
 	if ((*setIndexes)[setIndexes->size() - 1] >= dimension->size()) {
 		return minimum;
 	}
@@ -95,10 +90,6 @@ double SetCluster::getMeanValue(Dimension * dimension, std::vector<int>* setInde
 	double sum = 0.0;
 	std::sort(setIndexes->begin(), setIndexes->end());
 	// check if the dimension has enough sets for the sets in the passed vector(setIndexes)
-	if(setIndexes->size()==0)
-	{
-		return 0.0;
-	}
 	if ((*setIndexes)[setIndexes->size() - 1] >= dimension->size()) {
 		return sum;
 	}
@@ -116,16 +107,12 @@ double SetCluster::getMaximumValue(Dimension* dimension, std::vector<int>* setIn
 	double maximum = 0.0;
 	std::sort(setIndexes->begin(), setIndexes->end());
 	// check if the dimension has enough sets for the sets in the passed vector(setIndexes)
-	if(setIndexes->size()==0)
-	{
-		return 0.0;
-	}
 	if ((*setIndexes)[setIndexes->size() - 1] >= dimension->size()) {
 		return maximum;
 	}
-	maximum = dimension->getCalibratedData((*setIndexes)[0]);
 	// calculate the minimum
-	for (int i = 1; i < setIndexes->size(); i++) {
+	maximum = dimension->getCalibratedData((*setIndexes)[0]);
+	for (int i = 0; i < setIndexes->size(); i++) {
 		double dataValue = dimension->getCalibratedData((*setIndexes)[i]);
 		if (dataValue > maximum) {
 			maximum = dataValue;
@@ -208,33 +195,29 @@ double SetCluster::getMaximum(int dimensionIndex) const {
 
 // recalculates the values for the cluster using the passed dimensions
 void SetCluster::calculateValues(std::vector<Dimension*>* dimensionsToCalculateWith) {
-	//int test = 1;
-	int maximumSetIndex = setsInCluster[setsInCluster.size() - 1];
 	// get the values from the dimensions
 	// check if there are any dimensions passed
 	if (dimensionsToCalculateWith->size() <= 0) {
 		// do nothing dimensions cannot be used for this cluster
-		return;
 	}
-	Dimension* firstDimension =(*dimensionsToCalculateWith)[0];
-	int dimensionSetNumber = firstDimension->size();
 	// check if then largest set index is is within the dimensions passed
-	if ( maximumSetIndex >= dimensionSetNumber) {
+	else if (setsInCluster[setsInCluster.size() - 1] >= (*dimensionsToCalculateWith)[0]->size()) {
 		// do nothing dimensions cannot be used for this cluster
-		return;
 	}
-	minimumValues.clear();
-	meanValues.clear();
-	maximumValues.clear();
-	// there are enough sets in the dimensions to use the passed dimensions
-	// so get the data for this cluster
-	for (int i = 0; i < dimensionsToCalculateWith->size(); i++) {
-		double min = getMinimumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
-		double mean = getMeanValue((*dimensionsToCalculateWith)[i], &setsInCluster);
-		double max = getMaximumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
-		minimumValues.push_back(min);
-		meanValues.push_back(mean);
-		maximumValues.push_back(max);
+	else {
+		minimumValues.clear();
+		meanValues.clear();
+		maximumValues.clear();
+		// there are enough sets in the dimensions to use the passed dimensions
+		// so get the data for this cluster
+		for (int i = 0; i < dimensionsToCalculateWith->size(); i++) {
+			double min = getMinimumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
+			double mean = getMeanValue((*dimensionsToCalculateWith)[i], &setsInCluster);
+			double max = getMaximumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
+			minimumValues.push_back(min);
+			meanValues.push_back(mean);
+			maximumValues.push_back(max);
+		}
 	}
 }
 
@@ -298,4 +281,51 @@ std::vector<double>* SetCluster::getColor()
 	return color.getColorComponents();
 }
 
+// sets the color components of the cluster
+void SetCluster::setColor(std::vector<double>& newColor) {
+	if (newColor.size() != 4) {
+		return;
+	}
+	color.setRed(newColor[0]);
+	color.setGreen(newColor[1]);
+	color.setBlue(newColor[2]);
+	color.setAlpha(newColor[3]);
+}
 
+// sets the color components of the cluster
+void SetCluster::setColor(std::vector<double>* newColor) {
+	if (newColor == nullptr) {
+		return;
+	}
+	if (newColor->size() != 4) {
+		return;
+	}
+	color.setRed((*newColor)[0]);
+	color.setGreen((*newColor)[1]);
+	color.setBlue((*newColor)[2]);
+	color.setAlpha((*newColor)[3]);
+}
+
+// gets the radius of this cluster
+double SetCluster::getRadius() {
+	return radius;
+}
+
+// sets the radius of this cluster and returns the old one
+double SetCluster::setRadius(double newRadius) {
+	double oldRadius = radius;
+	radius = newRadius;
+	return radius;
+}
+
+// gets the original set of this cluster
+int SetCluster::getOriginalSet() {
+	return originalSet;
+}
+
+// sets the original set of this cluster and returns the old one
+int SetCluster::getOriginalSet(int newSet) {
+	int oldSet = originalSet;
+	originalSet = newSet;
+	return originalSet;
+}

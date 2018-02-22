@@ -50,6 +50,13 @@ int Dimension::getOriginalIndex() const {
 	return originalIndex;
 }
 
+// set the index of the the dimension, and returns the old index
+int Dimension::setOriginalIndex(int newIndex) {
+	int oldIndex = originalIndex;
+	originalIndex = newIndex;
+	return oldIndex;
+}
+
 // calibrate the data to the [0,1] space
 void Dimension::calibrateData() {
 	double maximum = getMaximum();
@@ -71,10 +78,10 @@ double Dimension::getData(int dataIndex) const {
 		return 0.0;
 	}
 	double dataReturn = (*data[dataIndex]).getData();
-	if (isInverted==false) {
+	dataReturn += shiftAmount;
+	if (isInverted) {
 		dataReturn = 1 - dataReturn;
 	}
-	dataReturn += shiftAmount;
 	return dataReturn;
 }
 
@@ -84,7 +91,7 @@ double Dimension::getCalibratedData(int dataIndex) const {
 		return 0.0;
 	}
 	double dataReturn = (*data[dataIndex]).getData();
-	if (isInverted==false) {
+	if (isInverted) {
 		dataReturn = 1 - dataReturn;
 	}
 	return dataReturn;
@@ -114,7 +121,8 @@ void Dimension::setData(int dataIndex, double newData) {
 	if (dataIndex >= size() || dataIndex < 0) {
 		return;
 	}
-	return (*data[dataIndex]).setData(newData);
+	(*data[dataIndex]).setData(newData);
+	//this->calibrateData();
 }
 
 
@@ -162,6 +170,11 @@ void Dimension::invertData() {
 // gets the number of sets in the dimensions
 int Dimension::size() const {
 	return data.size();
+}
+
+// returns whether there is artificial calibration or not
+bool Dimension::isArtificiallyCalibrated() {
+	return useArtificialCalibration;
 }
 
 // sets the calibration to use the data's(not the artificial) maximum and minimum

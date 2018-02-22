@@ -9,9 +9,8 @@
 class SetCluster {
 public:
 
-	// creates a blank cluster
 	SetCluster();
-	// creates a cluster of the passed color
+	// creates a blank cluster
 	SetCluster(ColorCustom &clusterColor);
 	// creates the cluster with the passed sets
 	SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInCluster);
@@ -55,6 +54,20 @@ public:
 
 	// gets the color components of the cluster
 	std::vector<double>* getColor();
+	// sets the color components of the cluster
+	void setColor(std::vector<double>& newColor);
+	// sets the color components of the cluster
+	void setColor(std::vector<double>* newColor);
+
+	// gets the radius of this cluster
+	double getRadius();
+	// sets the radius of this cluster and returns the old one
+	double setRadius(double newRadius);
+
+	// gets the original set of this cluster
+	int getOriginalSet();
+	// sets the original set of this cluster and returns the old one
+	int getOriginalSet(int newSet);
 
 private:
 	ColorCustom color;
@@ -62,6 +75,8 @@ private:
 	std::vector<double> minimumValues;
 	std::vector<double> meanValues;
 	std::vector<double> maximumValues;
+	double radius;
+	int originalSet;
 
 
 };

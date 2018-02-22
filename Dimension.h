@@ -23,6 +23,8 @@ public:
 
 	// get the index of the the dimension was created with
 	int getOriginalIndex() const;
+	// set the index of the the dimension, and returns the old index
+	int setOriginalIndex(int newIndex);
 	// calibrate the data to the [0,1] space
 	void calibrateData();
 	// gets the data for the set of the passed index(dataIndex)
@@ -55,6 +57,8 @@ public:
 
 	// gets the number of sets in the dimensions
 	int size() const;
+	// returns whether there is artificial calibration or not
+	bool isArtificiallyCalibrated();
 	// sets the calibration to use the data's(not the artificial) maximum and minimum
 	void clearArtificialCalibration();
 	// sets the bounds to be used for artificial calibration

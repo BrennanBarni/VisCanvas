@@ -22,6 +22,8 @@ Purpose: CS 481 Project
 */
 
 
+
+
 // a class to hold several sets of data and manage interactions with the data
 class DataInterface {
 public:
@@ -33,11 +35,9 @@ public:
 	~DataInterface();
 
 	// read data from the file at the passed path(filePath) and 
-	void readFile(std::string* filePath);
-
-	// saves the data to the file att the passed index
-	// warning not implemented
-	void saveData(std::string* filePath) const;
+	bool readFile(std::string* filePath);
+	// saves the data and all settings to the file at the passed location
+	bool saveToFile(std::string * filePath);
 
 	// get the amounts of class for the data
 	int getClassAmount() const;
@@ -47,6 +47,8 @@ public:
 	int getDimensionAmount() const;
 	// gets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData)
 	double getData(int setIndex, int indexOfData) const;
+	// gets the original data in the set of the passed index(setIndex), for the passed dimension(indexOfData)
+	double getOriginalData(int setIndex, int indexOfData) const;
 	// sets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData), to the passed value(newDataValue)
 	double setData(int setIndex, int indexOfData, double newDataValue);
 	// moves the dimension at the passed index(indexOfDimension) to the spot after the other index(indexBeforeInsertion)
@@ -57,7 +59,7 @@ public:
 	std::string* getDimensionName(int dimensionIndex);
 	// sets the name of the class at the passed index(classIndex) to the passed string(newName)
 	void setDimensionName(int dimensionIndex, std::string* newName);
-	/*
+
 	// sets the calibration to use the data's(not the artificial) maximum and minimum in dimension at the passed index(dimensionIndex)
 	void clearArtificialCalibration(int dimensionIndex);
 	// sets the bounds to be used for artificial calibration at the passed index(dimensionIndex)
@@ -66,7 +68,7 @@ public:
 	double getArtificialMaximum(int dimensionIndex) const;
 	// gets the artificial minimum for the dimension at the passed index(dimensionIndex)
 	double getArtificialMinimum(int dimensionIndex) const;
-	*/
+
 	// add the passed double(amountToAdd) to all the data in the dimension at the index(dimensionIndex)
 	void addToDimension(int dimensionIndex, double amountToAdd);
 
@@ -84,9 +86,9 @@ public:
 	*/
 	int getSetAmount(int classIndex) const;
 	// gets the color for the class at the passed class index
-	std::vector<double>* getColor(int classIndex);
+	std::vector<double>* getClassColor(int classIndex);
 	// sets the color for the class at the passed class index(classIndex) to the passed color(newColor)
-	void setColor(int classIndex, std::vector<double>* newColor);
+	void setClassColor(int classIndex, std::vector<double>* newColor);
 
 
 
@@ -105,6 +107,8 @@ public:
 
 	// gets the amount the dimension is shifted by
 	double getDimensionShift(int dimensionIndex);
+	// changes the shift of the dimension at the passed int to the passsed double
+	void setDimensionShift(int dimensionIndex, double shiftMod);
 
 	// gets the name of the x-axis
 	std::string* getXAxisName();
@@ -149,6 +153,11 @@ public:
 	// deletes of the note at the passed index(noteIndex)
 	void deleteNote(int noteIndex);
 
+
+
+
+
+
 	// compares the data of a each set to the set at the passed index and checks if the data is within the radius of the data of the passed set
 	void hypercube(int setIndex, double radius);
 
@@ -163,18 +172,24 @@ public:
 	// gets the color of the selected set
 	std::vector<double>* getSelectedSetColor();
 
-	// whether to paint the cluster or not
-	bool isPaintCluster() const;
-	// toggles whether to paint the cluster or not
-	bool togglePaintCluster();
+	// whether to paint the clusters or not
+	bool isPaintClusters() const;
+	// toggles whether to paint the clusters or not
+	bool togglePaintClusters();
+	// gets amount of clusters
+	int getClusterAmount();
 	// the minimum value for the cluster data
-	double getClusterMinimum(int dimensionIndex) const;
+	double getClusterMinimum(int clusterIndex, int dimensionIndex) const;
 	// the mean value for the cluster data
-	double getClusterMean(int dimensionIndex) const;
+	double getClusterMean(int clusterIndex, int dimensionIndex) const;
 	// the maximum value for the cluster data
-	double getClusterMaximum(int dimensionIndex) const;
+	double getClusterMaximum(int clusterIndex, int dimensionIndex) const;
 	// gets the color of the cluster
-	std::vector<double>* getClusterColor();
+	std::vector<double>* getClusterColor(int clusterIndex);
+	// sets the color of the cluster at the passed index
+	void setClusterColor(int clusterIndex, std::vector<double>* newColor);
+	// deletes the cluster at the passed index
+	void deleteCluster(int classIndex);
 
 private:
 	// a vector to hold the dimensions containing the data for the sets
@@ -189,9 +204,9 @@ private:
 	// a field to hold the index of the selected set
 	int selectedSetIndex;
 	// holds the graph notes
-	SetCluster cluster;
+	std::vector<SetCluster> clusters;
 	// holds the boolean of whether to paint the cluster or not
-	bool paintCluster;
+	bool paintClusters;
 
 	// holds the graph notes
 	std::vector<GraphNote> notes;
@@ -224,6 +239,9 @@ private:
 
 	// reads the contents of the file, at fileName, into a vector
 	void readCustomFile(std::vector<std::vector<std::string>*>* fileContents);
+
+	// parses a command line from a save file
+	void parseLine(std::vector<std::string>* lineTokens);
 
 	// counts the number of characters in the passed string(line) that are one of the characters in the passed vector(characters)
 	int countCharacters(vector<char>* characters, string* line);

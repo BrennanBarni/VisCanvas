@@ -27,11 +27,14 @@ namespace VisCanvas {
 			//TODO: Add the constructor code here
 			//
 			OpenGL = openGL;
-			
+
 			this->SetStyle(::ControlStyles::SupportsTransparentBackColor | ::ControlStyles::UserPaint | ::ControlStyles::AllPaintingInWmPaint | 
-                ::ControlStyles::OptimizedDoubleBuffer, 
-                true);
-		
+				::ControlStyles::OptimizedDoubleBuffer, 
+				true);
+
+			this->changedColor = false;
+			this->changedClusterColor = false;
+			this->classSetSelectedIndexChanged = false;
 		}
 
 	protected:
@@ -76,7 +79,7 @@ namespace VisCanvas {
 
 	private: System::Windows::Forms::TabPage^  tabPage3;
 	private: System::Windows::Forms::DataGridView^  dataGridView2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+
 	private: System::Windows::Forms::Label^  label9;
 	private: System::Windows::Forms::TextBox^  textBox7;
 	private: System::Windows::Forms::Label^  label10;
@@ -104,7 +107,7 @@ namespace VisCanvas {
 
 
 	private: Nevron::Nov::WinFormControls::NButtonControl^  nButtonControl3;
-	private: System::Windows::Forms::CheckBox^  checkBox1;
+
 	private: Nevron::Nov::WinFormControls::NButtonControl^  nButtonControl2;
 	private: Nevron::Nov::WinFormControls::NButtonControl^  nButtonControl1;
 	private: System::Windows::Forms::Label^  label5;
@@ -132,28 +135,36 @@ namespace VisCanvas {
 
 
 
-private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown3;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown4;
-private: System::Windows::Forms::Label^  label14;
-private: System::Windows::Forms::Panel^  panel1;
-private: System::Windows::Forms::Timer^  timer1;
-private: System::Windows::Forms::Panel^  panel2;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown5;
-private: System::Windows::Forms::Label^  label15;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown6;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown7;
-private: System::Windows::Forms::NumericUpDown^  numericUpDown8;
-private: System::Windows::Forms::Label^  label18;
-private: System::Windows::Forms::TextBox^  textBox1;
-private: System::Windows::Forms::Label^  label19;
-private: System::Windows::Forms::Label^  label20;
-private: System::Windows::Forms::Label^  label21;
-private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl2;
-private: System::Windows::Forms::Label^  label22;
-private: System::Windows::Forms::Label^  label23;
-private: System::Windows::Forms::ComboBox^  comboBox4;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown3;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown4;
+	private: System::Windows::Forms::Label^  label14;
+	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::Timer^  timer1;
+	private: System::Windows::Forms::Panel^  panel2;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown5;
+	private: System::Windows::Forms::Label^  label15;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown6;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown7;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown8;
+
+
+	private: System::Windows::Forms::Label^  label19;
+	private: System::Windows::Forms::Label^  label20;
+	private: System::Windows::Forms::Label^  label21;
+	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl2;
+	private: System::Windows::Forms::Label^  label22;
+	private: System::Windows::Forms::Label^  label23;
+	private: System::Windows::Forms::ComboBox^  comboBox4;
+	private: System::Windows::Forms::Label^  label16;
+	private: System::Windows::Forms::Timer^  timer2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+	private: System::Windows::Forms::Label^  label18;
+	private: System::Windows::Forms::Label^  label17;
+	private: System::Windows::Forms::TextBox^  textBox2;
+	private: System::Windows::Forms::TextBox^  textBox1;
+	private: System::Windows::Forms::CheckBox^  checkBox1;
 
 
 
@@ -198,6 +209,11 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->components = (gcnew System::ComponentModel::Container());
 				 System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Settings::typeid));
 				 this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+				 this->label18 = (gcnew System::Windows::Forms::Label());
+				 this->label17 = (gcnew System::Windows::Forms::Label());
+				 this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+				 this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+				 this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 				 this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
 				 this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 				 this->label9 = (gcnew System::Windows::Forms::Label());
@@ -229,7 +245,6 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->label6 = (gcnew System::Windows::Forms::Label());
 				 this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 				 this->nButtonControl3 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
-				 this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 				 this->nButtonControl2 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->nButtonControl1 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->label5 = (gcnew System::Windows::Forms::Label());
@@ -241,14 +256,13 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->classComboBox = (gcnew System::Windows::Forms::ComboBox());
 				 this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 				 this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+				 this->label16 = (gcnew System::Windows::Forms::Label());
 				 this->panel2 = (gcnew System::Windows::Forms::Panel());
 				 this->numericUpDown5 = (gcnew System::Windows::Forms::NumericUpDown());
 				 this->label15 = (gcnew System::Windows::Forms::Label());
 				 this->numericUpDown6 = (gcnew System::Windows::Forms::NumericUpDown());
 				 this->numericUpDown7 = (gcnew System::Windows::Forms::NumericUpDown());
 				 this->numericUpDown8 = (gcnew System::Windows::Forms::NumericUpDown());
-				 this->label18 = (gcnew System::Windows::Forms::Label());
-				 this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 				 this->label19 = (gcnew System::Windows::Forms::Label());
 				 this->label20 = (gcnew System::Windows::Forms::Label());
 				 this->label21 = (gcnew System::Windows::Forms::Label());
@@ -260,6 +274,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl11 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->nButtonControl12 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
+				 this->timer2 = (gcnew System::Windows::Forms::Timer(this->components));
 				 this->tabPage3->SuspendLayout();
 				 (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->BeginInit();
 				 this->tabPage1->SuspendLayout();
@@ -279,6 +294,11 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // tabPage3
 				 // 
 				 this->tabPage3->BackColor = System::Drawing::Color::LightGray;
+				 this->tabPage3->Controls->Add(this->label18);
+				 this->tabPage3->Controls->Add(this->label17);
+				 this->tabPage3->Controls->Add(this->textBox2);
+				 this->tabPage3->Controls->Add(this->textBox1);
+				 this->tabPage3->Controls->Add(this->checkBox1);
 				 this->tabPage3->Controls->Add(this->dataGridView2);
 				 this->tabPage3->Controls->Add(this->label9);
 				 this->tabPage3->Controls->Add(this->textBox7);
@@ -295,6 +315,58 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->tabPage3->Text = L"Dimension";
 				 this->tabPage3->Click += gcnew System::EventHandler(this, &Settings::tabPage3_Click);
 				 // 
+				 // label18
+				 // 
+				 this->label18->AutoSize = true;
+				 this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
+				 this->label18->Location = System::Drawing::Point(165, 127);
+				 this->label18->Name = L"label18";
+				 this->label18->Size = System::Drawing::Size(38, 15);
+				 this->label18->TabIndex = 44;
+				 this->label18->Text = L"Max:";
+				 this->label18->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
+				 // 
+				 // label17
+				 // 
+				 this->label17->AutoSize = true;
+				 this->label17->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
+				 this->label17->Location = System::Drawing::Point(101, 127);
+				 this->label17->Name = L"label17";
+				 this->label17->Size = System::Drawing::Size(35, 15);
+				 this->label17->TabIndex = 43;
+				 this->label17->Text = L"Min:";
+				 this->label17->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
+				 // 
+				 // textBox2
+				 // 
+				 this->textBox2->Enabled = false;
+				 this->textBox2->Location = System::Drawing::Point(168, 145);
+				 this->textBox2->Name = L"textBox2";
+				 this->textBox2->Size = System::Drawing::Size(52, 20);
+				 this->textBox2->TabIndex = 42;
+				 this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+				 this->textBox2->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Settings::textBox2_KeyPress_State);
+				 // 
+				 // textBox1
+				 // 
+				 this->textBox1->Enabled = false;
+				 this->textBox1->Location = System::Drawing::Point(104, 145);
+				 this->textBox1->Name = L"textBox1";
+				 this->textBox1->Size = System::Drawing::Size(52, 20);
+				 this->textBox1->TabIndex = 41;
+				 this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+				 this->textBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Settings::textBox1_KeyPress_State);
+				 // 
+				 // checkBox1
+				 // 
+				 this->checkBox1->AutoSize = true;
+				 this->checkBox1->Location = System::Drawing::Point(80, 145);
+				 this->checkBox1->Name = L"checkBox1";
+				 this->checkBox1->Size = System::Drawing::Size(15, 14);
+				 this->checkBox1->TabIndex = 40;
+				 this->checkBox1->UseVisualStyleBackColor = true;
+				 this->checkBox1->CheckedChanged += gcnew System::EventHandler(this, &Settings::checkedDimension_State);
+				 // 
 				 // dataGridView2
 				 // 
 				 this->dataGridView2->AllowUserToAddRows = false;
@@ -302,10 +374,10 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->dataGridView2->AllowUserToResizeColumns = false;
 				 this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 				 this->dataGridView2->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) {this->dataGridViewTextBoxColumn1});
-				 this->dataGridView2->Location = System::Drawing::Point(105, 147);
+				 this->dataGridView2->Location = System::Drawing::Point(104, 182);
 				 this->dataGridView2->Name = L"dataGridView2";
 				 this->dataGridView2->RowHeadersVisible = false;
-				 this->dataGridView2->Size = System::Drawing::Size(116, 179);
+				 this->dataGridView2->Size = System::Drawing::Size(116, 154);
 				 this->dataGridView2->TabIndex = 39;
 				 // 
 				 // dataGridViewTextBoxColumn1
@@ -314,13 +386,14 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->dataGridViewTextBoxColumn1->HeaderText = L"Data";
 				 this->dataGridViewTextBoxColumn1->MinimumWidth = 113;
 				 this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
+				 this->dataGridViewTextBoxColumn1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
 				 this->dataGridViewTextBoxColumn1->Width = 113;
 				 // 
 				 // label9
 				 // 
 				 this->label9->AutoSize = true;
 				 this->label9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label9->Location = System::Drawing::Point(60, 82);
+				 this->label9->Location = System::Drawing::Point(60, 77);
 				 this->label9->Name = L"label9";
 				 this->label9->Size = System::Drawing::Size(102, 15);
 				 this->label9->TabIndex = 38;
@@ -329,7 +402,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 // textBox7
 				 // 
-				 this->textBox7->Location = System::Drawing::Point(63, 100);
+				 this->textBox7->Location = System::Drawing::Point(63, 95);
 				 this->textBox7->Name = L"textBox7";
 				 this->textBox7->Size = System::Drawing::Size(202, 20);
 				 this->textBox7->TabIndex = 37;
@@ -338,7 +411,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 this->label10->AutoSize = true;
 				 this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label10->Location = System::Drawing::Point(60, 26);
+				 this->label10->Location = System::Drawing::Point(60, 21);
 				 this->label10->Name = L"label10";
 				 this->label10->Size = System::Drawing::Size(49, 15);
 				 this->label10->TabIndex = 36;
@@ -348,7 +421,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 this->comboBox3->FormattingEnabled = true;
 				 this->comboBox3->ItemHeight = 13;
-				 this->comboBox3->Location = System::Drawing::Point(63, 44);
+				 this->comboBox3->Location = System::Drawing::Point(63, 39);
 				 this->comboBox3->Name = L"comboBox3";
 				 this->comboBox3->Size = System::Drawing::Size(202, 21);
 				 this->comboBox3->TabIndex = 35;
@@ -363,6 +436,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl7->Name = L"nButtonControl7";
 				 this->nButtonControl7->Size = System::Drawing::Size(56, 23);
 				 this->nButtonControl7->TabIndex = 26;
+				 this->nButtonControl7->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl7_Click);
 				 // 
 				 // nButtonControl8
 				 // 
@@ -382,6 +456,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl9->Name = L"nButtonControl9";
 				 this->nButtonControl9->Size = System::Drawing::Size(45, 23);
 				 this->nButtonControl9->TabIndex = 24;
+				 this->nButtonControl9->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl9_Click);
 				 // 
 				 // tabPage1
 				 // 
@@ -422,6 +497,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->comboBox1->Size = System::Drawing::Size(202, 21);
 				 this->comboBox1->TabIndex = 34;
 				 this->comboBox1->Text = L"select...";
+				 this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &Settings::setClass_SelectedIndex_Change);
 				 // 
 				 // label7
 				 // 
@@ -460,6 +536,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->comboBox2->Size = System::Drawing::Size(202, 21);
 				 this->comboBox2->TabIndex = 29;
 				 this->comboBox2->Text = L"select...";
+				 this->comboBox2->SelectedIndexChanged += gcnew System::EventHandler(this, &Settings::setSetIndexChanged_ChangeEvent);
 				 // 
 				 // nButtonControl4
 				 // 
@@ -469,6 +546,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl4->Name = L"nButtonControl4";
 				 this->nButtonControl4->Size = System::Drawing::Size(56, 23);
 				 this->nButtonControl4->TabIndex = 26;
+				 this->nButtonControl4->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl4_Click);
 				 // 
 				 // nButtonControl5
 				 // 
@@ -488,6 +566,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl6->Name = L"nButtonControl6";
 				 this->nButtonControl6->Size = System::Drawing::Size(45, 23);
 				 this->nButtonControl6->TabIndex = 24;
+				 this->nButtonControl6->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl6_Click);
 				 // 
 				 // tabPage2
 				 // 
@@ -503,7 +582,6 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->tabPage2->Controls->Add(this->label6);
 				 this->tabPage2->Controls->Add(this->textBox5);
 				 this->tabPage2->Controls->Add(this->nButtonControl3);
-				 this->tabPage2->Controls->Add(this->checkBox1);
 				 this->tabPage2->Controls->Add(this->nButtonControl2);
 				 this->tabPage2->Controls->Add(this->nButtonControl1);
 				 this->tabPage2->Controls->Add(this->label5);
@@ -633,17 +711,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl3->Name = L"nButtonControl3";
 				 this->nButtonControl3->Size = System::Drawing::Size(56, 23);
 				 this->nButtonControl3->TabIndex = 23;
-				 // 
-				 // checkBox1
-				 // 
-				 this->checkBox1->AutoSize = true;
-				 this->checkBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->checkBox1->Location = System::Drawing::Point(18, 42);
-				 this->checkBox1->Name = L"checkBox1";
-				 this->checkBox1->Size = System::Drawing::Size(15, 14);
-				 this->checkBox1->TabIndex = 22;
-				 this->checkBox1->UseVisualStyleBackColor = true;
-				 this->checkBox1->CheckedChanged += gcnew System::EventHandler(this, &Settings::checkBox1_CheckedChanged);
+				 this->nButtonControl3->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl3_Click);
 				 // 
 				 // nButtonControl2
 				 // 
@@ -752,14 +820,13 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // tabPage4
 				 // 
 				 this->tabPage4->BackColor = System::Drawing::Color::LightGray;
+				 this->tabPage4->Controls->Add(this->label16);
 				 this->tabPage4->Controls->Add(this->panel2);
 				 this->tabPage4->Controls->Add(this->numericUpDown5);
 				 this->tabPage4->Controls->Add(this->label15);
 				 this->tabPage4->Controls->Add(this->numericUpDown6);
 				 this->tabPage4->Controls->Add(this->numericUpDown7);
 				 this->tabPage4->Controls->Add(this->numericUpDown8);
-				 this->tabPage4->Controls->Add(this->label18);
-				 this->tabPage4->Controls->Add(this->textBox1);
 				 this->tabPage4->Controls->Add(this->label19);
 				 this->tabPage4->Controls->Add(this->label20);
 				 this->tabPage4->Controls->Add(this->label21);
@@ -778,30 +845,44 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->tabPage4->Text = L"Cluster";
 				 this->tabPage4->Click += gcnew System::EventHandler(this, &Settings::tabPage4_Click);
 				 // 
+				 // label16
+				 // 
+				 this->label16->AutoSize = true;
+				 this->label16->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 6.5F, System::Drawing::FontStyle::Bold));
+				 this->label16->Location = System::Drawing::Point(253, 42);
+				 this->label16->Name = L"label16";
+				 this->label16->Size = System::Drawing::Size(12, 12);
+				 this->label16->TabIndex = 59;
+				 this->label16->Text = L"X";
+				 this->label16->Click += gcnew System::EventHandler(this, &Settings::label16_Click);
+				 this->label16->MouseLeave += gcnew System::EventHandler(this, &Settings::removeCluster_Leave);
+				 this->label16->MouseHover += gcnew System::EventHandler(this, &Settings::removeCluster_Hover);
+				 // 
 				 // panel2
 				 // 
 				 this->panel2->BackColor = System::Drawing::Color::Black;
 				 this->panel2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
-				 this->panel2->Location = System::Drawing::Point(37, 297);
+				 this->panel2->Location = System::Drawing::Point(37, 252);
 				 this->panel2->Name = L"panel2";
 				 this->panel2->Size = System::Drawing::Size(187, 29);
 				 this->panel2->TabIndex = 58;
 				 // 
 				 // numericUpDown5
 				 // 
-				 this->numericUpDown5->Location = System::Drawing::Point(267, 275);
+				 this->numericUpDown5->Location = System::Drawing::Point(267, 230);
 				 this->numericUpDown5->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
 				 this->numericUpDown5->Name = L"numericUpDown5";
 				 this->numericUpDown5->Size = System::Drawing::Size(47, 20);
 				 this->numericUpDown5->TabIndex = 57;
 				 this->numericUpDown5->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
 				 this->numericUpDown5->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
+				 this->numericUpDown5->ValueChanged += gcnew System::EventHandler(this, &Settings::numericUpDown5_ValueChanged);
 				 // 
 				 // label15
 				 // 
 				 this->label15->AutoSize = true;
 				 this->label15->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9));
-				 this->label15->Location = System::Drawing::Point(242, 276);
+				 this->label15->Location = System::Drawing::Point(242, 231);
 				 this->label15->Name = L"label15";
 				 this->label15->Size = System::Drawing::Size(17, 15);
 				 this->label15->TabIndex = 56;
@@ -809,54 +890,39 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 // numericUpDown6
 				 // 
-				 this->numericUpDown6->Location = System::Drawing::Point(267, 232);
+				 this->numericUpDown6->Location = System::Drawing::Point(267, 187);
 				 this->numericUpDown6->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
 				 this->numericUpDown6->Name = L"numericUpDown6";
 				 this->numericUpDown6->Size = System::Drawing::Size(47, 20);
 				 this->numericUpDown6->TabIndex = 55;
 				 this->numericUpDown6->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+				 this->numericUpDown6->ValueChanged += gcnew System::EventHandler(this, &Settings::numericUpDown6_ValueChanged);
 				 // 
 				 // numericUpDown7
 				 // 
-				 this->numericUpDown7->Location = System::Drawing::Point(267, 190);
+				 this->numericUpDown7->Location = System::Drawing::Point(267, 145);
 				 this->numericUpDown7->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
 				 this->numericUpDown7->Name = L"numericUpDown7";
 				 this->numericUpDown7->Size = System::Drawing::Size(47, 20);
 				 this->numericUpDown7->TabIndex = 54;
 				 this->numericUpDown7->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
+				 this->numericUpDown7->ValueChanged += gcnew System::EventHandler(this, &Settings::numericUpDown7_ValueChanged);
 				 // 
 				 // numericUpDown8
 				 // 
-				 this->numericUpDown8->Location = System::Drawing::Point(267, 148);
+				 this->numericUpDown8->Location = System::Drawing::Point(267, 103);
 				 this->numericUpDown8->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {255, 0, 0, 0});
 				 this->numericUpDown8->Name = L"numericUpDown8";
 				 this->numericUpDown8->Size = System::Drawing::Size(47, 20);
 				 this->numericUpDown8->TabIndex = 53;
 				 this->numericUpDown8->TextAlign = System::Windows::Forms::HorizontalAlignment::Right;
-				 // 
-				 // label18
-				 // 
-				 this->label18->AutoSize = true;
-				 this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label18->Location = System::Drawing::Point(34, 76);
-				 this->label18->Name = L"label18";
-				 this->label18->Size = System::Drawing::Size(102, 15);
-				 this->label18->TabIndex = 50;
-				 this->label18->Text = L"Change Name:";
-				 this->label18->TextAlign = System::Drawing::ContentAlignment::MiddleRight;
-				 // 
-				 // textBox1
-				 // 
-				 this->textBox1->Location = System::Drawing::Point(37, 96);
-				 this->textBox1->Name = L"textBox1";
-				 this->textBox1->Size = System::Drawing::Size(202, 20);
-				 this->textBox1->TabIndex = 49;
+				 this->numericUpDown8->ValueChanged += gcnew System::EventHandler(this, &Settings::numericUpDown8_ValueChanged);
 				 // 
 				 // label19
 				 // 
 				 this->label19->AutoSize = true;
 				 this->label19->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9));
-				 this->label19->Location = System::Drawing::Point(242, 232);
+				 this->label19->Location = System::Drawing::Point(242, 187);
 				 this->label19->Name = L"label19";
 				 this->label19->Size = System::Drawing::Size(18, 15);
 				 this->label19->TabIndex = 48;
@@ -866,7 +932,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 this->label20->AutoSize = true;
 				 this->label20->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9));
-				 this->label20->Location = System::Drawing::Point(242, 190);
+				 this->label20->Location = System::Drawing::Point(242, 145);
 				 this->label20->Name = L"label20";
 				 this->label20->Size = System::Drawing::Size(19, 15);
 				 this->label20->TabIndex = 47;
@@ -876,7 +942,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 this->label21->AutoSize = true;
 				 this->label21->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9));
-				 this->label21->Location = System::Drawing::Point(242, 149);
+				 this->label21->Location = System::Drawing::Point(242, 104);
 				 this->label21->Name = L"label21";
 				 this->label21->Size = System::Drawing::Size(19, 15);
 				 this->label21->TabIndex = 46;
@@ -886,16 +952,17 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 // 
 				 this->nHsbColorPickerControl2->AutoSize = false;
 				 this->nHsbColorPickerControl2->DesignTimeState = nullptr;
-				 this->nHsbColorPickerControl2->Location = System::Drawing::Point(37, 148);
+				 this->nHsbColorPickerControl2->Location = System::Drawing::Point(37, 103);
 				 this->nHsbColorPickerControl2->Name = L"nHsbColorPickerControl2";
 				 this->nHsbColorPickerControl2->Size = System::Drawing::Size(187, 147);
 				 this->nHsbColorPickerControl2->TabIndex = 45;
+				 this->nHsbColorPickerControl2->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &Settings::nHsbColorPickerControl2_SelectedColorChanged);
 				 // 
 				 // label22
 				 // 
 				 this->label22->AutoSize = true;
 				 this->label22->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label22->Location = System::Drawing::Point(34, 130);
+				 this->label22->Location = System::Drawing::Point(34, 85);
 				 this->label22->Name = L"label22";
 				 this->label22->Size = System::Drawing::Size(45, 15);
 				 this->label22->TabIndex = 44;
@@ -929,6 +996,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl10->Name = L"nButtonControl10";
 				 this->nButtonControl10->Size = System::Drawing::Size(56, 23);
 				 this->nButtonControl10->TabIndex = 41;
+				 this->nButtonControl10->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl10_Click);
 				 // 
 				 // nButtonControl11
 				 // 
@@ -938,6 +1006,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl11->Name = L"nButtonControl11";
 				 this->nButtonControl11->Size = System::Drawing::Size(49, 23);
 				 this->nButtonControl11->TabIndex = 40;
+				 this->nButtonControl11->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl11_Click);
 				 // 
 				 // nButtonControl12
 				 // 
@@ -947,12 +1016,19 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->nButtonControl12->Name = L"nButtonControl12";
 				 this->nButtonControl12->Size = System::Drawing::Size(45, 23);
 				 this->nButtonControl12->TabIndex = 39;
+				 this->nButtonControl12->Click += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NEventArgs^ >(this, &Settings::nButtonControl12_Click);
 				 // 
 				 // timer1
 				 // 
 				 this->timer1->Enabled = true;
 				 this->timer1->Interval = 20;
 				 this->timer1->Tick += gcnew System::EventHandler(this, &Settings::timer1_Tick);
+				 // 
+				 // timer2
+				 // 
+				 this->timer2->Enabled = true;
+				 this->timer2->Interval = 20;
+				 this->timer2->Tick += gcnew System::EventHandler(this, &Settings::timer2_Tick);
 				 // 
 				 // Settings
 				 // 
@@ -999,8 +1075,10 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 	private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 			 }
 
+			 // Class tab OK button
 	private: System::Void nButtonControl1_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
-
+				 this->applyClass();
+				 this->Close();
 			 }
 
 	private: System::Void redBox(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
@@ -1023,7 +1101,7 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 
 	private: System::Void nHsbColorPickerControl1_SelectedColorChanged(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
 				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
-				
+
 				 // get the values of the color from the palette
 				 int r = selectedColor.R; // red
 				 int g = selectedColor.G; // green
@@ -1034,31 +1112,38 @@ private: System::Windows::Forms::ComboBox^  comboBox4;
 				 this->numericUpDown2->Value = g;
 				 this->numericUpDown3->Value = b;	
 
+				 this->changedColor = true;
+
 			 }
 
 	private:
 
 		/* Converts from System::String^ to std::string */
-		std::string toStandardString(System::String^ str)
+		std::string *toStandardString(System::String^ str)
 		{
 			const char* location = (const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( str ).ToPointer();
-			std::string temp(location);
+			std::string *temp = new std::string(location);
 			/* Clean up the const char* location memory */
 			System::Runtime::InteropServices::Marshal::FreeHGlobal(IntPtr((void*)location));
 			return temp;
 		}	
+
+
 	private: System::Void comboBox3_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-				/*cli::array<System::Object^>^ item = gcnew cli::array<System::Object^>(OpenGL->getDimensionAmount());
-				for (int i = 0; i < OpenGL->getDimensionAmount(); i++) {
-					System::String^ mString = gcnew System::String(OpenGL->getDimensionName(i));
-					item[i] = (Object^)mString;
-				}
-				this->comboBox3->Items->AddRange( item );*/
+				 /*cli::array<System::Object^>^ item = gcnew cli::array<System::Object^>(OpenGL->getDimensionAmount());
+				 for (int i = 0; i < OpenGL->getDimensionAmount(); i++) {
+				 System::String^ mString = gcnew System::String(OpenGL->getDimensionName(i));
+				 item[i] = (Object^)mString;
+				 }
+				 this->comboBox3->Items->AddRange( item );*/
 			 }
-private: System::Void classComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-			 
-		 }
-private: System::Void Settings_Load(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void classComboBox_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+				 if (OpenGL->uploadedFile()) {
+					 System::String^ temp = gcnew System::String((*OpenGL->getClassName(this->classComboBox->SelectedIndex)).c_str());
+					 this->textBox5->Text = temp;
+				 }
+			 }
+	private: System::Void Settings_Load(System::Object^  sender, System::EventArgs^  e) {
 
 				 System::Windows::Forms::ToolTip^ toolTip = gcnew System::Windows::Forms::ToolTip;
 				 // Set up the delays for the ToolTip.
@@ -1071,145 +1156,474 @@ private: System::Void Settings_Load(System::Object^  sender, System::EventArgs^ 
 				 // Set up the ToolTip text for the Button and Checkbox.
 				 toolTip->SetToolTip(this->label12, "Remove");
 				 toolTip->SetToolTip(this->label13, "Add");
+				 // class tab
 				 toolTip->SetToolTip(this->label3, "Red");
 				 toolTip->SetToolTip(this->label4, "Green");
 				 toolTip->SetToolTip(this->label5, "Blue");
 				 toolTip->SetToolTip(this->label14, "Alpha");
-				 toolTip->SetToolTip(this->checkBox1, "Visible");
-				 
-				loadClass();
+				 // cluster tab
+				 toolTip->SetToolTip(this->label21, "Red");
+				 toolTip->SetToolTip(this->label20, "Green");
+				 toolTip->SetToolTip(this->label19, "Blue");
+				 toolTip->SetToolTip(this->label15, "Alpha");
+				 // tooltip for cluster tab
+				 toolTip->SetToolTip(this->label16, "Remove");
+				 // tooltips for dimension tab
+				 toolTip->SetToolTip(this->label17, "Minimum");
+				 toolTip->SetToolTip(this->label18, "Maximum");
 
-				// Setup of the sets
-				cli::array<System::Object^>^ item2 = gcnew cli::array<System::Object^>(OpenGL->getSetAmount());
-				for (int i = 0; i < OpenGL->getSetAmount(); i++) {
-					System::String^ mString = gcnew System::String((*OpenGL->getSetName(i)).c_str());
-					item2[i] = (Object^)mString;
-				}				
-				this->comboBox2->Items->AddRange( item2 ); // set the combobox to the data in items2
+				 if (OpenGL->uploadedFile()) { 
 
-				// Setup of the dimensions
-				cli::array<System::Object^>^ item3 = gcnew cli::array<System::Object^>(OpenGL->getDimensionAmount());
-				for (int i = 0; i < OpenGL->getDimensionAmount(); i++) {
-					System::String^ mString = gcnew System::String((*OpenGL->getDimensionName(i)).c_str());
-					item3[i] = (Object^)mString;
-				}				
-				this->comboBox3->Items->AddRange( item3 ); // set the combobox to the data in items3
+					 // initially loads the data for the classes
+					 this->loadClass();
+					 this->loadSet();
+					 this->loadDimensions();
+					 this->loadClusters();
 
-		 }
-private: System::Void checkBox1_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+					 // show default the first element in each combobox
+					 this->classComboBox->SelectedIndex = 0; 
 
-		 }
-private: System::Void tabPage3_Click(System::Object^  sender, System::EventArgs^  e) {
-		 }
-private: System::Void numericUpDown1_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;
-			 
-			 // set the textbox back color
-			// this->panel1->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b);
-			 OpenGL->SetRGB((GLdouble)r, (GLdouble)g, (GLdouble)b);
-		 }
-private: System::Void numericUpDown2_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;
+					 if(this->comboBox2->Items->Count > 0) {
+						 this->comboBox2->SelectedIndex = 0; 
+						 if (this->comboBox1->Items->Count > 0) {
+							 this->comboBox1->SelectedIndex = OpenGL->getClassOfSet(this->comboBox2->SelectedIndex);
+						 }
+					 }
+					 if (this->comboBox3->Items->Count > 0) {
+						 this->comboBox3->SelectedIndex = 0;
+					 }
+					 if (this->comboBox4->Items->Count > 0) {
+						 this->comboBox4->SelectedIndex = 0;
+					 }
 
-		 }
-private: System::Void numericUpDown3_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;	 
-		}
-private: System::Void numericUpDown4_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;	
-		 }
-
-private: System::Void changePanelColor(System::Object^  sender, System::EventArgs^  e) {
-			/* System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;
-			 this->panel1->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b); */
-
-		 }
-private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;
-			 this->panel1->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b);
-
-		 }
-
-private: System::Void label13_Click(System::Object^  sender, System::EventArgs^  e) {
-
-			 OpenGL->addClass();
-			 this->loadClass();
-
-		 }
-private: System::Void classAddHover(System::Object^  sender, System::EventArgs^  e) {
-			 this->label13->ForeColor = System::Drawing::Color::FromArgb((int)45, (int)200, (int)0); // somewhat dark green
-		 }
-		
-private: System::Void classAddLeave(System::Object^  sender, System::EventArgs^  e) {
-			 this->label13->ForeColor = System::Drawing::Color::Black;
-		 }
-private: System::Void classRemoveHover(System::Object^  sender, System::EventArgs^  e) {
-			this->label12->ForeColor = System::Drawing::Color::FromArgb((int)200, (int)0, (int)0); // somewhat dark green
-
-		 }
-
-private: System::Void classRemoveLeave(System::Object^  sender, System::EventArgs^  e) {
-			this->label12->ForeColor = System::Drawing::Color::Black;
-		 }
+				 }
+			 }
 
 
+	private: System::Void checkBox1_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+
+			 }
+	private: System::Void tabPage3_Click(System::Object^  sender, System::EventArgs^  e) {
+			 }
+	private: System::Void numericUpDown1_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;
+
+				 this->changedColor = true;
+			 }
+	private: System::Void numericUpDown2_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;
+
+				 this->changedColor = true;
+			 }
+	private: System::Void numericUpDown3_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;
+
+				 this->changedColor = true;
+			 }
+	private: System::Void numericUpDown4_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;	
+
+				 this->changedColor = true;
+			 }
+
+	private: System::Void changePanelColor(System::Object^  sender, System::EventArgs^  e) {
+				 /* System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;
+				 this->panel1->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b); */
+
+			 }
+	private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown1->Value;
+				 System::Decimal g = this->numericUpDown2->Value;
+				 System::Decimal b = this->numericUpDown3->Value;
+				 System::Decimal a = this->numericUpDown4->Value;
+				 this->panel1->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b);
+
+			 }
+
+	private: System::Void label13_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if (OpenGL->uploadedFile()) {
+					 OpenGL->addClass();
+					 this->loadClass();
+					 this->classComboBox->SelectedIndex = this->classComboBox->Items->Count - 1; // set it to the last index and shows it
+					 System::String^ temp = gcnew System::String((*OpenGL->getClassName(this->classComboBox->Items->Count - 1)).c_str());
+					 this->textBox5->Text = temp;
+				 }
+			 }
+	private: System::Void classAddHover(System::Object^  sender, System::EventArgs^  e) {
+				 this->label13->ForeColor = System::Drawing::Color::FromArgb((int)45, (int)200, (int)0); // somewhat dark green
+			 }
+
+	private: System::Void classAddLeave(System::Object^  sender, System::EventArgs^  e) {
+				 this->label13->ForeColor = System::Drawing::Color::Black;
+			 }
+	private: System::Void classRemoveHover(System::Object^  sender, System::EventArgs^  e) {
+				 this->label12->ForeColor = System::Drawing::Color::FromArgb((int)200, (int)0, (int)0); // somewhat dark green
+
+			 }
+
+	private: System::Void classRemoveLeave(System::Object^  sender, System::EventArgs^  e) {
+				 this->label12->ForeColor = System::Drawing::Color::Black;
+			 }
 
 
-	
 	protected:
-		
+		bool changedColor;
 		System::Void applyClass(System::Void) {
-						
-			loadClass();	
 
-			 System::Decimal r = this->numericUpDown1->Value;
-			 System::Decimal g = this->numericUpDown2->Value;
-			 System::Decimal b = this->numericUpDown3->Value;
-			 System::Decimal a = this->numericUpDown4->Value;
-			 OpenGL->SetRGB((GLdouble)r, (GLdouble)g, (GLdouble)b);
+			if (OpenGL->uploadedFile()) {
+				std::string *className = this->toStandardString(this->textBox5->Text);
 
+				int currentIndex = this->classComboBox->SelectedIndex;
+
+				if (!className->empty()) {
+					OpenGL->setClassName(currentIndex, className);
+					this->loadClass();
+					this->classComboBox->SelectedIndex = currentIndex;
+				}
+
+				double r = System::Decimal::ToDouble(this->numericUpDown1->Value);
+				double g = System::Decimal::ToDouble(this->numericUpDown2->Value);
+				double b = System::Decimal::ToDouble(this->numericUpDown3->Value);
+				double a = System::Decimal::ToDouble(this->numericUpDown4->Value);
+
+				if (this->changedColor) {
+					std::vector<double> *color = new std::vector<double>(4);
+					(*color)[0] = r / 255.0;
+					(*color)[1] = g / 255.0;
+					(*color)[2] = b / 255.0;
+					(*color)[3] = a / 255.0;
+					OpenGL->setClassColor(currentIndex, color);
+					this->changedColor = false;
+					delete color;
+				}
+
+				OpenGL->setAppliedClassChanges(true);
+				delete className;
+			}
 		}
 
+		bool classSetSelectedIndexChanged;
+		System::Void applySet(System::Void)
+		{
+			if (OpenGL->uploadedFile()) {
+				std::string *setName = this->toStandardString(this->textBox6->Text);
+				int currentIndex = this->comboBox2->SelectedIndex;
+				int currentSetIndex = this->comboBox1->SelectedIndex;
+				if (currentSetIndex == -1) {
+					currentSetIndex++;
+				}
+				if (!setName->empty()) {
+					OpenGL->setSetName(currentIndex, *setName);
+					this->loadSet();
+					this->comboBox2->SelectedIndex = currentIndex;		
+				}	
+
+				if (this->classSetSelectedIndexChanged){
+					OpenGL->setSetClass(currentIndex, currentSetIndex);
+					this->comboBox1->SelectedIndex = currentSetIndex;
+					this->classSetSelectedIndexChanged = false;
+				}
+
+				delete setName;
+
+			}
+		}
+
+		System::Void applyDimension(System::Void) {
+			if (OpenGL->uploadedFile()) {
+				std::string *dimensionName = this->toStandardString(this->textBox7->Text);
+				int currentIndex = this->comboBox3->SelectedIndex;
+				if (!dimensionName->empty()) {
+					OpenGL->setDimensionName(currentIndex, dimensionName);
+					this->loadDimensions();
+				}
+				this->comboBox3->SelectedIndex = currentIndex;
+				delete dimensionName;
+
+			}
+		}
+		bool changedClusterColor;
+		System::Void applyCluster(System::Void) {
+			if (OpenGL->uploadedFile()) {
+
+				double r = System::Decimal::ToDouble(this->numericUpDown8->Value);
+				double g = System::Decimal::ToDouble(this->numericUpDown7->Value);
+				double b = System::Decimal::ToDouble(this->numericUpDown6->Value);
+				double a = System::Decimal::ToDouble(this->numericUpDown5->Value);
+
+				if (this->changedClusterColor) {
+					std::vector<double> *color = new std::vector<double>(4);
+					(*color)[0] = r / 255.0;
+					(*color)[1] = g / 255.0;
+					(*color)[2] = b / 255.0;
+					(*color)[3] = a / 255.0;
+					OpenGL->setClusterColor(this->comboBox4->SelectedIndex, color);
+					this->changedClusterColor = false;
+					delete color;
+				}
+			}
+		}
 
 		System::Void loadClass(System::Void) {
 			// clear the list to prevent duplicates on update
 			this->classComboBox->Items->Clear();
 			this->comboBox1->Items->Clear();
 			// Setup of the classes
-				cli::array<System::Object^>^ item1 = gcnew cli::array<System::Object^>(OpenGL->getClassAmount());
-				for (int i = 0; i < OpenGL->getClassAmount(); i++) {
-					System::String^ mString = gcnew System::String((*OpenGL->getClassName(i)).c_str());
-					item1[i] = (Object^)mString;
-				}	
-				this->classComboBox->Items->AddRange( item1 ); // set the combobox for "Class tab" to the data in item1 
-				this->comboBox1->Items->AddRange( item1 ); // set the combobox for class assignment in "Set tab" to the data in item1
+			cli::array<System::Object^>^ item1 = gcnew cli::array<System::Object^>(OpenGL->getClassAmount());
+			for (int i = 0; i < OpenGL->getClassAmount(); i++) {
+				System::String^ mString = gcnew System::String((*OpenGL->getClassName(i)).c_str());
+				item1[i] = (Object^)mString;
+			}	
+			this->classComboBox->Items->AddRange( item1 ); // set the combobox for "Class tab" to the data in item1 
+			this->comboBox1->Items->AddRange( item1 ); // set the combobox for class assignment in "Set tab" to the data in item1
+		}
+
+		System::Void loadSet(System::Void)
+		{
+			// clear the list to prevent duplicates
+			this->comboBox2->Items->Clear();
+
+			// Setup of the sets
+			cli::array<System::Object^>^ item2 = gcnew cli::array<System::Object^>(OpenGL->getSetAmount());
+			for (int i = 0; i < OpenGL->getSetAmount(); i++) {
+				System::String^ mString = gcnew System::String((*OpenGL->getSetName(i)).c_str());
+				item2[i] = (Object^)mString;
+			}				
+			this->comboBox2->Items->AddRange( item2 ); // set the combobox to the data in items2
+		}
+
+		System::Void loadDimensions(System::Void)
+		{
+			// clear the list to prevent duplicates
+			this->comboBox3->Items->Clear();
+
+			// Setup of the dimensions
+			cli::array<System::Object^>^ item3 = gcnew cli::array<System::Object^>(OpenGL->getDimensionAmount());
+			for (int i = 0; i < OpenGL->getDimensionAmount(); i++) {
+				System::String^ mString = gcnew System::String((*OpenGL->getDimensionName(i)).c_str());
+				item3[i] = (Object^)mString;
+			}				
+			this->comboBox3->Items->AddRange( item3 ); // set the combobox to the data in items3
+		}
+
+		System::Void loadClusters(System::Void)
+		{
+			// clear the list to prevent errors
+			this->comboBox4->Items->Clear();
+
+			// Setup of the dimensions
+			cli::array<System::Object^>^ item4 = gcnew cli::array<System::Object^>(OpenGL->getClusterAmount());
+			for (int i = 0; i < OpenGL->getClusterAmount(); i++) {
+				System::String^ mString = gcnew System::String("" + i);
+				item4[i] = (Object^)mString;
+			}				
+			this->comboBox4->Items->AddRange( item4 ); // set the combobox to the data in items3
 		}
 
 
-		
-private: System::Void tabPage4_Click(System::Object^  sender, System::EventArgs^  e) {
-		 }
-private: System::Void label12_Click(System::Object^  sender, System::EventArgs^  e) {
-			 OpenGL->removeClass(this->classComboBox->SelectedIndex);
-			 this->loadClass();
-		 }
-};
+
+
+
+	private: System::Void tabPage4_Click(System::Object^  sender, System::EventArgs^  e) {
+			 }
+	private: System::Void label12_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if (OpenGL->uploadedFile()) {
+					 int currentIndex = this->classComboBox->SelectedIndex;
+					 if (currentIndex > 0) {
+						 OpenGL->removeClass(this->classComboBox->SelectedIndex);
+						 this->loadClass();
+						 if (currentIndex < OpenGL->getClassAmount()) {
+							 this->classComboBox->SelectedIndex = currentIndex; // set it to the last index and shows it
+							 System::String^ temp = gcnew System::String((*OpenGL->getClassName(currentIndex)).c_str());
+							 this->textBox5->Text = temp;
+						 } else if (currentIndex == OpenGL->getClassAmount()) {
+							 this->classComboBox->SelectedIndex = currentIndex - 1; // set it to the last index and shows it
+							 System::String^ temp = gcnew System::String((*OpenGL->getClassName(currentIndex - 1)).c_str());
+							 this->textBox5->Text = temp;
+						 } else {
+							 // do nothing
+						 }
+					 }
+				 }
+			 }
+	private: System::Void nButtonControl3_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applyClass();
+			 }
+	private: System::Void label16_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if (OpenGL->uploadedFile()) {
+					 if (this->comboBox4->Items->Count > 0) {
+						 int currentIndex = this->comboBox4->SelectedIndex;
+						 OpenGL->deleteCluster(currentIndex);
+						 this->loadClusters();
+						 if (currentIndex < this->comboBox4->Items->Count) {
+							 if (currentIndex == 0) {
+								 if (this->comboBox4->Items->Count == 0) {
+									 this->comboBox4->Text = "select..."; // if there's only one element left then show select...
+								 } else {
+									 this->comboBox4->SelectedIndex = currentIndex; // set it to the last index and shows it
+								 }
+							 } else {
+								 this->comboBox4->SelectedIndex = currentIndex; // set it to the next index and shows it
+							 }
+						 } else if (currentIndex == this->comboBox4->Items->Count) {
+							 if (this->comboBox4->Items->Count == 0) {
+								 this->comboBox4->Text = "select..."; // if there's only one element left then show select... 
+							 } else {
+								 this->comboBox4->SelectedIndex = currentIndex - 1; // set it to the last index and shows it
+							 }
+						 } else {
+							 // do nothing
+						 }
+
+					 } 
+				 }
+			 }
+	private: System::Void numericUpDown8_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+
+				 System::Decimal r = this->numericUpDown8->Value;
+				 System::Decimal g = this->numericUpDown7->Value;
+				 System::Decimal b = this->numericUpDown6->Value;
+				 System::Decimal a = this->numericUpDown5->Value;	
+
+				 this->changedClusterColor = true;
+
+			 }
+	private: System::Void numericUpDown7_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+
+				 System::Decimal r = this->numericUpDown8->Value;
+				 System::Decimal g = this->numericUpDown7->Value;
+				 System::Decimal b = this->numericUpDown6->Value;
+				 System::Decimal a = this->numericUpDown5->Value;	
+
+				 this->changedClusterColor = true;
+			 }
+	private: System::Void numericUpDown6_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+
+				 System::Decimal r = this->numericUpDown8->Value;
+				 System::Decimal g = this->numericUpDown7->Value;
+				 System::Decimal b = this->numericUpDown6->Value;
+				 System::Decimal a = this->numericUpDown5->Value;
+
+				 this->changedClusterColor = true;
+			 }
+	private: System::Void numericUpDown5_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+
+				 System::Decimal r = this->numericUpDown8->Value;
+				 System::Decimal g = this->numericUpDown7->Value;
+				 System::Decimal b = this->numericUpDown6->Value;
+				 System::Decimal a = this->numericUpDown5->Value;	
+
+				 this->changedClusterColor = true;
+			 }
+
+			 // Cluster tab color picker
+	private: System::Void nHsbColorPickerControl2_SelectedColorChanged(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+
+				 // get the values of the color from the palette
+				 int r = selectedColor.R; // red
+				 int g = selectedColor.G; // green
+				 int b = selectedColor.B; // blue
+
+				 // update the RGB values in the textbox
+				 this->numericUpDown8->Value = r;
+				 this->numericUpDown7->Value = g;
+				 this->numericUpDown6->Value = b;	
+
+				 this->changedClusterColor = true;
+
+			 }
+	private: System::Void timer2_Tick(System::Object^  sender, System::EventArgs^  e) {
+				 System::Decimal r = this->numericUpDown8->Value;
+				 System::Decimal g = this->numericUpDown7->Value;
+				 System::Decimal b = this->numericUpDown6->Value;
+				 System::Decimal a = this->numericUpDown5->Value;
+				 this->panel2->BackColor = System::Drawing::Color::FromArgb((int)a, (int)r, (int)g, (int)b);
+
+			 }
+	private: System::Void setSetIndexChanged_ChangeEvent(System::Object^  sender, System::EventArgs^  e) {
+				 System::String^ temp = gcnew System::String((*OpenGL->getSetName(this->comboBox2->SelectedIndex)).c_str());
+				 this->textBox6->Text = temp;
+				 if (this->comboBox1->Items->Count > 0) {
+					 this->comboBox1->SelectedIndex = OpenGL->getClassOfSet(this->comboBox2->SelectedIndex);
+				 }
+			 }
+	private: System::Void nButtonControl11_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->Close();
+			 }
+	private: System::Void nButtonControl10_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applyCluster();
+			 }
+	private: System::Void nButtonControl12_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applyCluster();
+				 this->Close();
+			 }
+	private: System::Void nButtonControl7_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applyDimension();
+			 }
+	private: System::Void nButtonControl9_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applyDimension();
+				 this->Close();
+			 }
+	private: System::Void nButtonControl4_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applySet();
+			 }
+	private: System::Void nButtonControl6_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
+				 this->applySet();
+				 this->Close();
+			 }
+	private: System::Void removeCluster_Hover(System::Object^  sender, System::EventArgs^  e) {
+				 this->label16->ForeColor = System::Drawing::Color::FromArgb((int)200, (int)0, (int)0); // somewhat dark green, like lawn green
+			 }
+	private: System::Void removeCluster_Leave(System::Object^  sender, System::EventArgs^  e) {
+				 this->label16->ForeColor = System::Drawing::Color::Black; // black
+			 }
+	private: System::Void setClass_SelectedIndex_Change(System::Object^  sender, System::EventArgs^  e) {
+				 this->classSetSelectedIndexChanged = true;
+			 }
+	private: System::Void checkedDimension_State(System::Object^  sender, System::EventArgs^  e) {
+				 if (this->checkBox1->Checked) {
+					 this->textBox1->Enabled = true;
+					 this->textBox2->Enabled = true;
+				 } else {
+					 this->textBox1->Enabled = false;
+					 this->textBox2->Enabled = false;					 
+				 }
+			 }
+	private: System::Void textBox1_KeyPress_State(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+				 if (!Char::IsControl(e->KeyChar) && !Char::IsDigit(e->KeyChar) && (e->KeyChar != '.')) {
+					 e->Handled = true;
+				 }
+
+				 // only allow one decimal point
+				 if ((e->KeyChar == '.') && (this->textBox1->Text->IndexOf('.') > -1)) {
+					 e->Handled = true;
+				 }
+			 }
+	private: System::Void textBox2_KeyPress_State(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
+				 if (!Char::IsControl(e->KeyChar) && !Char::IsDigit(e->KeyChar) && (e->KeyChar != '.')) {
+					 e->Handled = true;
+				 }
+
+				 // only allow one decimal point
+				 if ((e->KeyChar == '.') && (this->textBox2->Text->IndexOf('.') > -1)) {
+					 e->Handled = true;
+				 }
+			 }
+	};
 }

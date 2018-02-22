@@ -6,12 +6,14 @@ DataClass::DataClass() {
 	this->index = -1;
 	this->name = "-1";
 	this->color = ColorCustom();
+	this->setNumber = 0;
 }
 
 DataClass::DataClass(int index, std::string name) {
 	this->index = index;
 	this->name = name;
 	this->color = ColorCustom();
+	this->setNumber = 0;
 }
 
 DataClass::~DataClass() {
