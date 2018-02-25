@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="nButtonControl13.DesignTimeState" xml:space="preserve">
+    <value>eNrNVktPE1EUPjMt0PIo76eEABGJkuDGBDUulOk0NinXpq1VV4aX0qQ8AoMBFybtsHKlcetW127c459w5w/wP7jwnHvvPJhp61zKQppO78x855tzz/m+MwwAwIfPL798/2lmPvVszJ3/OOmtfUwB6HgjbR/FATRcGUa6voPrOK2f6PRTytINLYGHLMi/2je8lsRFvr6Axxh+y3mJJsIYLc1sGpzIMg87LzwM42PN8TDbAB9XxHco4jsV8V0t8ABhfEIRn2yBX/HyMR18d2v+97roNDPsd7poPzPSMraHelvRBWNOXuxz26857c8gpJe3fymYbir4eLpQpiY8ggP8VOG0wSb7FYsyoIgfVMQPKeKHFfEjivhRRfxYNLwrmnFF/ERDvNYUP9kSX0t0C1Gu2X9Q7uTA0ppx9lUXg6iIU0m7T0K9RgfYhjdwCPuwB8t4to9ny/AUhxOdrcIxWPihu0XYhB1E78I6aHFHwPUxXcyuYt6+KfMslvNcp4x0+gwqsIUUOzKILMK3US7R0V7xBU1TEDkhjc95hc85RoFbIYpYgOKej2KGKPpCFI/xrAKvkcKSJPGoeRxh4CH+boXy6Iiah0cRzqMzQDLnI6F7jKr8XIK7ooBfSHAiAF7ygcnxjCLCCSUDYXecMDOvkVBZNxdzhe9qA79V/Fo4h0S4NzBLWSqhfRuEGovMOJsHMSNxndZoKjDakcH1ZWEme24WfHb+wgMV2dTuEnbqH3o18bx5YpRM/YZMwCx7j/dCqkge8Op1L8BXM9LBFs83YNVbHpyGBkvK7VXxs47z+oirQATpTtCDmKxwLto+GeSQbAMR1QauJNHVf8tXCrpy0dd2usT4DMGQE7fYKa/lVPdoRu5v38gDV2HkwfaNPHQVRh5WMfKIipFHL2fksfaMPO4zMinSzvjiSedsmD92HytSgbfSw+vIkudi3+Sq9Ht6wsdI7x571cdIzmSDPKNtZLSQc7Ml26SPbfrKp8XU/zotakOaeKebWoFiFptuk4bEKa7pFS62q9IsalB91kvQHR057kcrytYNyUgNDWx93oO7E6bgCfjigJzxwKRZRprJ8HYJYMypTcqtDSPcgkJtospuullCJaQ7aLMqjeCryCv+B9u9bF3+ArMliQc=</value>
+  </data>
+  <data name="nButtonControl14.DesignTimeState" xml:space="preserve">
+    <value>eNrNVjtvE0EQnjs7iZ2H47wfRFESESJAhAYpgChQzhfFkrNYsTFQobwgBuehcEEJFfalpEBKSws1DX34E3T8AP4DBTO7ew/ubHMbu8DWrXfvvvl2duabOacB4OOn55+//TBXzns2Zy++n/RWz1MAOj7I2MdxAA1nhpGpvcJ5nOaPdPopZumBlsAhC/JT/Yr3kjjJ1+ZxjOFVyks0EcZoamYz4FiWuNnF+sMwPtYYDzN18HFFfIcivlMR39UEDxDGJxTxySb4Jc8f08F3N+f/oItMM8N+r4v0MyMjbXsot691wZiTN/vc9GtO+lcR0svTfyvobiq4PSmvREE1YAP2YQt2oFLnmP2KYUkr4gcU8YOK+CFF/LAifkQRPxoN78pmTBE/XhevNcRPNMVXE91Clmv2bxQ8yaW4Zpx90UUrKmBf0u6TVK/QgBJ6C0dwgHJaxNUBrhbhMbYnWi3DMVj4pacFlNsuovdQelrckXBtVBfdq5C3r0s/C6W8RtJl1C6eQBm2kWJXGlGR8GOUijTaSz6jKTKiWsjgPi9wn2OUtxWiiAUo7vkopomiL0SxiqsyvEQKS5LEo/rxBg2P8Hc75EdHVD88irAfnQGSWR8JPWMU5acS3BUF/EyCEwHwTR+YKp6RRdihZMDsjmNm5jUSKuvmYi7zU23iVcHLglNp7rXMYpZCaN8GocYCM87mQHRJnGc06gqsizcz0peFnuy7XvDu+RMHCrKp3SXs5D/0auK6sWPkTO2adMAsedt7JhUkD9TqVc/AFzPSwTb3N1CqNzw4NQ2WlMer4HcDDnEfUoEw0h2jBzEZ4Vy0czLIIdkmb/7hqiTR1X7JlwpW5YIv7XSL8R6CJidusFNeyinu0Qq5v/VCTrejkAdaL+TBdhTykEohD6sU8sjlCnm0tUIe8xUyKdJe8dmTztkQ3/YAI1KGd7KGN5Alz8W+xVXpr+lxHyO9e+xlHyNVJhvgHu0go4WcW03ZJnxsU23vFpP/a7eoDmrinW5q62Sz0PCY1CROcU6vcHFclWRRgmoznoNu68jxerSiHN2QjJTQwNHnPLjbYdY9Af/dIKc9MGmWkWZWeLoEMObEJuXGhhFuXiE2UWU31cihItIdthiVevBl5BX/wfYuG5c/K7yJWg==</value>
+  </data>
+  <data name="nButtonControl15.DesignTimeState" xml:space="preserve">
+    <value>eNrNVk9PE0EUf7st0PKnFMp/CREiEjXBiwY1Hki3S2wsQ9PWqidDC0qTFggWA97a5ebFxKtXPXvxjl/Cmx/A7+DB92anO8t2W3coB9vsdGb3937z5r3fe9s4AHz8/OrL95/mxqeh0uL5j5PhxocYgI4PUlYtDKDhzDBSzRLOwzTf0umnkKYHWgSHNIhP4xvei+Ik21zGMYRXMSvQRBiiqZlOQcuyyM3Oc+vt+FBnPCR98OEu+Ps++D5F/n5F/oEueIB2fEQRH+2CX5P+mC38YHf+M93ONDOsE91OPzNSwnaIclvWbcaMuDnipF9rpX8dIcP+6Y/5bk/bbMFTn+ONKoYjrogfU8SPK+ITivgJRfykIn4qGN6Ry7QifsYXr3XEz3bFNyKDthw3rT8odKq9wqZx9lW3W1Ae+5H2iCR6jQbYhXdwBAewD6u4OsDVKjzDtkSrJBxDHb/0NA9l2EN0DbZBC7ek25zS7a6Vz1q3hJ/5YlYjyTJqE8+hAjtIsSeMSLX8GMUCjdaay2iejKgGUrjPa9znGKpo6qUIeSgeuigWiGKkjeIJrirwBinqgiQc1I+3aHiEvzttfvQF9UNStPvR7yFZdJHQM0ZRfiHAA0HALwU44gHfcYGp4hlZtDsU9Zjda5mZWY2Eyga5mCv8VCW8qnjV4VSYy1ZZSFMIrbtgqzHPjLMlsLsjzlMadQVGJzK4vuroyb7jBe+av3CgIJvaA8LO/UOvJq47O0bONG8KB8yi3F6aVJHcU6s3pIErZqSDHe6vp1RvSzg1DRYVx6vidxsOcR9Sgezf3OhxSEQ4E+ycDDJIVkJE1acqSXTN3+JlglW54ko73WK8h6DJiRPsmEw5xT1YIY/2Xsjxqyjksd4LefwqCjmhUsgTKoU8eblCnuqtkKddhUyKtDZc9qRzluDbHmBEKvBe1PA2smS52Mtcle6annEx0rvHSroYqTLZGPdoFxnryFnuyjbrYpu/8m4x9792i8a4Zr/TTS1HNisdj0lN4hTn9Aq3j6uSLEpQ87p00GkdGV6P9SBHNwQjJdRz9CUJdzpMTgr4YoNckGDSLCPNbPB02cBQKzYxJzaMcMsKsQkqu/lODhWQ7rDHqPjBk8hr/werXTYufwEIMIfQ</value>
+  </data>
+  <data name="nButtonControl1.DesignTimeState" xml:space="preserve">
+    <value>eNrNVktPE1EUPjMt0PIo76eEABGJkuDGBDUulOk0NinXpq1VV4aX0qQ8AoMBFybtsHKlcetW127c459w5w/wP7jwnHvvPJhp61zKQppO78x855tzz/m+MwwAwIfPL798/2lmPvVszJ3/OOmtfUwB6HgjbR/FATRcGUa6voPrOK2f6PRTytINLYGHLMi/2je8lsRFvr6Axxh+y3mJJsIYLc1sGpzIMg87LzwM42PN8TDbAB9XxHco4jsV8V0t8ABhfEIRn2yBX/HyMR18d2v+97roNDPsd7poPzPSMraHelvRBWNOXuxz26857c8gpJe3fymYbir4eLpQpiY8ggP8VOG0wSb7FYsyoIgfVMQPKeKHFfEjivhRRfxYNLwrmnFF/ERDvNYUP9kSX0t0C1Gu2X9Q7uTA0ppx9lUXg6iIU0m7T0K9RgfYhjdwCPuwB8t4to9ny/AUhxOdrcIxWPihu0XYhB1E78I6aHFHwPUxXcyuYt6+KfMslvNcp4x0+gwqsIUUOzKILMK3US7R0V7xBU1TEDkhjc95hc85RoFbIYpYgOKej2KGKPpCFI/xrAKvkcKSJPGoeRxh4CH+boXy6Iiah0cRzqMzQDLnI6F7jKr8XIK7ooBfSHAiAF7ygcnxjCLCCSUDYXecMDOvkVBZNxdzhe9qA79V/Fo4h0S4NzBLWSqhfRuEGovMOJsHMSNxndZoKjDakcH1ZWEme24WfHb+wgMV2dTuEnbqH3o18bx5YpRM/YZMwCx7j/dCqkge8Op1L8BXM9LBFs83YNVbHpyGBkvK7VXxs47z+oirQATpTtCDmKxwLto+GeSQbAMR1QauJNHVf8tXCrpy0dd2usT4DMGQE7fYKa/lVPdoRu5v38gDV2HkwfaNPHQVRh5WMfKIipFHL2fksfaMPO4zMinSzvjiSedsmD92HytSgbfSw+vIkudi3+Sq9Ht6wsdI7x571cdIzmSDPKNtZLSQc7Ml26SPbfrKp8XU/zotakOaeKebWoFiFptuk4bEKa7pFS62q9IsalB91kvQHR057kcrytYNyUgNDWx93oO7E6bgCfjigJzxwKRZRprJ8HYJYMypTcqtDSPcgkJtospuullCJaQ7aLMqjeCryCv+B9u9bF3+ArMliQc=</value>
+  </data>
+  <data name="nButtonControl2.DesignTimeState" xml:space="preserve">
+    <value>eNrNVjtvE0EQnjs7iZ2H47wfRFESESJAhAYpgChQzhfFkrNYsTFQobwgBuehcEEJFfalpEBKSws1DX34E3T8AP4DBTO7ew/ubHMbu8DWrXfvvvl2duabOacB4OOn55+//TBXzns2Zy++n/RWz1MAOj7I2MdxAA1nhpGpvcJ5nOaPdPopZumBlsAhC/JT/Yr3kjjJ1+ZxjOFVyks0EcZoamYz4FiWuNnF+sMwPtYYDzN18HFFfIcivlMR39UEDxDGJxTxySb4Jc8f08F3N+f/oItMM8N+r4v0MyMjbXsot691wZiTN/vc9GtO+lcR0svTfyvobiq4PSmvREE1YAP2YQt2oFLnmP2KYUkr4gcU8YOK+CFF/LAifkQRPxoN78pmTBE/XhevNcRPNMVXE91Clmv2bxQ8yaW4Zpx90UUrKmBf0u6TVK/QgBJ6C0dwgHJaxNUBrhbhMbYnWi3DMVj4pacFlNsuovdQelrckXBtVBfdq5C3r0s/C6W8RtJl1C6eQBm2kWJXGlGR8GOUijTaSz6jKTKiWsjgPi9wn2OUtxWiiAUo7vkopomiL0SxiqsyvEQKS5LEo/rxBg2P8Hc75EdHVD88irAfnQGSWR8JPWMU5acS3BUF/EyCEwHwTR+YKp6RRdihZMDsjmNm5jUSKuvmYi7zU23iVcHLglNp7rXMYpZCaN8GocYCM87mQHRJnGc06gqsizcz0peFnuy7XvDu+RMHCrKp3SXs5D/0auK6sWPkTO2adMAsedt7JhUkD9TqVc/AFzPSwTb3N1CqNzw4NQ2WlMer4HcDDnEfUoEw0h2jBzEZ4Vy0czLIIdkmb/7hqiTR1X7JlwpW5YIv7XSL8R6CJidusFNeyinu0Qq5v/VCTrejkAdaL+TBdhTykEohD6sU8sjlCnm0tUIe8xUyKdJe8dmTztkQ3/YAI1KGd7KGN5Alz8W+xVXpr+lxHyO9e+xlHyNVJhvgHu0go4WcW03ZJnxsU23vFpP/a7eoDmrinW5q62Sz0PCY1CROcU6vcHFclWRRgmoznoNu68jxerSiHN2QjJTQwNHnPLjbYdY9Af/dIKc9MGmWkWZWeLoEMObEJuXGhhFuXiE2UWU31cihItIdthiVevBl5BX/wfYuG5c/K7yJWg==</value>
+  </data>
+  <data name="nButtonControl3.DesignTimeState" xml:space="preserve">
+    <value>eNrNVk9PE0EUf7st0PKnFMp/CREiEjXBiwY1Hki3S2wsQ9PWqidDC0qTFggWA97a5ebFxKtXPXvxjl/Cmx/A7+DB92anO8t2W3coB9vsdGb3937z5r3fe9s4AHz8/OrL95/mxqeh0uL5j5PhxocYgI4PUlYtDKDhzDBSzRLOwzTf0umnkKYHWgSHNIhP4xvei+Ik21zGMYRXMSvQRBiiqZlOQcuyyM3Oc+vt+FBnPCR98OEu+Ps++D5F/n5F/oEueIB2fEQRH+2CX5P+mC38YHf+M93ONDOsE91OPzNSwnaIclvWbcaMuDnipF9rpX8dIcP+6Y/5bk/bbMFTn+ONKoYjrogfU8SPK+ITivgJRfykIn4qGN6Ry7QifsYXr3XEz3bFNyKDthw3rT8odKq9wqZx9lW3W1Ae+5H2iCR6jQbYhXdwBAewD6u4OsDVKjzDtkSrJBxDHb/0NA9l2EN0DbZBC7ek25zS7a6Vz1q3hJ/5YlYjyTJqE8+hAjtIsSeMSLX8GMUCjdaay2iejKgGUrjPa9znGKpo6qUIeSgeuigWiGKkjeIJrirwBinqgiQc1I+3aHiEvzttfvQF9UNStPvR7yFZdJHQM0ZRfiHAA0HALwU44gHfcYGp4hlZtDsU9Zjda5mZWY2Eyga5mCv8VCW8qnjV4VSYy1ZZSFMIrbtgqzHPjLMlsLsjzlMadQVGJzK4vuroyb7jBe+av3CgIJvaA8LO/UOvJq47O0bONG8KB8yi3F6aVJHcU6s3pIErZqSDHe6vp1RvSzg1DRYVx6vidxsOcR9Sgezf3OhxSEQ4E+ycDDJIVkJE1acqSXTN3+JlglW54ko73WK8h6DJiRPsmEw5xT1YIY/2Xsjxqyjksd4LefwqCjmhUsgTKoU8eblCnuqtkKddhUyKtDZc9qRzluDbHmBEKvBe1PA2smS52Mtcle6annEx0rvHSroYqTLZGPdoFxnryFnuyjbrYpu/8m4x9792i8a4Zr/TTS1HNisdj0lN4hTn9Aq3j6uSLEpQ87p00GkdGV6P9SBHNwQjJdRz9CUJdzpMTgr4YoNckGDSLCPNbPB02cBQKzYxJzaMcMsKsQkqu/lODhWQ7rDHqPjBk8hr/werXTYufwEIMIfQ</value>
+  </data>
+  <data name="nColorBoxControl1.DesignTimeState" xml:space="preserve">
+    <value>eNrNVktQE0EQ7UmCgHz8Y+QTPgIqyE+w0IugSVSqdIkGop4sAT9UIWCI35Psctcqr149ePPiXe+esEq9eLHKKo9a5V27Z2ez6+xmkiE5SNVuZtnXvT3T73X3TgB4/vL6q7efkmdf1M11vnv/qH49EwUI4YuENV0LwHAVjyfMBK4jtJ4O0c/MFL1gNXibAvG3PhYG2IGLlNmDd3yATEqgyWGYlsmpBDiWGW42OTvpx4cV+EsB+EhhPIwG4Ks0/W/T9F+twAP48TWa+FoFftyNJ+ngt2v6r1Pgf0748fWa+IbC+KepgPNsVPg/Pmk+E/i4g98h47OEZ6wZfwy4CQ8gCyuwDIP4tIJPg3AO/3MDVuEOLMI8rPE3cXy3hFeWOyd3p+EyIs9ADfz585kkkAYWZjyWaMQOf8K+AL58vjJhtsuR7ZQjC/HIwPxWZevOiFvfmLNMCKtdlKUPTPhyNLg3r0HmaPA1rmqDNbhPkwNNKnxAjvZr4qOa+AOa+GbN/bZo4lvV+JiMb5PxnDfM+hGWs72b7DfDUsWN5bMdcrL9pnC22xXRjQScVocmvlOBHw7Ad2n6P6jpv7sw/l1QRenRrFi96grkq7iH1Oz4zezeimr/4VP7YcrtR6H2C+Kfffn0h0tIf7/i8x0Bx3FUEz+gwEcD8IOa/oc0/Q8r8HsD8CMKfCwAf6y0ePLpH1Wmf/1Xo53+i9Z3XNG0MHMxvnE6Yks+jRMXO0WUaCvYr2Zx8Pq3R53B+yNsSPPYw27CXexmLOL0BjMnZrN0yjoiYk1nUoz6qkHD0BVsewuQQ1PbiAjJt5KZobs17jGiwmdQx0/gd27hd+5jBDmfi7Dk4qTHBdUyo8Hn4jw+LcJtdJETTiKlxrGGhln8XfDFUVVqHK4LfxzbJCedHif0zqBTvirA1aWArwlwjQTu94BpWDDIwh9QrWQ25pglU4w6q7GdE26R72oOryW8cvBYmLsD4czUHrIf8HyW+o9RLVixjOexAg/zm6uTPlzU0NlovWR43GPI57I6yVBOZEMpXPA68J9ao+SCyhJRPT3t4UIazZbwmkczYoMrMdsJ6cjq8ljmt51CJpNljlvaaMqhdcdBG/GNmLtOuAJM4QdWUQarwowmvo1hL5Q6tNHIuZrl4ATf5DIK/z7/IhUI25gCWv+KN/KcZCfIsrlIKUnic2G+EEfMXhFOMuNu2TWhjUtdrts18FCZsrqA4GUBd4ZXs8+F0/BpEMftw1/is/kaT4dt5MxAG09CggVUNKnWGh1Fi6Z72F66+EsnDdhmS8jusqWWzn3ll86mSpTO/eWXzmglSucBndLZrFM6W7ZWOltL2dUsZxsJmgiSQx7eEPSwnbS5TjgNN0Oe3j1HXoaK0lAWchLPj0SnErifpBSy2aRJ0vbySdpRCZJ2lk/SrkqQ9KAOSbt1SNqzNZL2ltffD3n6OxHCooGUiQ7U620r+UqbRuO76IrqrT1L2q4OV7yZHPlfm4l5z2kmF9gkGcWKath/an6F9m1Fof3lK/RoJRQ6UL5CByuh0CEdhQ7rKHRkawo9Vp5CRz0KHau4xMb+V4n9BdV/mMg=</value>
+  </data>
+</root>

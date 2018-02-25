@@ -2,11 +2,12 @@
 
 /*
 Authors: Shane Vance, Nico Espitia, Brennan Barni, Daniel Ortyn
-Last Update: 2018/15/02
+Last Update: 2018/22/02
 Purpose: CS 481 Project
 */
 
 #include "stdafx.h"
+#include <atlstr.h>
 #include <vector>
 #include <windows.h>
 #include <GL/gl.h>
@@ -56,7 +57,16 @@ namespace OpenGLForm
 			this->shiftHorizontal = false;
 			this->shiftVertical = false;
 
+			this->textEnabled = true;
+			this->textTop = false;
+			this->textBottom = true;
+
+			this->zoom = 0;
+
 			this->clickedDimension = -1;
+
+			this->font_list_base_2d = 2000;
+
 
 			m_hDC = GetDC((HWND)this->Handle.ToPointer());
 
@@ -70,15 +80,36 @@ namespace OpenGLForm
 		}
 
 		// SET THE FILE PATH THAT WILL BE USED TO GRAPH THE DATA
-		System::Void SetFilePath(std::string filepath)
+		bool SetFilePath(std::string filepath)
 		{	
-			// read the file
-			if (!(this->file->readFile(&filepath))) {
-				// error message
+
+
+			try
+			{
+				// read the file
+				if (!(this->file->readFile(&filepath))) 
+				{
+					throw std::exception();
+				} else {
+					this->uploadFile = true;
+					return false;
+				}
+			} catch(...) {
+				// display an error message
+				DialogResult result = MessageBox::Show("WARNING: VisCanvas is unable to open the file. Click 'Retry' to try again.", "Trouble Opening File", MessageBoxButtons::RetryCancel, MessageBoxIcon::Warning);
+				this->uploadFile = false;
+				if (result == DialogResult::Retry)
+				{
+					return true; // reopen the file dialog
+				}
+				if (result == DialogResult::Cancel)
+				{
+					return false; // don't proceed to the file dialog
+				}
 			}
 
-			// we uploaded a file
-			this->uploadFile = true;
+
+
 		}
 
 		// BUTTON METHODS GO HERE //
@@ -154,7 +185,7 @@ namespace OpenGLForm
 		{
 			this->shiftHorizontal = isToggled;
 		}
-		
+
 		// Get the toggle for manual sort
 		bool getManualSortToggle(System::Void)
 		{
@@ -246,8 +277,11 @@ namespace OpenGLForm
 			this->file->deleteCluster(classIndex);
 		}
 
-
-
+		// Edits the set data at the pass set index and dimensioon
+		double setData(int setIndex, int indexOfDimension, double newDataValue)
+		{
+			return this->file->setData(setIndex, indexOfDimension, newDataValue);
+		}
 
 		// Get the dimension amount for settings window
 		int getDimensionAmount(System::Void)
@@ -266,6 +300,46 @@ namespace OpenGLForm
 			std::string* str = this->file->getDimensionName(dimensionIndex);
 			return str;
 		}
+
+
+		// sets the bounds to be used for artificial calibration at the passed index(dimensionIndex)
+		System::Void setCalibrationBounds(int dimensionIndex, double newMaximum, double newMinimum)
+		{
+			this->file->setCalibrationBounds(dimensionIndex, newMaximum, newMinimum);
+		}
+
+		// sets the maximum bound
+		double getArtificialMaximum(int dimensionIndex)
+		{
+			return this->file->getArtificialMaximum(dimensionIndex);
+		}
+
+		double getArtificialMinimum(int dimensionIndex)
+		{
+			return this->file->getArtificialMinimum(dimensionIndex);
+		}
+
+		// get whether callibrated data is set
+		bool isArtificiallyCalibrated(int dimensionIndex) {
+			return this->file->isArtificiallyCalibrated(dimensionIndex);
+		}
+
+		// clears the artificial calibration
+		System::Void clearArtificialCalibration(int dimensionIndex)
+		{
+			this->file->clearArtificialCalibration(dimensionIndex);
+		}
+
+
+
+		// Gets the original data of the sets and will display in the settings dialog
+		// dimension tab
+		double getOriginalData(int setIndex, int dimensionIndex)
+		{
+			return this->file->getOriginalData(setIndex, dimensionIndex);
+		}
+
+
 
 		// Get the set amount for settings window
 		int getSetAmount(System::Void)
@@ -311,6 +385,14 @@ namespace OpenGLForm
 			return this->applied;
 		}
 
+		std::string *getSetOfClass(int classIndex, int setIndex)
+		{
+			std::string *str = this->file->getSetOfClass(classIndex, setIndex);
+			return str;
+		}
+
+
+
 		// Sets the background color
 		System::Void Background(int r, int g, int b)
 		{
@@ -327,6 +409,50 @@ namespace OpenGLForm
 			this->G = green;
 			this->B = blue;
 		}
+
+
+		// both text enabled
+		bool textOnEnabled(System::Void)
+		{
+			return this->textEnabled;
+		}
+
+		// text top
+		bool textOnTop(System::Void)
+		{
+			return this->textTop;
+		}	
+
+		// both text enabled
+		bool textOnBottom(System::Void)
+		{
+			return this->textBottom;
+		}
+
+		System::Void setTextOnEnabled(bool enable)
+		{
+			this->textEnabled = enable;
+		}
+
+		// text top
+		System::Void setTextOnTop(bool enable)
+		{
+			this->textTop = enable;
+		}	
+
+		// both text enabled
+		System::Void setTextOnBottom(bool enable)
+		{
+			this->textBottom = enable;
+		}
+
+		// zoom setting
+		System::Void zoomSet(int i)
+		{
+			this->zoom = i * 2;
+		}
+
+
 
 
 		// THIS ALLOWS FOR THE CHILD WINDOW TO BE RESIZED ACCORDINGLY 
@@ -358,26 +484,37 @@ namespace OpenGLForm
 		GLdouble G; // Green
 		GLdouble B; // Blue
 
-		/* Create the DataInterface for reading the file */
-		DataInterface* file;
+		DataInterface* file; // Create the DataInterface for reading the file
 
-		int clickedDimension;
+		int clickedDimension; // Holds the clicked dimension
 
 		double mouseX; // Holds mouse X coord
 		double mouseY; // Holds mouse Y coord
 
 		double worldMouseX; // Holds mouse X coord when mapped to world
 		double worldMouseY; // Holds mouse Y coord when mapped to world
-		double worldMouseYOnClick;
+		double worldMouseYOnClick; // Holds the world mouse Y when clicked
 
 
-		bool uploadFile;
-		bool applied; // checks if changes to the class have been applied;
+		bool uploadFile; // Checks to see if the file has been uploaded
+		bool applied; // checks if changes to the class have been applied
 		bool drawingDragged; // Is made true via mouselistener when dragging the mouse
 
 		bool shiftHorizontal;
 		bool shiftVertical;
-		
+
+		int font_list_base_2d; // set the start of the display lists for the 2d font
+		const char *font; // sets the font
+		int size; // sets the size of the font
+
+		// text for dimensions
+		bool textEnabled;
+		bool textTop;
+		bool textBottom;
+
+		// zoom variabls
+		int zoom;
+
 		HDC m_hDC;
 		HGLRC m_hglrc;
 
@@ -388,6 +525,8 @@ namespace OpenGLForm
 		}
 
 		/* DO NOT REMOVE OR MODIFY THIS */
+		/* THIS IS USED TO DRAW OPENGL  */
+		/* IN WINDOWS FORMS             */
 		GLint MySetPixelFormat(HDC hdc)
 		{
 			PIXELFORMATDESCRIPTOR pfd = { 
@@ -440,11 +579,51 @@ namespace OpenGLForm
 				return 0;
 			}
 
+
+			this->glEnableText("Callibri", 22);
+			this->glTextBegin();
+
 			return 1;
 		}
 
+		// Call this to enable the text such as its font and size
+		System::Void glEnableText(const char *font, int size) 
+		{
+			if (size < 0)
+			{
+				return;
+			}
+			this->font = font;
+			this->size = size;
+		}
+
+		// call this to create the handle of the text to be drawn
+		System::Void glTextBegin(System::Void) 
+		{
+			HFONT font = CreateFont(this->size, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, 0, 0, 0, 0, (LPCTSTR)this->font); // can only use true type fonts 
+
+			// make the system font the device context's selected font  
+			SelectObject (m_hDC, font); 
+
+			// create the bitmap display lists  
+			// we're making images of glyphs 0 thru 254  
+			// the display list numbering starts at 2000, an arbitrary choice  
+			wglUseFontBitmaps (m_hDC, 0, 255, this->font_list_base_2d); 
+		}
+
+		System::Void glTextColor2d(double red, double green, double blue, double alpha)
+		{
+			glColor4d(red, green, blue, alpha);
+		}
 
 
+		System::Void glText2d(double x, double y, const char *text)
+		{
+			glRasterPos2d(x, y);
+			int length = (int)std::strlen(text);
+			glListBase(this->font_list_base_2d);
+			glCallLists(length, GL_UNSIGNED_BYTE, text);
+		}
 
 
 		double getWorldMouseX(){
@@ -452,15 +631,15 @@ namespace OpenGLForm
 			// this will get the mouse position relative to the child window
 			LPPOINT pts = new POINT;
 			GetCursorPos(pts);
-			
-			::ScreenToClient((HWND)this->Handle.ToPointer(), pts);
 
-			double xWorld = pts->x - (worldWidth / 2.0); //::Control::MousePosition.X;
+			::ScreenToClient((HWND)this->Handle.ToPointer(), pts); // gets the mouse coordinate relative to the OpenGL view
+
+			double xWorld = pts->x - ((this->worldWidth + (this->zoom)) / 2.0); //::Control::MousePosition.X;
 			// divide by panel width to get the porportion of the window
-			xWorld /= worldWidth;
+			xWorld /= this->worldWidth;
 			// multiply by the world width to parse the porportion of the window into the world
-			xWorld *= worldWidth;
-
+			xWorld *= this->worldWidth;
+			delete pts;
 			return xWorld;
 		} // Converts raw mouse X coordinates to world coordinates
 
@@ -469,14 +648,15 @@ namespace OpenGLForm
 			// this will get the mouse position relative to the child window
 			LPPOINT pts = new POINT;
 			GetCursorPos(pts);
-			::ScreenToClient((HWND)this->Handle.ToPointer(), pts);
 
-			double yWorld = pts->y - worldHeight; //::Control::MousePosition.Y;
+			::ScreenToClient((HWND)this->Handle.ToPointer(), pts); // Gets the mouse position relative to the OpenGL view
+
+			double yWorld = pts->y - (this->worldHeight); //::Control::MousePosition.Y;
 			// divide by panel height to get the proportion of the window
-			yWorld /= worldHeight;
+			yWorld /= this->worldHeight;
 			// multiply by the world height to parse the proportion of the window into the world
-			yWorld *= worldHeight;
-
+			yWorld *= this->worldHeight;
+			delete pts;
 			return yWorld;
 		} // Converts raw mouse Y coordinates to world coordinates
 
@@ -494,7 +674,7 @@ namespace OpenGLForm
 				double dimensionYMin = (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1);
 
 				// creates the bound for the parallel lines
-				if (xMouseWorldPosition - (dimensionX) >= -10 && xMouseWorldPosition - (dimensionX) <= 10) {
+				if (xMouseWorldPosition - (dimensionX) >= -15 && xMouseWorldPosition - (dimensionX) <= 15) {
 					return i;
 				}
 			}
@@ -507,6 +687,7 @@ namespace OpenGLForm
 			double xAxisIncrement = worldWidth / (this->file->getDimensionAmount() + 1);
 			double shiftAmount = this->file->getDimensionShift(dimensionIndex);
 
+			// this will draw the current selected dimension line at half alpha
 			glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
 			glBegin(GL_LINE_STRIP);
 			glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75);
@@ -515,6 +696,17 @@ namespace OpenGLForm
 
 			glLineWidth(3.0);
 			glPointSize(3.0);
+
+			// this will draw the current selected dimension text at half alpha
+			if (this->textEnabled) {
+				glTextColor2d(0.0, 0.0, 0.0, 0.5);
+				if (this->textBottom) {
+					glText2d(x - ((this->getDimensionName(dimensionIndex)->length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), this->getDimensionName(dimensionIndex)->c_str());
+				} else {
+					glText2d(x - ((this->getDimensionName(dimensionIndex)->length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), this->getDimensionName(dimensionIndex)->c_str());
+				}
+				glEnd();
+			}
 
 			for (int j = 0; j < file->getSetAmount(); j++)
 			{
@@ -531,7 +723,6 @@ namespace OpenGLForm
 		}
 
 
-
 		GLvoid Display(GLvoid) {
 			//Set the lines that will mark the x values of the window
 			glLineWidth(2.0);
@@ -540,10 +731,20 @@ namespace OpenGLForm
 			// Enables the transparency using alpha
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_BLEND);
-			
+
+			// This is an example of how to make text using OpenGL
+			// Made by Shane Vance
+
+			/*
+			glEnableText("Calibri", 50);
+			glTextBegin();
+			glTextColor2d(0.0, 0.0, 1.0, 1.0);
+			glText2d(-(this->worldWidth / 2.0), this->worldHeight / 2.0, "HELLO THIS IS A TEST TO SEE HOW MANY CHARACTERS I CAN PUT ON THE SCREEN!");
+			glFlush();
+			*/
+
 			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
 			glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-
 			for (int i = 0; i < this->file->getDimensionAmount(); i++)
 			{
 				double shiftAmount = this->file->getDimensionShift(i);
@@ -552,14 +753,29 @@ namespace OpenGLForm
 				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75));
 				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
 				glEnd();
+
 			}
 			glFlush();
 
+			// this will display the text for the dimension
+			if (this->textEnabled) {
+				glTextColor2d(0.0, 0.0, 0.0, 1.0);
+				for (int i = 0; i < this->file->getDimensionAmount(); i++) {
+					// display dimension text
+					double shiftAmount = this->file->getDimensionShift(i);
+					if (this->textBottom) {
+						glText2d(((-this->worldWidth - (this->getDimensionName(i)->length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), this->getDimensionName(i)->c_str());
+					} else {
+						glText2d(((-this->worldWidth - (this->getDimensionName(i)->length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), this->getDimensionName(i)->c_str());
+					}
+					glEnd();
+				}
+				glFlush();
+			}
 
 			drawData();
 			glFlush();
-
-
+			
 			if(this->drawingDragged && shiftHorizontal) {
 
 				if (this->clickedDimension != -1){
@@ -656,7 +872,7 @@ namespace OpenGLForm
 			// set the orthosphere and keep center of the screen
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluOrtho2D((GLdouble)-width / 2.0, (GLdouble)width / 2.0, (GLdouble)-height / 2.5, (GLdouble)height + 100);
+			gluOrtho2D(((GLdouble)-width + this->zoom) / 2.0, ((GLdouble)width - this->zoom) / 2.0, (((GLdouble)-height) / 2.5) + this->zoom, (((GLdouble)height - this->zoom) + 100));
 
 		}
 
@@ -707,7 +923,7 @@ namespace OpenGLForm
 				break;
 			case WM_LBUTTONUP:
 				{
-					
+
 					if (this->drawingDragged) {
 						// get the X and Y coordinates of the mouse position
 						/*this->worldMouseX = this->getWorldMouseX();
@@ -718,19 +934,19 @@ namespace OpenGLForm
 						this->drawingDragged = false;
 					}
 
-
 				}
 				break;
 			}
-
 
 
 			NativeWindow::WndProc( msg );
 
 		}
 
-
-
-
 	};
 }
+
+
+
+
+// Zooming call reshape 

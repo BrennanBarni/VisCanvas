@@ -60,6 +60,8 @@ public:
 	// sets the name of the class at the passed index(classIndex) to the passed string(newName)
 	void setDimensionName(int dimensionIndex, std::string* newName);
 
+	// gets whether the calibration for the dimension(dimensionIndex) is artificial or relative
+	bool isArtificiallyCalibrated(int dimensionIndex);
 	// sets the calibration to use the data's(not the artificial) maximum and minimum in dimension at the passed index(dimensionIndex)
 	void clearArtificialCalibration(int dimensionIndex);
 	// sets the bounds to be used for artificial calibration at the passed index(dimensionIndex)
@@ -99,6 +101,10 @@ public:
 	void setSetName(int setIndex, std::string &newName);
 	// get the data class index for the set at the passed index
 	int getClassOfSet(int setIndex) const;
+
+	// get the data set name for the class at the passed index
+	std::string *DataInterface::getSetOfClass(int classIndex, int setIndex);
+
 	// sets the index data class of the set at the passed index(setIndex)
 	int setSetClass(int setIndex, int newClassIndex);
 	// gets the color the set should be painted
@@ -235,7 +241,7 @@ private:
 	void removeDuplicates(std::vector<std::string>* stringList);
 
 	// reads the contents of the file, at fileName, into a vector
-	void readBasicFile(std::vector<std::vector<std::string>*>* fileContents);
+	bool readBasicFile(std::vector<std::vector<std::string>*>* fileContents);
 
 	// reads the contents of the file, at fileName, into a vector
 	void readCustomFile(std::vector<std::vector<std::string>*>* fileContents);

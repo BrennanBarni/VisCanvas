@@ -18,43 +18,43 @@ using namespace std;
 
 /*
 int main() {
-	std::string fileName2 = "C:\\Users\\danie\\Desktop\\Book2.csv";
-	std::string fileName = "C:\\Users\\danie\\\Desktop\\test.csv";
-	DataInterface* test = new DataInterface();
-	test->readFile(&fileName);
-	// print sizes
-	std::cout << "Class Amount: " << test->getClassAmount();
-	std::cout << "\nSet Amount: " << test->getSetAmount();
-	for (unsigned int i = 0; i < test->getSetAmount(); i++) {
-		std::cout << "\n" << *(test->getSetName(i));
-		for (unsigned int j = 0; j < test->getDimensionAmount(); j++) {
-			std::cout << "\t" << test->getData(i, j);
-		}
-	}
-	std::vector<double>* color = test->getSetColor(0);
-	std::cout << "\n\n" << (*color)[0] << ", " << (*color)[1];
-	std::cout << ", " << (*color)[2] << ", " << (*color)[3];
+std::string fileName2 = "C:\\Users\\danie\\Desktop\\Book2.csv";
+std::string fileName = "C:\\Users\\danie\\\Desktop\\test.csv";
+DataInterface* test = new DataInterface();
+test->readFile(&fileName);
+// print sizes
+std::cout << "Class Amount: " << test->getClassAmount();
+std::cout << "\nSet Amount: " << test->getSetAmount();
+for (unsigned int i = 0; i < test->getSetAmount(); i++) {
+std::cout << "\n" << *(test->getSetName(i));
+for (unsigned int j = 0; j < test->getDimensionAmount(); j++) {
+std::cout << "\t" << test->getData(i, j);
+}
+}
+std::vector<double>* color = test->getSetColor(0);
+std::cout << "\n\n" << (*color)[0] << ", " << (*color)[1];
+std::cout << ", " << (*color)[2] << ", " << (*color)[3];
 
-	/*
-	test->addClass();
-	std::string newClassName = "test";
-	test->setClassName(1,&newClassName);
-	std::vector<double> newColor = std::vector<double>();
-	newColor.push_back(0.0);
-	newColor.push_back(0.0);
-	newColor.push_back(1.0);
-	newColor.push_back(1.0);
-	test->setClassColor(1, &newColor);
-	test->setSetClass(0, 1);
-	
+/*
+test->addClass();
+std::string newClassName = "test";
+test->setClassName(1,&newClassName);
+std::vector<double> newColor = std::vector<double>();
+newColor.push_back(0.0);
+newColor.push_back(0.0);
+newColor.push_back(1.0);
+newColor.push_back(1.0);
+test->setClassColor(1, &newColor);
+test->setSetClass(0, 1);
 
-	//test->setCalibrationBounds(1, 10.0, -1.0);
-	//test->sortAscending(4);
-	//test->level(4, test->getMean(4));
-	//test->hypercube(2, 0.3);
 
-	test->saveToFile(&fileName2);
-	//system("Pause");
+//test->setCalibrationBounds(1, 10.0, -1.0);
+//test->sortAscending(4);
+//test->level(4, test->getMean(4));
+//test->hypercube(2, 0.3);
+
+test->saveToFile(&fileName2);
+//system("Pause");
 }
 */
 
@@ -117,17 +117,31 @@ bool DataInterface::readFile(string * filePath) {
 	notes.clear();
 	init();
 
-
-	if (isCustomFileFormat) {
-		readCustomFile(fileLines);
+	try {
+		if (isCustomFileFormat) {
+			readCustomFile(fileLines);
+		}
+		else {
+			if (!readBasicFile(fileLines))
+			{
+				throw std::exception();
+			}
+		}
 	}
-	else {
-		readBasicFile(fileLines);
+	catch (...) {
+		dataDimensions.clear();
+		dataClasses.clear();
+		dataSets.clear();
+		clusters.clear();
+		notes.clear();
+		init();
+		return false; // the file was not able to be opened properly
 	}
 	// perform final setup operations
 	finalInit();
 	return true;
 }
+
 
 // saves the data and all settings to the file at the passed location
 bool DataInterface::saveToFile(std::string * filePath) {
@@ -214,13 +228,13 @@ bool DataInterface::saveToFile(std::string * filePath) {
 	/*
 	// print class colors
 	for (int i = 1; i < getClassAmount(); i++) {
-		std::vector<double>* colorComponents = getClassColor(i);
-		double red = (*colorComponents)[0];
-		double green = (*colorComponents)[1];
-		double blue = (*colorComponents)[2];
-		double alpha = (*colorComponents)[3];
-		// make the artificial calibration exists
-		saveFile << "class Color," << *(getClassName(i)) << "," << i << "," << red << "," << green << "," << blue << "," << alpha << "\n";
+	std::vector<double>* colorComponents = getClassColor(i);
+	double red = (*colorComponents)[0];
+	double green = (*colorComponents)[1];
+	double blue = (*colorComponents)[2];
+	double alpha = (*colorComponents)[3];
+	// make the artificial calibration exists
+	saveFile << "class Color," << *(getClassName(i)) << "," << i << "," << red << "," << green << "," << blue << "," << alpha << "\n";
 	}
 	*/
 
@@ -319,7 +333,7 @@ bool DataInterface::moveData(int indexOfDimension, int indexOfInsertion) {
 	if (indexOfInsertion == -1 || indexOfDimension == -1) {
 		return false;
 	}
-	
+
 	// this will swap the data 
 	Dimension *temp = dataDimensions[indexOfDimension];
 	dataDimensions[indexOfDimension] = dataDimensions[indexOfInsertion];
@@ -347,6 +361,14 @@ void DataInterface::setDimensionName(int dimensionIndex, string * newName) {
 	dataDimensions[dimensionIndex]->setName(newName);
 }
 
+// gets whether the calibration for the dimension(dimensionIndex) is artificial or relative
+bool DataInterface::isArtificiallyCalibrated(int dimensionIndex) {
+	if (dimensionIndex >= dataDimensions.size() || dimensionIndex < 0) {
+		return false;
+	}
+	return dataDimensions[dimensionIndex]->isArtificiallyCalibrated();
+}
+
 // sets the calibration to use the data's(not the artificial) maximum and minimum in dimension at the passed index(dimensionIndex)
 void DataInterface::clearArtificialCalibration(int dimensionIndex) {
 	if (dimensionIndex >= dataDimensions.size() || dimensionIndex < 0) {
@@ -360,6 +382,15 @@ void DataInterface::setCalibrationBounds(int dimensionIndex, double newMaximum, 
 	if (dimensionIndex >= dataDimensions.size() || dimensionIndex < 0) {
 		return;
 	}
+
+	// take care of this if the user puts the wrong input for min-max
+	if (newMinimum > newMaximum) {
+		// swap them
+		double temp = newMinimum;
+		newMinimum = newMaximum;
+		newMaximum = temp;
+	}
+
 	dataDimensions[dimensionIndex]->setCalibrationBounds(newMaximum, newMinimum);
 }
 // gets the artificial maximum for the dimension at the passed index(dimensionIndex)
@@ -367,14 +398,14 @@ double DataInterface::getArtificialMaximum(int dimensionIndex) const {
 	if (dimensionIndex >= dataDimensions.size() || dimensionIndex < 0) {
 		return 0.0;
 	}
-	dataDimensions[dimensionIndex]->getArtificialMaximum();
+	return dataDimensions[dimensionIndex]->getArtificialMaximum();
 }
 // gets the artificial minimum for the dimension at the passed index(dimensionIndex)
 double DataInterface::getArtificialMinimum(int dimensionIndex) const {
 	if (dimensionIndex >= dataDimensions.size() || dimensionIndex < 0) {
 		return 0.0;
 	}
-	dataDimensions[dimensionIndex]->getArtificialMinimum();
+	return dataDimensions[dimensionIndex]->getArtificialMinimum();
 }
 
 /*
@@ -527,6 +558,28 @@ int DataInterface::getClassOfSet(int setIndex) const {
 	}
 	return this->dataSets[setIndex].getClass();
 }
+
+std::string *DataInterface::getSetOfClass(int classIndex, int setIndex) {
+	if (setIndex >= this->getSetAmount() || setIndex < 0)
+	{
+		return nullptr;
+	} 
+
+	if (classIndex >= this->getClassAmount() || classIndex < 0)
+	{
+		return nullptr;		
+	}
+	std::string str = std::string("");
+	if (this->dataSets[setIndex].getClass() == classIndex)
+	{
+		return this->dataSets[setIndex].getName();
+	} else {
+		return &str;
+	}
+}
+
+
+
 // sets the index data class of the set at the passed index(setIndex)
 int DataInterface::setSetClass(int setIndex, int newClassIndex) {
 	if (setIndex >= this->getSetAmount() || setIndex < 0) {
@@ -568,8 +621,6 @@ void DataInterface::setDimensionShift(int dimensionIndex, double shiftMod) {
 	}
 	double currentShift = (*dataDimensions[dimensionIndex]).getShift();
 	return (*dataDimensions[dimensionIndex]).shiftDataBy(shiftMod-currentShift);
-
-
 }
 
 
@@ -1057,52 +1108,95 @@ void DataInterface::removeDuplicates(std::vector<std::string>* stringList) {
 }
 
 // reads the contents of the file, at fileName, into a vector
-void DataInterface::readBasicFile(std::vector<std::vector<std::string>*>* fileContents) {
-	// ensure file has data
-	if (fileContents->size() < 1) {
-		return;
-	}
-	// check that each line had the same number of tokens
-	int tokenNumber = (*fileContents)[0]->size();
-	for (int i = 0; i < fileContents->size(); i++) {
-		if (tokenNumber != (*fileContents)[i]->size()) {
-			return;
+bool DataInterface::readBasicFile(std::vector<std::vector<std::string>*>* fileContents) {
+	try {
+		// ensure file has data
+		if (fileContents->size() < 2) {
+			return false;
 		}
-	}
-
-	// get number of sets
-	int setNumber = fileContents->size();
-	// get dimension names
-	std::vector<std::string> headers = std::vector<std::string>((*fileContents)[0]->size());
-	for (int i = 0; i < (*fileContents)[0]->size(); i++) {
-		string newDimensionName = (*(*fileContents)[0])[i];
-		dataDimensions.push_back(new Dimension(i, setNumber));
-	}
-
-	// create data sets
-	for (int i = 0; i < setNumber; i++) {
-		dataSets.push_back(DataSet(i, 0));
-	}
-	int temp = dataDimensions.size();
-	temp = dataSets.size();
-	// read data into dimensions
-	for (int i = 0; i < (*fileContents)[0]->size(); i++) {
-		Dimension* currentDimension = dataDimensions[i];
-		for (int j = 0; j < fileContents->size(); j++) {
-			double newData = std::stod((*(*fileContents)[j])[i]);
-			currentDimension->setData(j, newData);
+		int lastDataLine = 0;
+		// find the last line of data
+		int tokenNumber = (*fileContents)[0]->size();
+		for (int i = 1; i < fileContents->size(); i++) {
+			if (tokenNumber != (*fileContents)[i]->size()) {
+				i = fileContents->size();
+			}
+			else {
+				lastDataLine = i;
+			}
 		}
-		currentDimension->calibrateData();
+		if (lastDataLine < 1) {
+			return false;
+		}
+
+		// get number of sets
+		int setNumber = fileContents->size() - 1;
+		// get dimension names
+		std::vector<std::string> headers = std::vector<std::string>((*fileContents)[0]->size());
+		for (int i = 1; i < (*fileContents)[0]->size()-1; i++) {
+			std::string newDimensionName = (*(*fileContents)[0])[i];
+			dataDimensions.push_back(new Dimension(i - 1, setNumber));
+			dataDimensions[i - 1]->setName(&newDimensionName);
+		}
+
+		int temp = dataDimensions.size();
+		temp = dataSets.size();
+		// read data into dimensions
+		for (int i = 1; i < (*fileContents)[0]->size() - 1; i++) {
+			Dimension* currentDimension = dataDimensions[i-1];
+			for (int j = 1; j <= lastDataLine; j++) {
+				double newData = std::stod((*(*fileContents)[j])[i]);
+				currentDimension->setData(j - 1, newData);
+			}
+			currentDimension->calibrateData();
+		}
+
+		// create data classes
+		// create default class
+		dataClasses.clear();
+		dataClasses.push_back(DataClass(0, "Default"));
+		std::vector<double> newColor = std::vector<double>();
+		newColor.push_back(0.0);
+		newColor.push_back(0.0);
+		newColor.push_back(1.0);
+		newColor.push_back(1.0);
+		dataClasses[0].setColor(newColor);
+		// create the classes
+		for (int i = 1; i <= lastDataLine; i++) {
+			std::string setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
+			bool newClass = true;
+			for (int j = 0; j < dataClasses.size(); j++) {
+				if (dataClasses[j].getName()->compare(setClassName) == 0) {
+					newClass = false;
+					j = dataClasses.size();
+				}
+			}
+			if (newClass) {
+				this->addClass();
+				dataClasses[getClassAmount() - 1].setName(&setClassName);
+			}
+		}
+
+		// create data sets
+		for (int i = 1; i <= lastDataLine; i++) {
+			std::string newSetName = (*(*fileContents)[i])[0];
+			std::string setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
+			int classIndex = 0;
+			for (int j = 0; j < dataClasses.size(); j++) {
+				if (dataClasses[j].getName()->compare(setClassName) == 0) {
+					classIndex = j;
+					j = dataClasses.size();
+				}
+			}
+			dataSets.push_back(DataSet(i - 1, classIndex));
+			dataSets[i-1].setName(newSetName);
+		}
+
+	} catch (...) {
+		return false;
 	}
 
-	dataClasses.clear();
-	dataClasses.push_back(DataClass(0, "Default"));
-	std::vector<double> newColor = std::vector<double>();
-	newColor.push_back(0.0);
-	newColor.push_back(0.0);
-	newColor.push_back(1.0);
-	newColor.push_back(1.0);
-	dataClasses[0].setColor(newColor);
+	return true;
 }
 
 // reads the contents of the file, at fileName, into a vector
@@ -1116,8 +1210,10 @@ void DataInterface::readCustomFile(std::vector<std::vector<std::string>*>* fileC
 	int tokenNumber = (*fileContents)[0]->size();
 	for (int i = 1; i < fileContents->size(); i++) {
 		if (tokenNumber != (*fileContents)[i]->size()) {
-			lastDataLine = i - 1;
 			i = fileContents->size();
+		}
+		else {
+			lastDataLine = i;
 		}
 	}
 	if (lastDataLine < 1) {
@@ -1207,7 +1303,6 @@ void DataInterface::readCustomFile(std::vector<std::vector<std::string>*>* fileC
 		parseLine((*fileContents)[i]);
 	}
 }
-
 // parses a command line from a save file
 void DataInterface::parseLine(std::vector<std::string>* lineTokens) {
 	if (lineTokens == nullptr) {
@@ -1266,23 +1361,23 @@ void DataInterface::parseLine(std::vector<std::string>* lineTokens) {
 	}
 	/*
 	else if ((*lineTokens)[0].compare("class Color") == 0) {
-		if (lineTokens->size() >= 7) {
-			int classIndex = stoi((*lineTokens)[2]);
-			if (classIndex < 0 || classIndex >= getClassAmount()) {
-				return;
-			}
-			// std::string className = stoi(lineArgs[2]);
-			double red = stod((*lineTokens)[3]);
-			double green = stod((*lineTokens)[4]);
-			double blue = stod((*lineTokens)[5]);
-			double alpha = stod((*lineTokens)[6]);
-			std::vector<double> colorComponents = std::vector<double>();
-			colorComponents.push_back(red);
-			colorComponents.push_back(green);
-			colorComponents.push_back(blue);
-			colorComponents.push_back(alpha);
-			dataClasses[classIndex].setColor(colorComponents);
-		}
+	if (lineTokens->size() >= 7) {
+	int classIndex = stoi((*lineTokens)[2]);
+	if (classIndex < 0 || classIndex >= getClassAmount()) {
+	return;
+	}
+	// std::string className = stoi(lineArgs[2]);
+	double red = stod((*lineTokens)[3]);
+	double green = stod((*lineTokens)[4]);
+	double blue = stod((*lineTokens)[5]);
+	double alpha = stod((*lineTokens)[6]);
+	std::vector<double> colorComponents = std::vector<double>();
+	colorComponents.push_back(red);
+	colorComponents.push_back(green);
+	colorComponents.push_back(blue);
+	colorComponents.push_back(alpha);
+	dataClasses[classIndex].setColor(colorComponents);
+	}
 	}
 	*/
 }
