@@ -23,6 +23,8 @@ public:
 	static double getMinimumValue(Dimension* dimension, std::vector<int>* setIndexes);
 	// gets the calculates the mean value of dimension for the sets whose indexes are passed(setIndexes)
 	static double getMeanValue(Dimension* dimension, std::vector<int>* setIndexes);
+	// gets the calculates the median value of dimension for the sets whose indexes are passed(setIndexes)
+	static double getMedianValue(Dimension* dimension, std::vector<int>* setIndexes);
 	// gets the calculates the maximum value of dimension for the sets whose indexes are passed(setIndexes)
 	static double getMaximumValue(Dimension* dimension, std::vector<int>* setIndexes);
 
@@ -40,7 +42,7 @@ public:
 	// gets the minimum value in the cluster for the dimension at the passed index 
 	double getMinimum(int dimensionIndex) const;
 	// gets the mean value in the cluster for the dimension at the passed index 
-	double getMean(int dimensionIndex) const;
+	double getMiddle(int dimensionIndex) const;
 	// gets the maximum value in the cluster for the dimension at the passed index 
 	double getMaximum(int dimensionIndex) const;
 
@@ -49,7 +51,7 @@ public:
 	// inverts the values of the set at the passed index
 	void invertValues(int dimensionToInvertValuesAt);
 	// move the position of the values in the set(at originalIndex) to the index after indexBeforeNewIndex
-	void moveValues(int originalIndex, int indexOfInsertion);
+	bool moveValues(int originalIndex, int indexOfInsertion);
 
 
 	// gets the color components of the cluster
@@ -69,14 +71,29 @@ public:
 	// sets the original set of this cluster and returns the old one
 	int getOriginalSet(int newSet);
 
+	// gets the name of this cluster
+	std::string* getName();
+	// sets the name of this cluster
+	void setName(std::string* newName);
+	// gets the sets in the cluster
+	std::vector<int>* getSets();
+
+	// get whether the the cluster uses the mean or median
+	bool isUseMean();
+	// set whether the the cluster uses the mean or median
+	void setUseMean(bool newUseMean);
+
 private:
 	ColorCustom color;
 	std::vector<int> setsInCluster;
 	std::vector<double> minimumValues;
 	std::vector<double> meanValues;
+	std::vector<double> medianValues;
 	std::vector<double> maximumValues;
 	double radius;
 	int originalSet;
+	bool useMean;
+	std::string name;
 
 
 };

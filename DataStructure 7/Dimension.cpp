@@ -82,10 +82,10 @@ double Dimension::getData(int dataIndex) const {
 		return 0.0;
 	}
 	double dataReturn = (*data[dataIndex]).getData();
-	dataReturn += shiftAmount;
 	if (isInverted) {
 		dataReturn = 1 - dataReturn;
 	}
+	dataReturn += shiftAmount;
 	return dataReturn;
 }
 

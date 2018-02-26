@@ -89,6 +89,8 @@ public:
 	Gets the number of sets in the class at the passed index(classIndex)
 	*/
 	int getSetAmount(int classIndex) const;
+	// gets a list of sets in the class
+	std::vector<int>* getSetsInClass(int classIndex);
 	// gets the color for the class at the passed class index
 	std::vector<double>* getClassColor(int classIndex);
 	// sets the color for the class at the passed class index(classIndex) to the passed color(newColor)
@@ -173,6 +175,11 @@ public:
 
 	// compares the data of a each set to the set at the passed index and checks if the data is within the radius of the data of the passed set
 	void hypercube(int setIndex, double radius);
+	// returns whether the clusters will use mean or median
+	bool isUseMeanForClusters();
+	// sets whether the clusters will use mean or median
+	void setUseMeanForClusters(bool newUseMean);
+
 
 
 
@@ -194,7 +201,7 @@ public:
 	// the minimum value for the cluster data
 	double getClusterMinimum(int clusterIndex, int dimensionIndex) const;
 	// the mean value for the cluster data
-	double getClusterMean(int clusterIndex, int dimensionIndex) const;
+	double getClusterMiddle(int clusterIndex, int dimensionIndex) const;
 	// the maximum value for the cluster data
 	double getClusterMaximum(int clusterIndex, int dimensionIndex) const;
 	// gets the color of the cluster
@@ -203,6 +210,17 @@ public:
 	void setClusterColor(int clusterIndex, std::vector<double>* newColor);
 	// deletes the cluster at the passed index
 	void deleteCluster(int classIndex);
+	// gets the name of the cluster
+	std::string* getClusterName(int clusterIndex);
+	// sets the name of the cluster
+	void setClusterName(int clusterIndex, std::string* newName);
+	// gets a list of the sets in the class
+	std::vector<int>* getClusterSets(int clusterIndex);
+
+
+
+
+
 
 private:
 	// a vector to hold the dimensions containing the data for the sets
@@ -216,11 +234,12 @@ private:
 	ColorCustom selectedSetColor;
 	// a field to hold the index of the selected set
 	int selectedSetIndex;
-	// holds the graph notes
+	// holds the clusters of the data
 	std::vector<SetCluster> clusters;
 	// holds the boolean of whether to paint the cluster or not
 	bool paintClusters;
-
+	// holds the boolean of whether clusters use mean or median
+	bool useMean;
 	// holds the graph notes
 	std::vector<GraphNote> notes;
 

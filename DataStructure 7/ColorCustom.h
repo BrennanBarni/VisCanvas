@@ -37,6 +37,8 @@ public:
 private:
 	// the vector holding all the color components
 	std::vector<double> colorComponents;
+	// the vector holding a copy of the color components
+	std::vector<double> copyColorComponents;
 };
 
 
