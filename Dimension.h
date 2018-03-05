@@ -51,8 +51,10 @@ public:
 	void shiftDataBy(double modToShiftAmount);
 	// gets the amount data shift amount
 	double getShift();
+	// returns whether the dimension is inverted or not
+	bool isInverted();
 	// toggles whether the data is inverted
-	void invertData();
+	void invert();
 
 
 	// gets the number of sets in the dimensions
@@ -78,7 +80,7 @@ private:
 	// the amount to add to data when it is retrieved
 	double shiftAmount;
 	// holds whether the data is inverted or not
-	bool isInverted;
+	bool inverted;
 	// gets the index the dimension was originally at
 	int originalIndex;
 	// the boolean checking whether to use artificial calibration

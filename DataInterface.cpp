@@ -18,8 +18,8 @@ using namespace std;
 
 /*
 int main() {
-std::string fileName2 = "C:\\Users\\danie\\Desktop\\Book2.csv";
-std::string fileName = "C:\\Users\\danie\\\Desktop\\test.csv";
+std::string fileName = "C:\\Users\\danie\\Desktop\\test.csv";
+std::string fileName2 = "C:\\Users\\danie\\\Desktop\\Book3 - Copy.csv";
 DataInterface* test = new DataInterface();
 test->readFile(&fileName);
 // print sizes
@@ -28,14 +28,14 @@ std::cout << "\nSet Amount: " << test->getSetAmount();
 for (unsigned int i = 0; i < test->getSetAmount(); i++) {
 std::cout << "\n" << *(test->getSetName(i));
 for (unsigned int j = 0; j < test->getDimensionAmount(); j++) {
-std::cout << "\t" << test->getData(i, j);
+std::cout << "\t" << test->getOriginalData(i, j);
 }
 }
 std::vector<double>* color = test->getSetColor(0);
 std::cout << "\n\n" << (*color)[0] << ", " << (*color)[1];
 std::cout << ", " << (*color)[2] << ", " << (*color)[3];
 
-/*
+
 test->addClass();
 std::string newClassName = "test";
 test->setClassName(1,&newClassName);
@@ -48,13 +48,14 @@ test->setClassColor(1, &newColor);
 test->setSetClass(0, 1);
 
 
+test->setUseMeanForClusters(true);
 //test->setCalibrationBounds(1, 10.0, -1.0);
 //test->sortAscending(4);
-//test->level(4, test->getMean(4));
+test->level(4, test->getMean(4));
 //test->hypercube(2, 0.3);
 
 test->saveToFile(&fileName2);
-//system("Pause");
+system("Pause");
 }
 */
 
@@ -62,21 +63,24 @@ test->saveToFile(&fileName2);
 
 
 
+
+
 // create a blank class without any data
 DataInterface::DataInterface() {
+	readSetNamesBasic = true;
+	readDimensionNamesBasic = true;
+	readClassNamesBasic = true;
+
+	backgroundColor = ColorCustom();
+	backgroundColor.setRed(0.5);
+	backgroundColor.setGreen(0.5);
+	backgroundColor.setBlue(0.75);
+	backgroundColor.setAlpha(1.0);
+	radius = 0.2;
 	init();
 	finalInit();
 }
 
-// create a class with data taken from the file at the passed path(filePath)
-DataInterface::DataInterface(string* filePath) {
-	// create and set the fields
-	init();
-
-	// read data from file
-	readFile(filePath);
-
-}
 
 // delete the object
 DataInterface::~DataInterface() {
@@ -87,6 +91,7 @@ DataInterface::~DataInterface() {
 	*/
 	dataDimensions.clear();
 }
+
 
 // parse the data in the file at the passed path into the object
 bool DataInterface::readFile(string * filePath) {
@@ -122,10 +127,7 @@ bool DataInterface::readFile(string * filePath) {
 			readCustomFile(fileLines);
 		}
 		else {
-			if (!readBasicFile(fileLines))
-			{
-				throw std::exception();
-			}
+			readBasicFile(fileLines);
 		}
 	}
 	catch (...) {
@@ -135,7 +137,8 @@ bool DataInterface::readFile(string * filePath) {
 		clusters.clear();
 		notes.clear();
 		init();
-		return false; // the file was not able to be opened properly
+		finalInit();
+		return false;
 	}
 	// perform final setup operations
 	finalInit();
@@ -247,6 +250,43 @@ bool DataInterface::saveToFile(std::string * filePath) {
 		saveFile << clusters[i].getRadius() << "\n";
 	}
 
+	// print whether to use mean or median for clusters
+	saveFile << "useMean,";
+	saveFile << useMean << "\n";
+
+	// put artificial calibration in the list of 'commands'
+	for (int i = 0; i < getDimensionAmount(); i++) {
+		saveFile << "artificial calibration,";
+		saveFile << i << ",";
+		saveFile << dataDimensions[i]->isArtificiallyCalibrated() << ",";
+		saveFile << dataDimensions[i]->getArtificialMaximum() << ",";
+		saveFile << dataDimensions[i]->getArtificialMinimum() << "\n";
+	}
+
+	// put default class color in
+	std::vector<double>* defaultClassColor = getClassColor(0);
+	saveFile << "Default Class Color,";
+	saveFile << (*defaultClassColor)[0] << ",";
+	saveFile << (*defaultClassColor)[1] << ",";
+	saveFile << (*defaultClassColor)[2] << ",";
+	saveFile << (*defaultClassColor)[3];
+
+	std::vector<double>* componentsBackgroundColor = backgroundColor.getColorComponents();
+	saveFile << "Background Color,";
+	saveFile << (*componentsBackgroundColor)[0] << ",";
+	saveFile << (*componentsBackgroundColor)[1] << ",";
+	saveFile << (*componentsBackgroundColor)[2] << ",";
+	saveFile << (*componentsBackgroundColor)[3];
+
+	std::vector<double>* componentsSelectedSetColor = selectedSetColor.getColorComponents();
+	saveFile << "Selected Set Color,";
+	saveFile << (*componentsSelectedSetColor)[0] << ",";
+	saveFile << (*componentsSelectedSetColor)[1] << ",";
+	saveFile << (*componentsSelectedSetColor)[2] << ",";
+	saveFile << (*componentsSelectedSetColor)[3];
+
+
+
 	saveFile << "\n";
 	saveFile.close();
 }
@@ -277,6 +317,29 @@ int DataInterface::getSetAmount() const {
 int  DataInterface::getDimensionAmount() const {
 	return dataDimensions.size();
 }
+
+
+// inverts the dimension
+void DataInterface::invertDimension(int dimensionIndex) {
+	if (dimensionIndex >= this->getDimensionAmount() || dimensionIndex < 0) {
+		return;
+	}
+
+	(dataDimensions[dimensionIndex])->invert();
+}
+
+// checks whether the dimension is inverted
+bool DataInterface::isDimensionInverted(int dimensionIndex) {
+	if (dimensionIndex >= this->getDimensionAmount() || dimensionIndex < 0) {
+		return false;
+	}
+
+	return (dataDimensions[dimensionIndex])->isInverted();
+}
+
+
+
+
 
 // gets the data in the passed set at the passed index
 double DataInterface::getData(int setIndex, int indexOfData) const {
@@ -320,7 +383,7 @@ double DataInterface::setData(int setIndex, int indexOfData, double newDataValue
 	// get data
 	double oldData = (*dataDimensions[indexOfData]).getOriginalData(setIndex);
 	(*dataDimensions[indexOfData]).setData(setIndex, newDataValue);
-	calibrateData();
+	(*dataDimensions[indexOfData]).calibrateData();
 	return oldData;
 }
 
@@ -331,6 +394,9 @@ and the call moveData(1, 3) was made the dimensions would become 0,2,1,3 not 0,2
 */
 bool DataInterface::moveData(int indexOfDimension, int indexOfInsertion) {
 	if (indexOfInsertion == -1 || indexOfDimension == -1) {
+		return false;
+	}
+	if (indexOfInsertion >= getDimensionAmount() || indexOfDimension >= getDimensionAmount()) {
 		return false;
 	}
 
@@ -503,6 +569,14 @@ int DataInterface::getSetAmount(int classIndex) const {
 	return dataClasses[classIndex].getSetNumber();
 }
 
+std::vector<int>* DataInterface::getSetsInClass(int classIndex) {
+	// do not allow deletion of default class
+	if (classIndex < 0 || classIndex >= getClassAmount()) {
+		return nullptr;
+	}
+	return dataClasses[classIndex].getSetsInClass();
+}
+
 // sets the name of the class at the passed index(classIndex) to the passed string(newName)
 std::vector<double>* DataInterface::getClassColor(int classIndex) {
 	if (classIndex < 0 || classIndex >= dataClasses.size()) {
@@ -516,6 +590,9 @@ Gets the number of sets in the class at the passed index(classIndex)
 */
 void DataInterface::setClassColor(int classIndex, std::vector<double>* newColor) {
 	if (classIndex < 0 || classIndex >= dataClasses.size()) {
+		return;
+	}
+	if (newColor->size() < 4) {
 		return;
 	}
 
@@ -559,26 +636,26 @@ int DataInterface::getClassOfSet(int setIndex) const {
 	return this->dataSets[setIndex].getClass();
 }
 
+// get the data set name for the class at the passed index
 std::string *DataInterface::getSetOfClass(int classIndex, int setIndex) {
 	if (setIndex >= this->getSetAmount() || setIndex < 0)
 	{
 		return nullptr;
-	} 
+	}
 
 	if (classIndex >= this->getClassAmount() || classIndex < 0)
 	{
-		return nullptr;		
+		return nullptr;
 	}
 	std::string str = std::string("");
 	if (this->dataSets[setIndex].getClass() == classIndex)
 	{
 		return this->dataSets[setIndex].getName();
-	} else {
+	}
+	else {
 		return &str;
 	}
 }
-
-
 
 // sets the index data class of the set at the passed index(setIndex)
 int DataInterface::setSetClass(int setIndex, int newClassIndex) {
@@ -588,8 +665,8 @@ int DataInterface::setSetClass(int setIndex, int newClassIndex) {
 	if (newClassIndex >= this->getClassAmount() || newClassIndex < 0) {
 		return -1;
 	}
-	dataClasses[dataSets[setIndex].getClass()].decrementSetNumber();
-	dataClasses[newClassIndex].incrementSetNumber();
+	dataClasses[dataSets[setIndex].getClass()].removeSet(setIndex);
+	dataClasses[newClassIndex].addSet(setIndex);
 	return dataSets[setIndex].setDataClass(newClassIndex);
 }
 
@@ -598,11 +675,39 @@ std::vector<double>* DataInterface::getSetColor(int setIndex) {
 	if (setIndex >= this->getSetAmount() || setIndex < 0) {
 		return dataClasses[0].getColor();
 	}
-	if (setIndex == selectedSetIndex) {
+	if (setIndex == getSelectedSetIndex()) {
 		return getSelectedSetColor();
 	}
-	return dataClasses[dataSets[setIndex].getClass()].getColor();
+	std::vector<double>* color = dataClasses[dataSets[setIndex].getClass()].getColor();
+	if (isVisible(setIndex) == false) {
+		(*color)[3] = 0.0;
+	}
+	return color;
 }
+
+
+// checks whether the set is visible or not
+bool DataInterface::isVisible(int setIndex) {
+	if (setIndex >= this->getSetAmount() || setIndex < 0) {
+		return false;
+	}
+	if (setIndex == getSelectedSetIndex()) {
+		return true;
+	}
+	return dataSets[setIndex].isVisible();
+}
+
+// sets the set visible or not visible and returns the old visibility
+bool DataInterface::setVisible(int setIndex, bool newVisible) {
+	if (setIndex >= this->getSetAmount() || setIndex < 0) {
+		return false;
+	}
+	return dataSets[setIndex].setVisible(newVisible);
+}
+
+
+
+
 
 // gets the amount the dimension is shifted by
 double DataInterface::getDimensionShift(int dimensionIndex) {
@@ -620,7 +725,7 @@ void DataInterface::setDimensionShift(int dimensionIndex, double shiftMod) {
 		return;
 	}
 	double currentShift = (*dataDimensions[dimensionIndex]).getShift();
-	return (*dataDimensions[dimensionIndex]).shiftDataBy(shiftMod-currentShift);
+	return (*dataDimensions[dimensionIndex]).shiftDataBy(shiftMod - currentShift);
 }
 
 
@@ -671,7 +776,9 @@ void DataInterface::sortAscending(int setIndex) {
 		dataDimensions[i] = ptrTotalList->front();
 		ptrTotalList->pop_front();
 	}
-	//	clusters.calculateValues(&dataDimensions);
+	for (int i = 0; i < getClusterAmount(); i++) {
+		clusters[i].calculateValues(&dataDimensions);
+	}
 }
 
 // sorts the dimensions in descending order by the data corresponding to the passed set index(setIndex)
@@ -692,7 +799,9 @@ void DataInterface::sortDescending(int setIndex) {
 		dataDimensions[i] = ptrTotalList->front();
 		ptrTotalList->pop_front();
 	}
-	//	clusters.calculateValues(&dataDimensions);
+	for (int i = 0; i < getClusterAmount(); i++) {
+		clusters[i].calculateValues(&dataDimensions);
+	}
 }
 
 // places the dimensions back in the original order
@@ -710,7 +819,9 @@ void DataInterface::sortOriginal() {
 		dataDimensions[i] = ptrTotalList->front();
 		ptrTotalList->pop_front();
 	}
-	//	clusters.calculateValues(&dataDimensions);
+	for (int i = 0; i < getClusterAmount(); i++) {
+		clusters[i].calculateValues(&dataDimensions);
+	}
 }
 
 
@@ -844,6 +955,7 @@ void DataInterface::deleteNote(int noteIndex)
 
 
 // compares the data of a each set to the set at the passed index and checks if the data is within the radius of the data of the passed set
+// if the passed bool(meanMedian) is true the mean will be used and otherwise the median will be
 void DataInterface::hypercube(int setIndex, double radius) {
 	// don't accept out of bounds data set indexes
 	if (setIndex >= getSetAmount() || setIndex < 0) {
@@ -881,35 +993,146 @@ void DataInterface::hypercube(int setIndex, double radius) {
 	}
 
 	ColorCustom clusterColor = ColorCustom();
-	clusterColor.setRed(0.1);
-	clusterColor.setGreen(0.1);
-	clusterColor.setBlue(0.7);
-	clusterColor.setAlpha(1.0);
+	int originalSetClass = getClassOfSet(setIndex);
+	std::vector<double>* colorConponents = getClassColor(originalSetClass);
+	clusterColor.setRed((*colorConponents)[0]);
+	clusterColor.setGreen((*colorConponents)[1]);
+	clusterColor.setBlue((*colorConponents)[2]);
+	clusterColor.setAlpha((*colorConponents)[3]);
 	clusters.push_back(SetCluster(clusterColor, &selectedSets, &dataDimensions));
 	clusters[clusters.size() - 1].setRadius(radius);
 	clusters[clusters.size() - 1].getOriginalSet(setIndex);
+	std::string clusterName = *(dataSets[setIndex].getName()) + " " + std::to_string(radius);
+	clusters[clusters.size() - 1].setName(&clusterName);
+	if (useMean) {
+		clusters[clusters.size() - 1].setUseMean(useMean);
+		clusters[clusters.size() - 1].calculateValues(&dataDimensions);
+	}
+
+
 	paintClusters = true;
 }
 
+// returns whether the clusters will use mean or median
+bool DataInterface::isUseMeanForClusters() {
+	return useMean;
+}
+
+// returns whether the clusters will use mean or median
+bool DataInterface::getUseMeanForClusters() {
+	return useMean;
+}
+
+// returns whether the clusters will use mean or median
+void DataInterface::setUseMeanForClusters(bool newUseMean) {
+	useMean = newUseMean;
+	for (int i = 0; i < getClusterAmount(); i++) {
+		clusters[i].setUseMean(newUseMean);
+	}
+
+}
+
+double DataInterface::getRadius() {
+	return radius;
+}
+
+void DataInterface::setRadius(double newRadius) {
+	radius = newRadius;
+}
 
 
 
 
 // sets the index of the selected set to the passed index(newSelectedSetIndex)
-void DataInterface::setSelectedSetIndex(int newSelectedSetIndex) {
-	if (newSelectedSetIndex < 0 || newSelectedSetIndex >= getSetAmount()) {
-		newSelectedSetIndex = getSetAmount() - 1;
+void DataInterface::incrementSelectedSetIndex() {
+	int newSelectedSetIndex = selectedSetIndex;
+	int numberOfSetsChecked = 0;
+	// ensure class has sets
+	newSelectedSetIndex++;
+	// loop
+	if (newSelectedSetIndex >= dataClasses[selectedClassIndex].getSetNumber()) {
+		newSelectedSetIndex = 0;
+	}
+	if(dataClasses[selectedClassIndex].getSetNumber()==0) {
+		newSelectedSetIndex=0;
+	}
+	selectedSetIndex = newSelectedSetIndex;
+}
+
+// sets the index of the selected set to the passed index(newSelectedSetIndex)
+void DataInterface::decrementSelectedSetIndex() {
+	int newSelectedSetIndex = selectedSetIndex;
+	int numberOfSetsChecked = 0;
+	// ensure class has sets
+	newSelectedSetIndex--;
+	// loop
+	if (newSelectedSetIndex < 0) {
+		newSelectedSetIndex = dataClasses[selectedClassIndex].getSetNumber() - 1;
+	}
+	if(dataClasses[selectedClassIndex].getSetNumber()==0) {
+		newSelectedSetIndex=0;
 	}
 	selectedSetIndex = newSelectedSetIndex;
 }
 
 // gets the index of the selected set
-int DataInterface::getSelectedSetIndex() const {
-	return selectedSetIndex;
+int DataInterface::getSelectedSetIndex() {
+	if (dataClasses[selectedClassIndex].getSetNumber() <= 0) {
+		return 0;
+	}
+	return (dataClasses[selectedClassIndex].getSetsInClass())->at(selectedSetIndex);
+}
+
+// increases the index of the selected class to the passed index(newSelectedClassIndex)
+void DataInterface::incrementSelectedClassIndex() {
+	int newSelectedClassIndex = selectedClassIndex+1;
+	if (newSelectedClassIndex >= getClassAmount()) {
+		newSelectedClassIndex = getClassAmount() - 1;
+	}
+	int numberOfClassesChecked = 0;
+	// ensure class has sets
+	while (dataClasses[newSelectedClassIndex].getSetNumber() == 0 && numberOfClassesChecked <= getClassAmount()) {
+		newSelectedClassIndex++;
+		// loop
+		if (newSelectedClassIndex >= getClassAmount()) {
+			newSelectedClassIndex = 0;
+		}
+		numberOfClassesChecked++;
+	}
+	selectedClassIndex = newSelectedClassIndex;
+	selectedSetIndex = 0;
+}
+
+// decreases the index of the selected class to the passed index(newSelectedClassIndex)
+void DataInterface::decrementSelectedClassIndex() {
+	int newSelectedClassIndex = selectedClassIndex-1;
+	if (newSelectedClassIndex < 0) {
+		newSelectedClassIndex = getClassAmount() - 1;
+	}
+	int numberOfClassesChecked = 0;
+	// ensure class has sets
+	while (dataClasses[newSelectedClassIndex].getSetNumber() == 0 && numberOfClassesChecked <= getClassAmount()) {
+		newSelectedClassIndex--;
+		// loop
+		if (newSelectedClassIndex < 0) {
+			newSelectedClassIndex = getClassAmount() - 1;
+		}
+		numberOfClassesChecked++;
+	}
+	selectedClassIndex = newSelectedClassIndex;
+	selectedSetIndex = 0;
+}
+
+// gets the index of the selected class
+int DataInterface::getSelectedClassIndex() const {
+	return selectedClassIndex;
 }
 
 // sets the selected set's color to the colors in the passed double array(newSelectedSetColor)
 void DataInterface::setSelectedSetColor(std::vector<double> &newSelectedSetColor) {
+	if (newSelectedSetColor.size() < 4) {
+		return;
+	}
 	selectedSetColor.setRed(newSelectedSetColor[0]);
 	selectedSetColor.setGreen(newSelectedSetColor[1]);
 	selectedSetColor.setBlue(newSelectedSetColor[2]);
@@ -949,11 +1172,11 @@ double DataInterface::getClusterMinimum(int clusterIndex, int dimensionIndex) co
 }
 
 // the mean value for the cluster data
-double DataInterface::getClusterMean(int clusterIndex, int dimensionIndex) const {
+double DataInterface::getClusterMiddle(int clusterIndex, int dimensionIndex) const {
 	if (dimensionIndex >= getDimensionAmount() || dimensionIndex < 0) {
 		return 0.0;
 	}
-	return clusters[clusterIndex].getMean(dimensionIndex) + dataDimensions[dimensionIndex]->getShift();
+	return clusters[clusterIndex].getMiddle(dimensionIndex) + dataDimensions[dimensionIndex]->getShift();
 }
 
 // the maximum value for the cluster data
@@ -974,7 +1197,10 @@ std::vector<double>* DataInterface::getClusterColor(int clusterIndex) {
 
 // sets the color of the cluster at the passed index
 void DataInterface::setClusterColor(int clusterIndex, std::vector<double>* newColor) {
-	if (clusterIndex <0 || clusterIndex>getClusterAmount()) {
+	if (clusterIndex < 0 || clusterIndex >= getClusterAmount()) {
+		return;
+	}
+	if (newColor->size() < 4) {
 		return;
 	}
 	clusters[clusterIndex].setColor(newColor);
@@ -990,11 +1216,59 @@ void DataInterface::deleteCluster(int clusterIndex) {
 	clusters.erase(clusters.begin() + clusterIndex);
 }
 
+// gets the name of the cluster
+std::string * DataInterface::getClusterName(int clusterIndex) {
+	if (clusterIndex < 0 || clusterIndex >= getClusterAmount()) {
+		return nullptr;
+	}
+	return clusters[clusterIndex].getName();
+}
+
+// sets the name of the cluster
+void DataInterface::setClusterName(int clusterIndex, std::string* newName) {
+	if (clusterIndex < 0 || clusterIndex >= getClusterAmount()) {
+		return;
+	}
+	return clusters[clusterIndex].setName(newName);
+}
+
+// gets a list of the sets in the class
+std::vector<int>* DataInterface::getClusterSets(int clusterIndex) {
+	if (clusterIndex < 0 || clusterIndex >= getClusterAmount()) {
+		return nullptr;
+	}
+	return clusters[clusterIndex].getSets();
+}
+
+
+
+
+
+// sets the color for the background
+void DataInterface::setBackgroundColor(std::vector<double>* newColor) {
+	if (newColor->size() < 4) {
+		return;
+	}
+	backgroundColor.setRed(newColor->at(0));
+	backgroundColor.setGreen(newColor->at(1));
+	backgroundColor.setBlue(newColor->at(2));
+	backgroundColor.setAlpha(newColor->at(3));
+}
+
+// gets the color for the background
+std::vector<double>* DataInterface::getBackgroundColor() {
+	return backgroundColor.getColorComponents();
+}
+
+
+
+
 
 
 // private:
 // a method to hold the basic intialization of the object fields
 void DataInterface::init() {
+
 	dataDimensions = std::vector<Dimension*>();
 	// create and set the fields
 	dataClasses = std::vector<DataClass>();
@@ -1008,6 +1282,7 @@ void DataInterface::init() {
 	dataSets = std::vector<DataSet>();
 	clusters = std::vector<SetCluster>();
 
+
 	selectedSetColor = ColorCustom();
 	selectedSetColor.setRed(1.0);
 	selectedSetColor.setGreen(1.0);
@@ -1016,12 +1291,14 @@ void DataInterface::init() {
 
 
 	selectedSetIndex = 0;
+	selectedClassIndex = 0;
 
 	yMaxName = "1.0";
 	yMinName = "0.0";
 	xAxisName = "X-Axis";
 	yAxisName = "Y-Axis";
 	paintClusters = false;
+	useMean = false;
 }
 
 // a method to hold the setup of fields to be performed after everything else
@@ -1130,23 +1407,59 @@ bool DataInterface::readBasicFile(std::vector<std::vector<std::string>*>* fileCo
 		}
 
 		// get number of sets
-		int setNumber = fileContents->size() - 1;
+		int setNumber = fileContents->size();
+		if (readDimensionNamesBasic) {
+			setNumber--;
+		}
+		int startRow = 0;
+		if (readDimensionNamesBasic) {
+			startRow = 1;
+		}
+		int startColumn = 0;
+		if (readSetNamesBasic) {
+			startColumn = 1;
+		}
+		int endColumn = (*fileContents)[0]->size();
+		if (readClassNamesBasic) {
+			endColumn--;
+		}
 		// get dimension names
-		std::vector<std::string> headers = std::vector<std::string>((*fileContents)[0]->size());
-		for (int i = 1; i < (*fileContents)[0]->size()-1; i++) {
-			std::string newDimensionName = (*(*fileContents)[0])[i];
-			dataDimensions.push_back(new Dimension(i - 1, setNumber));
-			dataDimensions[i - 1]->setName(&newDimensionName);
+		if (readDimensionNamesBasic) {
+			std::vector<std::string> headers = (*(*fileContents)[0]);
+
+			for (int i = startColumn; i < endColumn; i++) {
+				std::string newDimensionName = (*(*fileContents)[0])[i];
+				if(readSetNamesBasic) {
+					dataDimensions.push_back(new Dimension(i - 1, setNumber));
+				}else{
+					dataDimensions.push_back(new Dimension(i, setNumber));
+				}
+			}
+			for (int i = startColumn; i < endColumn; i++) {
+				if(readSetNamesBasic) {
+					dataDimensions[i-1]->setName(&headers[i]);
+				}else{
+					dataDimensions[i]->setName(&headers[i]);
+				}
+			}
 		}
 
-		int temp = dataDimensions.size();
-		temp = dataSets.size();
 		// read data into dimensions
-		for (int i = 1; i < (*fileContents)[0]->size() - 1; i++) {
-			Dimension* currentDimension = dataDimensions[i-1];
-			for (int j = 1; j <= lastDataLine; j++) {
+		for (int i = startColumn; i < endColumn; i++) {
+			Dimension *currentDimension;
+			if(readSetNamesBasic) {
+				currentDimension = dataDimensions[i - 1];
+			}else{
+				currentDimension = dataDimensions[i];
+			}
+			for (int j = startRow; j <= lastDataLine; j++) {
 				double newData = std::stod((*(*fileContents)[j])[i]);
-				currentDimension->setData(j - 1, newData);
+				if (readSetNamesBasic) {
+					currentDimension->setData(j - 1, newData);
+				}
+				else {
+					currentDimension->setData(j, newData);
+				}
 			}
 			currentDimension->calibrateData();
 		}
@@ -1161,38 +1474,53 @@ bool DataInterface::readBasicFile(std::vector<std::vector<std::string>*>* fileCo
 		newColor.push_back(1.0);
 		newColor.push_back(1.0);
 		dataClasses[0].setColor(newColor);
+
 		// create the classes
-		for (int i = 1; i <= lastDataLine; i++) {
-			std::string setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
-			bool newClass = true;
-			for (int j = 0; j < dataClasses.size(); j++) {
-				if (dataClasses[j].getName()->compare(setClassName) == 0) {
-					newClass = false;
-					j = dataClasses.size();
+		if (readClassNamesBasic) {
+			for (int i = startRow; i <= lastDataLine; i++) {
+				std::string setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
+				bool newClass = true;
+				for (int j = 0; j < dataClasses.size(); j++) {
+					if (dataClasses[j].getName()->compare(setClassName) == 0) {
+						newClass = false;
+						j = dataClasses.size();
+					}
 				}
-			}
-			if (newClass) {
-				this->addClass();
-				dataClasses[getClassAmount() - 1].setName(&setClassName);
+				if (newClass) {
+					this->addClass();
+					dataClasses[getClassAmount() - 1].setName(&setClassName);
+				}
 			}
 		}
 
 		// create data sets
-		for (int i = 1; i <= lastDataLine; i++) {
-			std::string newSetName = (*(*fileContents)[i])[0];
-			std::string setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
+		for (int i = startRow; i <= lastDataLine; i++) {
+			int setIndex = i;
+			if (readDimensionNamesBasic) {
+				setIndex = i-1;
+			}
+			std::string newSetName = std::to_string(setIndex);
+			if (readSetNamesBasic) {
+				newSetName = (*(*fileContents)[i])[0];
+			}
 			int classIndex = 0;
-			for (int j = 0; j < dataClasses.size(); j++) {
-				if (dataClasses[j].getName()->compare(setClassName) == 0) {
-					classIndex = j;
-					j = dataClasses.size();
+			std::string setClassName = "Default";
+			if (readClassNamesBasic) {
+				setClassName = (*(*fileContents)[i])[(*fileContents)[i]->size() - 1];
+				for (int j = 0; j < dataClasses.size(); j++) {
+					if (dataClasses[j].getName()->compare(setClassName) == 0) {
+						classIndex = j;
+						j = dataClasses.size();
+					}
 				}
 			}
-			dataSets.push_back(DataSet(i - 1, classIndex));
-			dataSets[i-1].setName(newSetName);
+			dataSets.push_back(DataSet(setIndex, classIndex));
+			dataSets[setIndex].setName(newSetName);
+			dataClasses[classIndex].addSet(setIndex);
 		}
 
-	} catch (...) {
+	}
+	catch (...) {
 		return false;
 	}
 
@@ -1287,6 +1615,7 @@ void DataInterface::readCustomFile(std::vector<std::vector<std::string>*>* fileC
 			}
 		}
 		dataSets.push_back(DataSet(i - 1, classIndex));
+		dataClasses[classIndex].addSet(i - 1);
 	}
 
 	// add data structure
@@ -1345,7 +1674,6 @@ void DataInterface::parseLine(std::vector<std::string>* lineTokens) {
 	}
 	else if ((*lineTokens)[0].compare("hypercube") == 0) {
 		if (lineTokens->size() >= 3) {
-			//if ((*lineTokens)[1].compare("median") == 0 || (*lineTokens)[1].compare("mean") == 0) {
 			int index = stoi((*lineTokens)[1]);
 			double radius = stod((*lineTokens)[2]);
 			if (index < 0 || index >= this->getSetAmount()) {
@@ -1357,6 +1685,66 @@ void DataInterface::parseLine(std::vector<std::string>* lineTokens) {
 				}
 				this->hypercube(index, radius);
 			}
+		}
+	}
+	else if ((*lineTokens)[0].compare("useMean") == 0) {
+		if (lineTokens->size() >= 2) {
+			bool newUseMean = stoi((*lineTokens)[1]);
+			this->setUseMeanForClusters(newUseMean);
+		}
+	}
+	else if ((*lineTokens)[0].compare("artificial calibration") == 0) {
+		if (lineTokens->size() >= 5) {
+			int index = stoi((*lineTokens)[1]);
+			bool isCalibrated = stod((*lineTokens)[2]);
+			double maximum = stod((*lineTokens)[3]);
+			double minimum = stod((*lineTokens)[4]);
+			if (index < 0 || index >= this->getDimensionAmount()) {
+				return;
+			}
+			this->setCalibrationBounds(index, maximum, minimum);
+			if (isCalibrated == false) {
+				this->dataDimensions[index]->clearArtificialCalibration();
+			}
+		}
+	}
+	else if ((*lineTokens)[0].compare("Default Class Color") == 0) {
+		if (lineTokens->size() >= 5) {
+			double red = stod((*lineTokens)[1]);
+			double green = stod((*lineTokens)[2]);
+			double blue = stod((*lineTokens)[3]);
+			double alpha = stod((*lineTokens)[4]);
+			std::vector<double> color = std::vector<double>();
+			color.push_back(red);
+			color.push_back(green);
+			color.push_back(blue);
+			color.push_back(alpha);
+			dataClasses[0].setColor(&color);
+		}
+	}
+	else if ((*lineTokens)[0].compare("Background Color") == 0) {
+		if (lineTokens->size() >= 5) {
+			double red = stod((*lineTokens)[1]);
+			double green = stod((*lineTokens)[2]);
+			double blue = stod((*lineTokens)[3]);
+			double alpha = stod((*lineTokens)[4]);
+			backgroundColor.setRed(red);
+			backgroundColor.setGreen(green);
+			backgroundColor.setBlue(blue);
+			backgroundColor.setAlpha(alpha);
+		}
+	}
+
+	else if ((*lineTokens)[0].compare("Selected Set Color") == 0) {
+		if (lineTokens->size() >= 5) {
+			double red = stod((*lineTokens)[1]);
+			double green = stod((*lineTokens)[2]);
+			double blue = stod((*lineTokens)[3]);
+			double alpha = stod((*lineTokens)[4]);
+			selectedSetColor.setRed(red);
+			selectedSetColor.setGreen(green);
+			selectedSetColor.setBlue(blue);
+			selectedSetColor.setAlpha(alpha);
 		}
 	}
 	/*

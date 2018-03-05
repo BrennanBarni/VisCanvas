@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GraphNote.h"
 
+
+
 // creates a blank note
 GraphNote::GraphNote() {
 	title = "";

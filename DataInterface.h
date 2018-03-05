@@ -24,13 +24,13 @@ Purpose: CS 481 Project
 
 
 
+
+
 // a class to hold several sets of data and manage interactions with the data
 class DataInterface {
 public:
 	// create a blank class without any data
 	DataInterface();
-	// create a class with data taken from the file at the passed path(filePath)
-	DataInterface(std::string* filePath);
 	// delete the object
 	~DataInterface();
 
@@ -45,6 +45,10 @@ public:
 	int getSetAmount() const;
 	// gets the number of dimensions in the data
 	int getDimensionAmount() const;
+	// inverts the dimension
+	void invertDimension(int dimensionIndex);
+	// checks whether the dimension is inverted
+	bool isDimensionInverted(int dimensionIndex);
 	// gets the data in the set of the passed index(setIndex), for the passed dimension(indexOfData)
 	double getData(int setIndex, int indexOfData) const;
 	// gets the original data in the set of the passed index(setIndex), for the passed dimension(indexOfData)
@@ -53,6 +57,7 @@ public:
 	double setData(int setIndex, int indexOfData, double newDataValue);
 	// moves the dimension at the passed index(indexOfDimension) to the spot after the other index(indexBeforeInsertion)
 	bool moveData(int indexOfDimension, int indexBeforeInsertion);
+
 
 
 	// gets the name of the class at the passed index(classIndex)
@@ -75,6 +80,8 @@ public:
 	void addToDimension(int dimensionIndex, double amountToAdd);
 
 
+
+
 	// gets the name of the class at the passed index(classIndex)
 	std::string* getClassName(int classIndex);
 	// sets the name of the class at the passed index(classIndex) to the passed string(newName)
@@ -87,6 +94,8 @@ public:
 	Gets the number of sets in the class at the passed index(classIndex)
 	*/
 	int getSetAmount(int classIndex) const;
+	// gets a list of sets in the class
+	std::vector<int>* getSetsInClass(int classIndex);
 	// gets the color for the class at the passed class index
 	std::vector<double>* getClassColor(int classIndex);
 	// sets the color for the class at the passed class index(classIndex) to the passed color(newColor)
@@ -101,14 +110,17 @@ public:
 	void setSetName(int setIndex, std::string &newName);
 	// get the data class index for the set at the passed index
 	int getClassOfSet(int setIndex) const;
-
 	// get the data set name for the class at the passed index
-	std::string *DataInterface::getSetOfClass(int classIndex, int setIndex);
-
+	std::string* getSetOfClass(int classIndex, int setIndex);
 	// sets the index data class of the set at the passed index(setIndex)
 	int setSetClass(int setIndex, int newClassIndex);
 	// gets the color the set should be painted
 	std::vector<double>* getSetColor(int setIndex);
+	// checks whether the set is visible or not
+	bool isVisible(int setIndex);
+	// sets the set visible or not visible
+	bool setVisible(int setIndex, bool newVisible);
+
 
 
 	// gets the amount the dimension is shifted by
@@ -126,12 +138,15 @@ public:
 	std::string* getYMinName();
 
 
+
+
 	// sorts the data by the set at the passed index, in ascending order(left to right)
 	void sortAscending(int setIndex);
 	// sorts the data by the set at the passed index, in descending order(left to right)
 	void sortDescending(int setIndex);
 	// places the dimensions back in the original order
 	void sortOriginal();
+
 
 
 	/* adjusts the data of each dimension by shifting the data of each dimension by the
@@ -163,20 +178,39 @@ public:
 
 
 
-
 	// compares the data of a each set to the set at the passed index and checks if the data is within the radius of the data of the passed set
 	void hypercube(int setIndex, double radius);
+	// returns whether the clusters will use mean or median
+	bool isUseMeanForClusters();
+	// sets whether the clusters will use mean or median
+	bool getUseMeanForClusters();
+	// sets whether the clusters will use mean or median
+	void setUseMeanForClusters(bool newUseMean);
+	double getRadius();
+	void setRadius(double newRadius);
 
 
 
-	// sets the index of the selected set to the passed index(newSelectedSetIndex)
-	void setSelectedSetIndex(int newSelectedSetIndex);
+
+	// increases the selected set index
+	void incrementSelectedSetIndex();
+	// decreases the selected set index
+	void decrementSelectedSetIndex();
 	// gets the index of the selected set
-	int getSelectedSetIndex() const;
+	int getSelectedSetIndex();
+	// increases the index of the selected class to the passed index(newSelectedClassIndex)
+	void incrementSelectedClassIndex();
+	// decreases the index of the selected class to the passed index(newSelectedClassIndex)
+	void decrementSelectedClassIndex();
+	// gets the index of the selected class
+	int getSelectedClassIndex() const;
 	// sets the selected set's color to the colors in the passed double array(newSelectedSetColor)
 	void setSelectedSetColor(std::vector<double> &newSelectedSetColor);
 	// gets the color of the selected set
 	std::vector<double>* getSelectedSetColor();
+
+
+
 
 	// whether to paint the clusters or not
 	bool isPaintClusters() const;
@@ -187,7 +221,7 @@ public:
 	// the minimum value for the cluster data
 	double getClusterMinimum(int clusterIndex, int dimensionIndex) const;
 	// the mean value for the cluster data
-	double getClusterMean(int clusterIndex, int dimensionIndex) const;
+	double getClusterMiddle(int clusterIndex, int dimensionIndex) const;
 	// the maximum value for the cluster data
 	double getClusterMaximum(int clusterIndex, int dimensionIndex) const;
 	// gets the color of the cluster
@@ -196,8 +230,31 @@ public:
 	void setClusterColor(int clusterIndex, std::vector<double>* newColor);
 	// deletes the cluster at the passed index
 	void deleteCluster(int classIndex);
+	// gets the name of the cluster
+	std::string* getClusterName(int clusterIndex);
+	// sets the name of the cluster
+	void setClusterName(int clusterIndex, std::string* newName);
+	// gets a list of the sets in the class
+	std::vector<int>* getClusterSets(int clusterIndex);
+
+
+
+	// sets the color for the background
+	void setBackgroundColor(std::vector<double>* newColor);
+	// gets the color for the background
+	std::vector<double>* getBackgroundColor();
+
+
+
+
+
 
 private:
+	bool readSetNamesBasic;
+	bool readDimensionNamesBasic;
+	bool readClassNamesBasic;
+
+
 	// a vector to hold the dimensions containing the data for the sets
 	std::vector<Dimension*> dataDimensions;
 
@@ -205,15 +262,24 @@ private:
 	std::vector<DataClass> dataClasses;
 	// a vector to hold the data sets
 	std::vector<DataSet> dataSets;
+	// a field to hold the color of the background set
+	ColorCustom backgroundColor;
 	// a field to hold the color of the selected set
 	ColorCustom selectedSetColor;
 	// a field to hold the index of the selected set
 	int selectedSetIndex;
-	// holds the graph notes
+	// a field to hold the index of the selected class
+	int selectedClassIndex;
+
+
+
+	// holds the clusters of the data
 	std::vector<SetCluster> clusters;
 	// holds the boolean of whether to paint the cluster or not
 	bool paintClusters;
-
+	// holds the boolean of whether clusters use mean or median
+	bool useMean;
+	double radius;
 	// holds the graph notes
 	std::vector<GraphNote> notes;
 

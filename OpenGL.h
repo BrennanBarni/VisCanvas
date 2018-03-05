@@ -60,6 +60,7 @@ namespace OpenGLForm
 			this->textEnabled = true;
 			this->textTop = false;
 			this->textBottom = true;
+			this->invertDimensionToggled = false;
 
 			this->zoom = 0;
 
@@ -83,6 +84,9 @@ namespace OpenGLForm
 		bool SetFilePath(std::string filepath)
 		{	
 
+			this->zoom = 0;
+			this->tempXWorldMouseDifference = 0;
+			this->tempYWorldMouseDifference = 0;
 
 			try
 			{
@@ -108,29 +112,17 @@ namespace OpenGLForm
 				}
 			}
 
-
-
 		}
 
 		// BUTTON METHODS GO HERE //
 		System::Void incrementSelectedSet(System::Void)
 		{
-			int selectedSetIndex = this->file->getSelectedSetIndex();
-			selectedSetIndex++;
-			if(selectedSetIndex >= this->file->getSetAmount()){
-				selectedSetIndex = 0;
-			}
-			this->file->setSelectedSetIndex(selectedSetIndex);
+			this->file->incrementSelectedSetIndex();
 		}
 
 		System::Void decrementSelectedSet(System::Void)
 		{
-			int selectedSetIndex = this->file->getSelectedSetIndex();
-			selectedSetIndex--;
-			if(selectedSetIndex < 0){
-				selectedSetIndex = this->file->getSetAmount() - 1;
-			}
-			this->file->setSelectedSetIndex(selectedSetIndex);
+			this->file->decrementSelectedSetIndex();
 		} 
 
 		System::Void ascendingSort(System::Void)
@@ -177,13 +169,36 @@ namespace OpenGLForm
 		System::Void hypercube(System::Void)
 		{
 			int selectedSetIndex = this->file->getSelectedSetIndex();
-			this->file->hypercube(selectedSetIndex, 0.2);
+			this->file->hypercube(selectedSetIndex, file->getRadius());
 		}
 
 		// Set the toggle for manual sort
 		System::Void setManualSortToggle(bool isToggled)
 		{
 			this->shiftHorizontal = isToggled;
+			if (isToggled) {
+				this->zoom = 0;
+				this->tempXWorldMouseDifference = 0;
+				this->tempYWorldMouseDifference = 0;
+			}
+		}
+
+
+		// Set the toggle for manual invert
+		System::Void setManualInvertToggle(bool isToggled)
+		{
+			this->invertDimensionToggled = isToggled;
+			if (isToggled) {
+				this->zoom = 0;
+				this->tempXWorldMouseDifference = 0;
+				this->tempYWorldMouseDifference = 0;
+			}
+		}
+
+		// Get the toggle for manual invert
+		bool getManualInvertToggle(System::Void)
+		{
+			return this->invertDimensionToggled;
 		}
 
 		// Get the toggle for manual sort
@@ -196,6 +211,11 @@ namespace OpenGLForm
 		System::Void setManualShiftToggle(bool isToggled)
 		{
 			this->shiftVertical = isToggled;
+			if (isToggled) {
+				this->zoom = 0;
+				this->tempXWorldMouseDifference = 0;
+				this->tempYWorldMouseDifference = 0;
+			}
 		}
 
 		// Get the toggle for manual shift
@@ -452,7 +472,18 @@ namespace OpenGLForm
 			this->zoom = i * 2;
 		}
 
+		bool isVisible(int setIndex)
+		{
+			return this->file->isVisible(setIndex);
+		}
 
+		bool resetZoomPan(System::Void)
+		{
+			this->zoom = 0;
+			this->tempXWorldMouseDifference = 0;
+			this->tempYWorldMouseDifference = 0;
+			return true;
+		}
 
 
 		// THIS ALLOWS FOR THE CHILD WINDOW TO BE RESIZED ACCORDINGLY 
@@ -475,6 +506,10 @@ namespace OpenGLForm
 			SwapBuffers(m_hDC);
 		}
 
+		DataInterface* file; // Create the DataInterface for reading the file
+
+
+
 	private:
 
 		double worldWidth;  // Set the world width
@@ -484,7 +519,6 @@ namespace OpenGLForm
 		GLdouble G; // Green
 		GLdouble B; // Blue
 
-		DataInterface* file; // Create the DataInterface for reading the file
 
 		int clickedDimension; // Holds the clicked dimension
 
@@ -494,11 +528,18 @@ namespace OpenGLForm
 		double worldMouseX; // Holds mouse X coord when mapped to world
 		double worldMouseY; // Holds mouse Y coord when mapped to world
 		double worldMouseYOnClick; // Holds the world mouse Y when clicked
+		double worldMouseXOnClick;
 
+		double tempXWorldMouseDifference;
+		double tempYWorldMouseDifference;
+
+
+		double shiftAmount;
 
 		bool uploadFile; // Checks to see if the file has been uploaded
 		bool applied; // checks if changes to the class have been applied
 		bool drawingDragged; // Is made true via mouselistener when dragging the mouse
+		bool invertDimensionToggled;
 
 		bool shiftHorizontal;
 		bool shiftVertical;
@@ -626,7 +667,7 @@ namespace OpenGLForm
 		}
 
 
-		double getWorldMouseX(){
+		double getWorldMouseX() {
 
 			// this will get the mouse position relative to the child window
 			LPPOINT pts = new POINT;
@@ -634,7 +675,10 @@ namespace OpenGLForm
 
 			::ScreenToClient((HWND)this->Handle.ToPointer(), pts); // gets the mouse coordinate relative to the OpenGL view
 
-			double xWorld = pts->x - ((this->worldWidth + (this->zoom)) / 2.0); //::Control::MousePosition.X;
+			double xWorld = pts->x - ((this->worldWidth) / 2.0); //::Control::MousePosition.X;
+
+			//MessageBox::Show(""+xWorld);
+
 			// divide by panel width to get the porportion of the window
 			xWorld /= this->worldWidth;
 			// multiply by the world width to parse the porportion of the window into the world
@@ -643,7 +687,7 @@ namespace OpenGLForm
 			return xWorld;
 		} // Converts raw mouse X coordinates to world coordinates
 
-		double getWorldMouseY(){
+		double getWorldMouseY() {
 
 			// this will get the mouse position relative to the child window
 			LPPOINT pts = new POINT;
@@ -663,12 +707,12 @@ namespace OpenGLForm
 
 		// this method takes the passed mouse click coordinates and finds the dimension clicked on
 		int findClickedDimension(double xMouseWorldPosition, double yMouseWorldPosition){
-			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
+			double xAxisIncrement = (this->worldWidth) / (this->file->getDimensionAmount() + 1); // +1 instead of +2
 
 			for (int i = 0; i < file->getDimensionAmount(); i++)
 			{
 				double shiftAmount = this->file->getDimensionShift(i);
-				double dimensionX = (-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1));
+				double dimensionX = ((-this->worldWidth) / 2.0) + ((xAxisIncrement) * (i + 1));
 
 				double dimensionYMax = (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75);
 				double dimensionYMin = (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1);
@@ -684,14 +728,14 @@ namespace OpenGLForm
 		GLvoid drawDraggedDimension(double x, int dimensionIndex)
 		{			
 
-			double xAxisIncrement = worldWidth / (this->file->getDimensionAmount() + 1);
+			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1);
 			double shiftAmount = this->file->getDimensionShift(dimensionIndex);
 
 			// this will draw the current selected dimension line at half alpha
 			glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
 			glBegin(GL_LINE_STRIP);
-			glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.75);
-			glVertex2d(x, shiftAmount * (worldHeight * 0.5) + worldHeight * 0.1);
+			glVertex2d(x, shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75);
+			glVertex2d(x, shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1);
 			glEnd();
 
 			glLineWidth(3.0);
@@ -700,10 +744,21 @@ namespace OpenGLForm
 			// this will draw the current selected dimension text at half alpha
 			if (this->textEnabled) {
 				glTextColor2d(0.0, 0.0, 0.0, 0.5);
+				std::string name = (*this->file->getDimensionName(dimensionIndex));
+				std::string temp = "1-";
+				temp = temp.append(name);
 				if (this->textBottom) {
-					glText2d(x - ((this->getDimensionName(dimensionIndex)->length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), this->getDimensionName(dimensionIndex)->c_str());
+					if (this->file->isDimensionInverted(dimensionIndex)) {
+						glText2d(x - ((temp.length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), temp.c_str());
+					} else {
+						glText2d(x - ((name.length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), name.c_str());
+					}
 				} else {
-					glText2d(x - ((this->getDimensionName(dimensionIndex)->length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), this->getDimensionName(dimensionIndex)->c_str());
+					if (this->file->isDimensionInverted(dimensionIndex)) {
+						glText2d(x - ((temp.length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), temp.c_str());
+					} else {
+						glText2d(x - ((name.length() * 10.0) / 2.0), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), name.c_str());
+					}
 				}
 				glEnd();
 			}
@@ -725,6 +780,7 @@ namespace OpenGLForm
 
 		GLvoid Display(GLvoid) {
 			//Set the lines that will mark the x values of the window
+
 			glLineWidth(2.0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
@@ -742,49 +798,60 @@ namespace OpenGLForm
 			glText2d(-(this->worldWidth / 2.0), this->worldHeight / 2.0, "HELLO THIS IS A TEST TO SEE HOW MANY CHARACTERS I CAN PUT ON THE SCREEN!");
 			glFlush();
 			*/
-
-			double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
-			glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-			for (int i = 0; i < this->file->getDimensionAmount(); i++)
-			{
-				double shiftAmount = this->file->getDimensionShift(i);
-				glBegin(GL_LINE_STRIP);
-				// was (xAxisIncrement) * i
-				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75));
-				glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
-				glEnd();
-
-			}
-			glFlush();
-
-			// this will display the text for the dimension
-			if (this->textEnabled) {
-				glTextColor2d(0.0, 0.0, 0.0, 1.0);
-				for (int i = 0; i < this->file->getDimensionAmount(); i++) {
-					// display dimension text
+			if (this->uploadedFile()) {
+				double xAxisIncrement = this->worldWidth / (this->file->getDimensionAmount() + 1); // +1 instead of +2
+				glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+				for (int i = 0; i < this->file->getDimensionAmount(); i++)
+				{
 					double shiftAmount = this->file->getDimensionShift(i);
-					if (this->textBottom) {
-						glText2d(((-this->worldWidth - (this->getDimensionName(i)->length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), this->getDimensionName(i)->c_str());
-					} else {
-						glText2d(((-this->worldWidth - (this->getDimensionName(i)->length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), this->getDimensionName(i)->c_str());
-					}
+					glBegin(GL_LINE_STRIP);
+					// was (xAxisIncrement) * i
+					glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.75));
+					glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.1));
 					glEnd();
+
 				}
 				glFlush();
-			}
 
-			drawData();
-			glFlush();
-			
-			if(this->drawingDragged && shiftHorizontal) {
-
-				if (this->clickedDimension != -1){
-					this->drawDraggedDimension(this->worldMouseX, this->clickedDimension);
+				// this will display the text for the dimension
+				if (this->textEnabled) {
+					glTextColor2d(0.0, 0.0, 0.0, 1.0);
+					for (int i = 0; i < this->file->getDimensionAmount(); i++) {
+						// display dimension text
+						double shiftAmount = this->file->getDimensionShift(i);
+						std::string name = (*this->file->getDimensionName(i));
+						std::string temp = "1-";
+						temp = temp.append(name);
+						if (this->textBottom) {
+							if (this->file->isDimensionInverted(i)) {
+								glText2d(((-this->worldWidth - (temp.length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), temp.c_str());
+							} else {
+								glText2d(((-this->worldWidth - (name.length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.05), name.c_str());
+							}
+						} else {
+							if (this->file->isDimensionInverted(i)) {
+								glText2d(((-this->worldWidth - (temp.length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), temp.c_str());
+							} else {
+								glText2d(((-this->worldWidth - (name.length() * 10.0)) / 2.0) + ((xAxisIncrement) * (i + 1)), (shiftAmount * (this->worldHeight * 0.5) + this->worldHeight * 0.78), name.c_str());
+							}
+						}
+						glEnd();
+					}
 					glFlush();
-				} 
+				}
 
+				drawData();
+				glFlush();
+
+				if(this->drawingDragged && shiftHorizontal) {
+
+					if (this->clickedDimension != -1){
+						this->drawDraggedDimension(this->worldMouseX, this->clickedDimension);
+						glFlush();
+					} 
+
+				}
 			}
-
 		}
 
 		// Graphs the data to the world
@@ -809,7 +876,7 @@ namespace OpenGLForm
 					glBegin(GL_LINE_STRIP); // begins drawing lines
 					for (int i = 0; i < this->file->getDimensionAmount(); i++)
 					{
-						double currentData = this->file->getClusterMean(j, i);
+						double currentData = this->file->getClusterMiddle(j, i);
 						glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (i + 1)), (currentData * (this->worldHeight * 0.5)) + (0.175 * this->worldHeight));
 					}
 					glEnd(); // ends drawing line
@@ -838,6 +905,24 @@ namespace OpenGLForm
 					glEnd(); // ends drawing line
 				}
 			}
+			if (!this->file->togglePaintClusters()) {
+				std::vector<int> *list = this->file->getSetsInClass(this->file->getSelectedClassIndex());
+				for(int  i = 0; i< list->size(); i++){
+					int currentIndex = (*list)[i];
+					// set color to the color of the set currentIndex
+					// paint set
+					std::vector<double>* colorOfCurrent = this->file->getSetColor(currentIndex);
+					glColor4d((*colorOfCurrent)[0], (*colorOfCurrent)[1], (*colorOfCurrent)[2], (*colorOfCurrent)[3]);
+					glBegin(GL_LINE_STRIP);
+					for (int j = 0; j < this->file->getDimensionAmount(); j++)
+					{
+						double currentData = this->file->getData(currentIndex, j);
+						glVertex2d((-this->worldWidth / 2.0) + ((xAxisIncrement) * (j + 1)), (currentData * (this->worldHeight * 0.5)) + (0.175 * this->worldHeight));
+					}
+					glEnd();
+				}
+			}
+
 			int selectedSetIndex = file->getSelectedSetIndex();
 			std::vector<double>* colorOfCurrent = this->file->getSetColor(selectedSetIndex);
 			glColor4d((*colorOfCurrent)[0], (*colorOfCurrent)[1], (*colorOfCurrent)[2], (*colorOfCurrent)[3]);
@@ -872,8 +957,7 @@ namespace OpenGLForm
 			// set the orthosphere and keep center of the screen
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			gluOrtho2D(((GLdouble)-width + this->zoom) / 2.0, ((GLdouble)width - this->zoom) / 2.0, (((GLdouble)-height) / 2.5) + this->zoom, (((GLdouble)height - this->zoom) + 100));
-
+			gluOrtho2D((((GLdouble)-width + this->tempXWorldMouseDifference) + this->zoom) / 2.0, (((GLdouble)width + this->tempXWorldMouseDifference) - this->zoom) / 2.0, ((((GLdouble)-height / 2.5) + this->zoom) - this->tempYWorldMouseDifference), ((((GLdouble)height - this->zoom) + 100) - this->tempYWorldMouseDifference));
 		}
 
 
@@ -887,17 +971,24 @@ namespace OpenGLForm
 
 			case WM_LBUTTONDOWN:
 				{
-
 					// get the X and Y coordinates of the mouse position
 					this->worldMouseX = this->getWorldMouseX();
 					this->worldMouseY = this->getWorldMouseY();
 
 					this->worldMouseYOnClick = this->getWorldMouseY();
-
+					this->worldMouseXOnClick = this->getWorldMouseX();
 
 					// ensures that the clicked dimension is valid
 					this->clickedDimension = this->findClickedDimension(this->worldMouseX, this->worldMouseY); //1					
-					double shiftAmount = this->file->getDimensionShift(clickedDimension);	
+
+
+					if (this->invertDimensionToggled)
+					{
+						this->file->invertDimension(this->clickedDimension);
+					}
+
+
+					double shiftAmount = this->file->getDimensionShift(clickedDimension);
 					this->drawingDragged = true;								
 				}
 				break;
@@ -916,8 +1007,11 @@ namespace OpenGLForm
 					if (this->drawingDragged && this->shiftHorizontal && this->file->moveData(this->clickedDimension, droppedDimension)) {
 						this->clickedDimension = droppedDimension;							
 					} else if (this->drawingDragged && this->shiftVertical) {
-						this->file->setDimensionShift(this->clickedDimension, (this->worldMouseYOnClick - this->worldMouseY)/(this->worldHeight * 0.65));
-					}				
+						this->file->setDimensionShift(this->clickedDimension, (this->shiftAmount + (this->worldMouseYOnClick - this->worldMouseY)/(this->worldHeight * 0.65)));
+					} else if (this->drawingDragged && !this->shiftVertical && !this->shiftHorizontal && !this->invertDimensionToggled) {
+						this->tempXWorldMouseDifference = worldMouseXOnClick - this->getWorldMouseX();
+						this->tempYWorldMouseDifference = worldMouseYOnClick - this->getWorldMouseY();
+					}
 
 				}
 				break;
@@ -930,7 +1024,7 @@ namespace OpenGLForm
 						this->worldMouseY = this->getWorldMouseY();
 						int droppedDimension = this->findClickedDimension(this->worldMouseX, this->worldMouseY);
 						this->file->moveData(this->clickedDimension, droppedDimension);*/
-
+						shiftAmount = 0.0;
 						this->drawingDragged = false;
 					}
 

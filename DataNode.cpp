@@ -34,6 +34,11 @@ void DataNode::setData(double newData) {
 	originalData = newData;
 }
 
+// sets the data to the original
+void DataNode::resetData() {
+	currentData = originalData;
+}
+
 // multiplies the data held by the node, by the passed value(multiplier)
 void DataNode::multiplyData(double multiplier) {
 	currentData *= multiplier;

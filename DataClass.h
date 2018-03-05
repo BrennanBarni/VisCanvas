@@ -34,10 +34,12 @@ public:
 	void setName(std::string* newName);
 	// gets the number of sets in this class
 	int getSetNumber() const;
-	// increments the number of sets in this class, and returns the new number of sets
-	int incrementSetNumber();
-	// decrements the number of sets in this class, and returns the new number of sets
-	int decrementSetNumber();
+	// gets the sets in the class
+	std::vector<int>* getSetsInClass();
+	// adds set to the class
+	void addSet(int setIndex);
+	// removes set from the class
+	void removeSet(int setIndex);
 
 private:
 	// the vector holding all the data
@@ -46,8 +48,8 @@ private:
 	ColorCustom color;
 	// gets the name of this class
 	std::string name;
-	//a field holding the number of sets in this data class
-	int setNumber;
+	//a field holding the sets in this data class
+	std::vector<int> sets;
 };
 
 #endif

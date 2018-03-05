@@ -12,7 +12,7 @@ Dimension::Dimension() {
 	name = std::to_string(originalIndex);
 	data = vector<DataNode*>();
 	shiftAmount = 0.0;
-	isInverted = false;
+	inverted = false;
 
 	useArtificialCalibration = false;
 	artificialMaximum = 1.0;
@@ -30,7 +30,7 @@ Dimension::Dimension(int index, int size) {
 		data.push_back(new DataNode(0.0));
 	}
 	shiftAmount = 0.0;
-	isInverted = false;
+	inverted = false;
 
 	useArtificialCalibration = false;
 	artificialMaximum = 1.0;
@@ -59,6 +59,11 @@ int Dimension::setOriginalIndex(int newIndex) {
 
 // calibrate the data to the [0,1] space
 void Dimension::calibrateData() {
+	// reset data
+	for (int i = 0; i < this->size(); i++) {
+		(data[i])->resetData();
+	}
+
 	double maximum = getMaximum();
 	double minimum = getMinimum();
 	if (useArtificialCalibration) {
@@ -78,10 +83,10 @@ double Dimension::getData(int dataIndex) const {
 		return 0.0;
 	}
 	double dataReturn = (*data[dataIndex]).getData();
-	dataReturn += shiftAmount;
-	if (isInverted) {
+	if (inverted) {
 		dataReturn = 1 - dataReturn;
 	}
+	dataReturn += shiftAmount;
 	return dataReturn;
 }
 
@@ -91,7 +96,7 @@ double Dimension::getCalibratedData(int dataIndex) const {
 		return 0.0;
 	}
 	double dataReturn = (*data[dataIndex]).getData();
-	if (isInverted) {
+	if (inverted) {
 		dataReturn = 1 - dataReturn;
 	}
 	return dataReturn;
@@ -122,7 +127,6 @@ void Dimension::setData(int dataIndex, double newData) {
 		return;
 	}
 	(*data[dataIndex]).setData(newData);
-	//this->calibrateData();
 }
 
 
@@ -159,12 +163,14 @@ double Dimension::getShift() {
 	return shiftAmount;
 }
 
-// toggles whether the data is inverted
-void Dimension::invertData() {
-	isInverted = !isInverted;
+bool Dimension::isInverted() {
+	return inverted;
 }
 
-
+// toggles whether the data is inverted
+void Dimension::invert() {
+	inverted = !inverted;
+}
 
 
 // gets the number of sets in the dimensions
@@ -206,7 +212,7 @@ double Dimension::getMaximum() const {
 	}
 	double maximum = (*data[0]).getData();
 	for (unsigned int i = 1; i < data.size(); i++) {
-		if (maximum > (*data[i]).getData()) {
+		if (maximum >(*data[i]).getData()) {
 			maximum = (*data[i]).getData();
 		}
 	}
@@ -226,6 +232,3 @@ double Dimension::getMinimum() const {
 	}
 	return minimum;
 }
-
-// private:
-

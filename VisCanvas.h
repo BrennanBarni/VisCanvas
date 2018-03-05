@@ -42,6 +42,7 @@ namespace VisCanvas {
 			this->previousClassAmount = 0;
 			this->sortToggleState = false;
 			this->shifToggleState = false;
+			this->invertToggleState = false;
 			this->prevZoom = 100;
 		}
 
@@ -119,7 +120,7 @@ namespace VisCanvas {
 	private: System::Windows::Forms::Button^  origData;
 
 			 // COLOR PICKER
-	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1;
+
 			 // this will display the currently selected color
 
 			 // SELECT THE CLASS YOU WANT VISIBLE OR CHANGE ITS COLOR
@@ -148,6 +149,20 @@ namespace VisCanvas {
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripMenuItem3;
 	private: System::Windows::Forms::ToolStripMenuItem^  optionsToolStripMenuItem1;
+	private: System::Windows::Forms::Label^  label2;
+	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1;
+	private: System::Windows::Forms::Label^  label3;
+	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::ToolStripMenuItem^  toggleDimensionInvertToolStripMenuItem;
+
+
+
+
+
+
+
+
 
 
 
@@ -176,6 +191,8 @@ namespace VisCanvas {
 				 this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->openToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				 this->toolStripMenuItem3 = (gcnew System::Windows::Forms::ToolStripSeparator());
+				 this->optionsToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->toolStripMenuItem4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 				 this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->viewToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -186,6 +203,7 @@ namespace VisCanvas {
 				 this->toolsToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->reorderToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->dimensionShiftingToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				 this->toggleDimensionInvertToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->toolStripMenuItem6 = (gcnew System::Windows::Forms::ToolStripSeparator());
 				 this->ascendSortToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->descendSortToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -201,6 +219,8 @@ namespace VisCanvas {
 				 this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->helpToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				 this->Tools = (gcnew System::Windows::Forms::Panel());
+				 this->button3 = (gcnew System::Windows::Forms::Button());
+				 this->label3 = (gcnew System::Windows::Forms::Label());
 				 this->button2 = (gcnew System::Windows::Forms::Button());
 				 this->origData = (gcnew System::Windows::Forms::Button());
 				 this->nColorBoxControl1 = (gcnew Nevron::Nov::WinFormControls::NColorBoxControl());
@@ -214,18 +234,18 @@ namespace VisCanvas {
 				 this->manualSort = (gcnew System::Windows::Forms::Button());
 				 this->sortOrig = (gcnew System::Windows::Forms::Button());
 				 this->Options = (gcnew System::Windows::Forms::Panel());
+				 this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->panel1 = (gcnew System::Windows::Forms::Panel());
 				 this->linkLabel1 = (gcnew System::Windows::Forms::LinkLabel());
 				 this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 				 this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 				 this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 				 this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
-				 this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->label5 = (gcnew System::Windows::Forms::Label());
 				 this->nSliderControl1 = (gcnew Nevron::Nov::WinFormControls::NSliderControl());
 				 this->label1 = (gcnew System::Windows::Forms::Label());
-				 this->toolStripMenuItem3 = (gcnew System::Windows::Forms::ToolStripSeparator());
-				 this->optionsToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				 this->label2 = (gcnew System::Windows::Forms::Label());
+				 this->button1 = (gcnew System::Windows::Forms::Button());
 				 this->menubar->SuspendLayout();
 				 this->Tools->SuspendLayout();
 				 this->Options->SuspendLayout();
@@ -269,7 +289,7 @@ namespace VisCanvas {
 				 // 
 				 this->openToolStripMenuItem->Name = L"openToolStripMenuItem";
 				 this->openToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::O));
-				 this->openToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+				 this->openToolStripMenuItem->Size = System::Drawing::Size(146, 22);
 				 this->openToolStripMenuItem->Text = L"Open";
 				 this->openToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::openToolStripMenuItem_Click);
 				 // 
@@ -277,19 +297,31 @@ namespace VisCanvas {
 				 // 
 				 this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
 				 this->saveToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::S));
-				 this->saveToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+				 this->saveToolStripMenuItem->Size = System::Drawing::Size(146, 22);
 				 this->saveToolStripMenuItem->Text = L"Save";
 				 this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::saveToolStripMenuItem_Click);
+				 // 
+				 // toolStripMenuItem3
+				 // 
+				 this->toolStripMenuItem3->Name = L"toolStripMenuItem3";
+				 this->toolStripMenuItem3->Size = System::Drawing::Size(143, 6);
+				 // 
+				 // optionsToolStripMenuItem1
+				 // 
+				 this->optionsToolStripMenuItem1->Name = L"optionsToolStripMenuItem1";
+				 this->optionsToolStripMenuItem1->Size = System::Drawing::Size(146, 22);
+				 this->optionsToolStripMenuItem1->Text = L"Options";
+				 this->optionsToolStripMenuItem1->Click += gcnew System::EventHandler(this, &VisCanvas::optionsToolStripMenuItem1_Click);
 				 // 
 				 // toolStripMenuItem4
 				 // 
 				 this->toolStripMenuItem4->Name = L"toolStripMenuItem4";
-				 this->toolStripMenuItem4->Size = System::Drawing::Size(149, 6);
+				 this->toolStripMenuItem4->Size = System::Drawing::Size(143, 6);
 				 // 
 				 // exitToolStripMenuItem
 				 // 
 				 this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-				 this->exitToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+				 this->exitToolStripMenuItem->Size = System::Drawing::Size(146, 22);
 				 this->exitToolStripMenuItem->Text = L"Exit";
 				 this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::exitToolStripMenuItem_Click);
 				 // 
@@ -340,10 +372,11 @@ namespace VisCanvas {
 				 // 
 				 // toolsToolStripMenuItem1
 				 // 
-				 this->toolsToolStripMenuItem1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(13) {this->reorderToolStripMenuItem, 
-					 this->dimensionShiftingToolStripMenuItem, this->toolStripMenuItem6, this->ascendSortToolStripMenuItem, this->descendSortToolStripMenuItem, 
-					 this->sortOriginalToolStripMenuItem, this->toolStripMenuItem2, this->hypercubeToolStripMenuItem, this->resetHypercubeToolStripMenuItem, 
-					 this->toolStripMenuItem5, this->meanLevelToolStripMenuItem, this->medianLevelToolStripMenuItem, this->originalDataToolStripMenuItem});
+				 this->toolsToolStripMenuItem1->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(14) {this->reorderToolStripMenuItem, 
+					 this->dimensionShiftingToolStripMenuItem, this->toggleDimensionInvertToolStripMenuItem, this->toolStripMenuItem6, this->ascendSortToolStripMenuItem, 
+					 this->descendSortToolStripMenuItem, this->sortOriginalToolStripMenuItem, this->toolStripMenuItem2, this->hypercubeToolStripMenuItem, 
+					 this->resetHypercubeToolStripMenuItem, this->toolStripMenuItem5, this->meanLevelToolStripMenuItem, this->medianLevelToolStripMenuItem, 
+					 this->originalDataToolStripMenuItem});
 				 this->toolsToolStripMenuItem1->Name = L"toolsToolStripMenuItem1";
 				 this->toolsToolStripMenuItem1->Size = System::Drawing::Size(47, 20);
 				 this->toolsToolStripMenuItem1->Text = L"Tools";
@@ -353,7 +386,7 @@ namespace VisCanvas {
 				 this->reorderToolStripMenuItem->Name = L"reorderToolStripMenuItem";
 				 this->reorderToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::Z));
-				 this->reorderToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->reorderToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->reorderToolStripMenuItem->Text = L"Manual Sort";
 				 this->reorderToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::reorderToolStripMenuItem_Click);
 				 // 
@@ -362,21 +395,30 @@ namespace VisCanvas {
 				 this->dimensionShiftingToolStripMenuItem->Name = L"dimensionShiftingToolStripMenuItem";
 				 this->dimensionShiftingToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::X));
-				 this->dimensionShiftingToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->dimensionShiftingToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->dimensionShiftingToolStripMenuItem->Text = L"Manual Shift";
 				 this->dimensionShiftingToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::dimensionShiftingToolStripMenuItem_Click);
+				 // 
+				 // toggleDimensionInvertToolStripMenuItem
+				 // 
+				 this->toggleDimensionInvertToolStripMenuItem->Name = L"toggleDimensionInvertToolStripMenuItem";
+				 this->toggleDimensionInvertToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
+					 | System::Windows::Forms::Keys::I));
+				 this->toggleDimensionInvertToolStripMenuItem->Size = System::Drawing::Size(281, 22);
+				 this->toggleDimensionInvertToolStripMenuItem->Text = L"Toggle Dimension Invert";
+				 this->toggleDimensionInvertToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::toggleDimensionInvertToolStripMenuItem_Click);
 				 // 
 				 // toolStripMenuItem6
 				 // 
 				 this->toolStripMenuItem6->Name = L"toolStripMenuItem6";
-				 this->toolStripMenuItem6->Size = System::Drawing::Size(222, 6);
+				 this->toolStripMenuItem6->Size = System::Drawing::Size(278, 6);
 				 // 
 				 // ascendSortToolStripMenuItem
 				 // 
 				 this->ascendSortToolStripMenuItem->Name = L"ascendSortToolStripMenuItem";
 				 this->ascendSortToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::A));
-				 this->ascendSortToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->ascendSortToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->ascendSortToolStripMenuItem->Text = L"Sort Ascending";
 				 this->ascendSortToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::sortingToolStripMenuItem_Click);
 				 // 
@@ -385,7 +427,7 @@ namespace VisCanvas {
 				 this->descendSortToolStripMenuItem->Name = L"descendSortToolStripMenuItem";
 				 this->descendSortToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::D));
-				 this->descendSortToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->descendSortToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->descendSortToolStripMenuItem->Text = L"Sort Descending";
 				 this->descendSortToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::descendSortToolStripMenuItem_Click);
 				 // 
@@ -394,22 +436,22 @@ namespace VisCanvas {
 				 this->sortOriginalToolStripMenuItem->Name = L"sortOriginalToolStripMenuItem";
 				 this->sortOriginalToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::R));
-				 this->sortOriginalToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->sortOriginalToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->sortOriginalToolStripMenuItem->Text = L"Reset Sort";
 				 this->sortOriginalToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::sortOriginalToolStripMenuItem_Click);
 				 // 
 				 // toolStripMenuItem2
 				 // 
 				 this->toolStripMenuItem2->Name = L"toolStripMenuItem2";
-				 this->toolStripMenuItem2->Size = System::Drawing::Size(222, 6);
+				 this->toolStripMenuItem2->Size = System::Drawing::Size(278, 6);
 				 // 
 				 // hypercubeToolStripMenuItem
 				 // 
 				 this->hypercubeToolStripMenuItem->Name = L"hypercubeToolStripMenuItem";
 				 this->hypercubeToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::H));
-				 this->hypercubeToolStripMenuItem->Size = System::Drawing::Size(225, 22);
-				 this->hypercubeToolStripMenuItem->Text = L"Hypercube";
+				 this->hypercubeToolStripMenuItem->Size = System::Drawing::Size(281, 22);
+				 this->hypercubeToolStripMenuItem->Text = L"Hypercube Analysis";
 				 this->hypercubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::hypercubeToolStripMenuItem_Click);
 				 // 
 				 // resetHypercubeToolStripMenuItem
@@ -417,21 +459,21 @@ namespace VisCanvas {
 				 this->resetHypercubeToolStripMenuItem->Name = L"resetHypercubeToolStripMenuItem";
 				 this->resetHypercubeToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::C));
-				 this->resetHypercubeToolStripMenuItem->Size = System::Drawing::Size(225, 22);
-				 this->resetHypercubeToolStripMenuItem->Text = L"Toggle Cluster";
+				 this->resetHypercubeToolStripMenuItem->Size = System::Drawing::Size(281, 22);
+				 this->resetHypercubeToolStripMenuItem->Text = L"Toggle Hypercube Clusters";
 				 this->resetHypercubeToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::resetHypercubeToolStripMenuItem_Click);
 				 // 
 				 // toolStripMenuItem5
 				 // 
 				 this->toolStripMenuItem5->Name = L"toolStripMenuItem5";
-				 this->toolStripMenuItem5->Size = System::Drawing::Size(222, 6);
+				 this->toolStripMenuItem5->Size = System::Drawing::Size(278, 6);
 				 // 
 				 // meanLevelToolStripMenuItem
 				 // 
 				 this->meanLevelToolStripMenuItem->Name = L"meanLevelToolStripMenuItem";
 				 this->meanLevelToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::N));
-				 this->meanLevelToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->meanLevelToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->meanLevelToolStripMenuItem->Text = L"Mean Level";
 				 this->meanLevelToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::meanLevelToolStripMenuItem_Click);
 				 // 
@@ -440,7 +482,7 @@ namespace VisCanvas {
 				 this->medianLevelToolStripMenuItem->Name = L"medianLevelToolStripMenuItem";
 				 this->medianLevelToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::M));
-				 this->medianLevelToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->medianLevelToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->medianLevelToolStripMenuItem->Text = L"Median Level";
 				 this->medianLevelToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::medianLevelToolStripMenuItem_Click);
 				 // 
@@ -449,7 +491,7 @@ namespace VisCanvas {
 				 this->originalDataToolStripMenuItem->Name = L"originalDataToolStripMenuItem";
 				 this->originalDataToolStripMenuItem->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Alt) 
 					 | System::Windows::Forms::Keys::L));
-				 this->originalDataToolStripMenuItem->Size = System::Drawing::Size(225, 22);
+				 this->originalDataToolStripMenuItem->Size = System::Drawing::Size(281, 22);
 				 this->originalDataToolStripMenuItem->Text = L"Reset Level";
 				 this->originalDataToolStripMenuItem->Click += gcnew System::EventHandler(this, &VisCanvas::originalDataToolStripMenuItem_Click);
 				 // 
@@ -478,6 +520,8 @@ namespace VisCanvas {
 				 // Tools
 				 // 
 				 this->Tools->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
+				 this->Tools->Controls->Add(this->button3);
+				 this->Tools->Controls->Add(this->label3);
 				 this->Tools->Controls->Add(this->button2);
 				 this->Tools->Controls->Add(this->origData);
 				 this->Tools->Controls->Add(this->nColorBoxControl1);
@@ -496,11 +540,35 @@ namespace VisCanvas {
 				 this->Tools->Size = System::Drawing::Size(72, 643);
 				 this->Tools->TabIndex = 2;
 				 // 
+				 // button3
+				 // 
+				 this->button3->BackColor = System::Drawing::SystemColors::ButtonFace;
+				 this->button3->FlatAppearance->BorderColor = System::Drawing::Color::White;
+				 this->button3->FlatAppearance->BorderSize = 2;
+				 this->button3->FlatAppearance->MouseOverBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(128)), 
+					 static_cast<System::Int32>(static_cast<System::Byte>(128)), static_cast<System::Int32>(static_cast<System::Byte>(255)));
+				 this->button3->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"button3.Image")));
+				 this->button3->Location = System::Drawing::Point(14, 135);
+				 this->button3->Name = L"button3";
+				 this->button3->Size = System::Drawing::Size(45, 45);
+				 this->button3->TabIndex = 26;
+				 this->button3->UseVisualStyleBackColor = false;
+				 this->button3->Click += gcnew System::EventHandler(this, &VisCanvas::button3_Click_1);
+				 // 
+				 // label3
+				 // 
+				 this->label3->AutoSize = true;
+				 this->label3->Location = System::Drawing::Point(4, 628);
+				 this->label3->Name = L"label3";
+				 this->label3->Size = System::Drawing::Size(65, 13);
+				 this->label3->TabIndex = 25;
+				 this->label3->Text = L"Background";
+				 // 
 				 // button2
 				 // 
 				 this->button2->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->button2->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"button2.Image")));
-				 this->button2->Location = System::Drawing::Point(14, 377);
+				 this->button2->Location = System::Drawing::Point(14, 393);
 				 this->button2->Name = L"button2";
 				 this->button2->Size = System::Drawing::Size(45, 45);
 				 this->button2->TabIndex = 24;
@@ -511,7 +579,7 @@ namespace VisCanvas {
 				 // 
 				 this->origData->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->origData->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
-				 this->origData->Location = System::Drawing::Point(5, 540);
+				 this->origData->Location = System::Drawing::Point(5, 541);
 				 this->origData->Name = L"origData";
 				 this->origData->Size = System::Drawing::Size(62, 40);
 				 this->origData->TabIndex = 23;
@@ -523,7 +591,7 @@ namespace VisCanvas {
 				 // 
 				 this->nColorBoxControl1->AutoSize = false;
 				 this->nColorBoxControl1->DesignTimeState = resources->GetString(L"nColorBoxControl1.DesignTimeState");
-				 this->nColorBoxControl1->Location = System::Drawing::Point(5, 593);
+				 this->nColorBoxControl1->Location = System::Drawing::Point(5, 588);
 				 this->nColorBoxControl1->Name = L"nColorBoxControl1";
 				 this->nColorBoxControl1->Size = System::Drawing::Size(62, 40);
 				 this->nColorBoxControl1->TabIndex = 13;
@@ -533,7 +601,7 @@ namespace VisCanvas {
 				 // 
 				 this->sortAscend->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->sortAscend->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortAscend.Image")));
-				 this->sortAscend->Location = System::Drawing::Point(14, 150);
+				 this->sortAscend->Location = System::Drawing::Point(14, 187);
 				 this->sortAscend->Name = L"sortAscend";
 				 this->sortAscend->Size = System::Drawing::Size(45, 45);
 				 this->sortAscend->TabIndex = 19;
@@ -544,7 +612,7 @@ namespace VisCanvas {
 				 // 
 				 this->hypercube->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->hypercube->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"hypercube.Image")));
-				 this->hypercube->Location = System::Drawing::Point(14, 320);
+				 this->hypercube->Location = System::Drawing::Point(14, 341);
 				 this->hypercube->Name = L"hypercube";
 				 this->hypercube->Size = System::Drawing::Size(45, 45);
 				 this->hypercube->TabIndex = 20;
@@ -555,7 +623,7 @@ namespace VisCanvas {
 				 // 
 				 this->medianLevel->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->medianLevel->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
-				 this->medianLevel->Location = System::Drawing::Point(5, 487);
+				 this->medianLevel->Location = System::Drawing::Point(5, 493);
 				 this->medianLevel->Name = L"medianLevel";
 				 this->medianLevel->Size = System::Drawing::Size(62, 40);
 				 this->medianLevel->TabIndex = 22;
@@ -580,7 +648,7 @@ namespace VisCanvas {
 				 // 
 				 this->manualShift->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->manualShift->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"manualShift.Image")));
-				 this->manualShift->Location = System::Drawing::Point(14, 94);
+				 this->manualShift->Location = System::Drawing::Point(14, 83);
 				 this->manualShift->Name = L"manualShift";
 				 this->manualShift->Size = System::Drawing::Size(45, 45);
 				 this->manualShift->TabIndex = 18;
@@ -591,7 +659,7 @@ namespace VisCanvas {
 				 // 
 				 this->meanLevel->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->meanLevel->Font = (gcnew System::Drawing::Font(L"Eras Demi ITC", 9));
-				 this->meanLevel->Location = System::Drawing::Point(5, 434);
+				 this->meanLevel->Location = System::Drawing::Point(5, 446);
 				 this->meanLevel->Name = L"meanLevel";
 				 this->meanLevel->Size = System::Drawing::Size(62, 40);
 				 this->meanLevel->TabIndex = 21;
@@ -603,7 +671,7 @@ namespace VisCanvas {
 				 // 
 				 this->sortDescend->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->sortDescend->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortDescend.Image")));
-				 this->sortDescend->Location = System::Drawing::Point(14, 206);
+				 this->sortDescend->Location = System::Drawing::Point(14, 239);
 				 this->sortDescend->Name = L"sortDescend";
 				 this->sortDescend->Size = System::Drawing::Size(45, 45);
 				 this->sortDescend->TabIndex = 5;
@@ -618,7 +686,7 @@ namespace VisCanvas {
 				 this->manualSort->FlatAppearance->MouseOverBackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(128)), 
 					 static_cast<System::Int32>(static_cast<System::Byte>(128)), static_cast<System::Int32>(static_cast<System::Byte>(255)));
 				 this->manualSort->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"manualSort.Image")));
-				 this->manualSort->Location = System::Drawing::Point(14, 38);
+				 this->manualSort->Location = System::Drawing::Point(14, 32);
 				 this->manualSort->Name = L"manualSort";
 				 this->manualSort->Size = System::Drawing::Size(45, 45);
 				 this->manualSort->TabIndex = 4;
@@ -629,7 +697,7 @@ namespace VisCanvas {
 				 // 
 				 this->sortOrig->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->sortOrig->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"sortOrig.Image")));
-				 this->sortOrig->Location = System::Drawing::Point(14, 263);
+				 this->sortOrig->Location = System::Drawing::Point(14, 290);
 				 this->sortOrig->Name = L"sortOrig";
 				 this->sortOrig->Size = System::Drawing::Size(45, 45);
 				 this->sortOrig->TabIndex = 5;
@@ -640,11 +708,11 @@ namespace VisCanvas {
 				 // 
 				 this->Options->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 				 this->Options->BackColor = System::Drawing::SystemColors::Control;
+				 this->Options->Controls->Add(this->nHsbColorPickerControl1);
 				 this->Options->Controls->Add(this->panel1);
 				 this->Options->Controls->Add(this->linkLabel1);
 				 this->Options->Controls->Add(this->dataGridView1);
 				 this->Options->Controls->Add(this->comboBox1);
-				 this->Options->Controls->Add(this->nHsbColorPickerControl1);
 				 this->Options->Controls->Add(this->label5);
 				 this->Options->Dock = System::Windows::Forms::DockStyle::Right;
 				 this->Options->Location = System::Drawing::Point(1048, 24);
@@ -653,11 +721,21 @@ namespace VisCanvas {
 				 this->Options->TabIndex = 3;
 				 this->Options->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &VisCanvas::Classes_Paint);
 				 // 
+				 // nHsbColorPickerControl1
+				 // 
+				 this->nHsbColorPickerControl1->AutoSize = false;
+				 this->nHsbColorPickerControl1->DesignTimeState = nullptr;
+				 this->nHsbColorPickerControl1->Location = System::Drawing::Point(7, 253);
+				 this->nHsbColorPickerControl1->Name = L"nHsbColorPickerControl1";
+				 this->nHsbColorPickerControl1->Size = System::Drawing::Size(122, 102);
+				 this->nHsbColorPickerControl1->TabIndex = 38;
+				 this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &VisCanvas::nHsbColorPickerControl1_SelectedColorChanged_1);
+				 // 
 				 // panel1
 				 // 
 				 this->panel1->BackColor = System::Drawing::Color::Black;
 				 this->panel1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::None;
-				 this->panel1->Location = System::Drawing::Point(7, 362);
+				 this->panel1->Location = System::Drawing::Point(7, 357);
 				 this->panel1->Name = L"panel1";
 				 this->panel1->Size = System::Drawing::Size(122, 29);
 				 this->panel1->TabIndex = 37;
@@ -694,7 +772,7 @@ namespace VisCanvas {
 				 dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::ControlText;
 				 dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::False;
 				 this->dataGridView1->DefaultCellStyle = dataGridViewCellStyle1;
-				 this->dataGridView1->Location = System::Drawing::Point(7, 38);
+				 this->dataGridView1->Location = System::Drawing::Point(7, 33);
 				 this->dataGridView1->MultiSelect = false;
 				 this->dataGridView1->Name = L"dataGridView1";
 				 this->dataGridView1->ReadOnly = true;
@@ -741,21 +819,11 @@ namespace VisCanvas {
 				 // comboBox1
 				 // 
 				 this->comboBox1->FormattingEnabled = true;
-				 this->comboBox1->Location = System::Drawing::Point(7, 214);
+				 this->comboBox1->Location = System::Drawing::Point(7, 209);
 				 this->comboBox1->Name = L"comboBox1";
 				 this->comboBox1->Size = System::Drawing::Size(122, 21);
 				 this->comboBox1->TabIndex = 18;
 				 this->comboBox1->Text = L"select class...";
-				 // 
-				 // nHsbColorPickerControl1
-				 // 
-				 this->nHsbColorPickerControl1->AutoSize = false;
-				 this->nHsbColorPickerControl1->DesignTimeState = nullptr;
-				 this->nHsbColorPickerControl1->Location = System::Drawing::Point(7, 258);
-				 this->nHsbColorPickerControl1->Name = L"nHsbColorPickerControl1";
-				 this->nHsbColorPickerControl1->Size = System::Drawing::Size(122, 102);
-				 this->nHsbColorPickerControl1->TabIndex = 17;
-				 this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &VisCanvas::nHsbColorPickerControl1_SelectedColorChanged);
 				 // 
 				 // label5
 				 // 
@@ -774,7 +842,7 @@ namespace VisCanvas {
 				 // 
 				 this->nSliderControl1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 				 this->nSliderControl1->AutoSize = false;
-				 this->nSliderControl1->DesignTimeState = resources->GetString(L"nSliderControl1.DesignTimeState");
+				 this->nSliderControl1->DesignTimeState = nullptr;
 				 this->nSliderControl1->Location = System::Drawing::Point(1026, 668);
 				 this->nSliderControl1->Name = L"nSliderControl1";
 				 this->nSliderControl1->Size = System::Drawing::Size(146, 21);
@@ -792,17 +860,28 @@ namespace VisCanvas {
 				 this->label1->TabIndex = 5;
 				 this->label1->Text = L"0%";
 				 // 
-				 // toolStripMenuItem3
+				 // label2
 				 // 
-				 this->toolStripMenuItem3->Name = L"toolStripMenuItem3";
-				 this->toolStripMenuItem3->Size = System::Drawing::Size(149, 6);
+				 this->label2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+				 this->label2->AutoSize = true;
+				 this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.5F));
+				 this->label2->Location = System::Drawing::Point(951, 671);
+				 this->label2->Name = L"label2";
+				 this->label2->Size = System::Drawing::Size(42, 15);
+				 this->label2->TabIndex = 6;
+				 this->label2->Text = L"Zoom:";
 				 // 
-				 // optionsToolStripMenuItem1
+				 // button1
 				 // 
-				 this->optionsToolStripMenuItem1->Name = L"optionsToolStripMenuItem1";
-				 this->optionsToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
-				 this->optionsToolStripMenuItem1->Text = L"Options";
-				 this->optionsToolStripMenuItem1->Click += gcnew System::EventHandler(this, &VisCanvas::optionsToolStripMenuItem1_Click);
+				 this->button1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
+				 this->button1->BackColor = System::Drawing::SystemColors::ButtonFace;
+				 this->button1->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"button1.Image")));
+				 this->button1->Location = System::Drawing::Point(927, 667);
+				 this->button1->Name = L"button1";
+				 this->button1->Size = System::Drawing::Size(22, 22);
+				 this->button1->TabIndex = 7;
+				 this->button1->UseVisualStyleBackColor = false;
+				 this->button1->Click += gcnew System::EventHandler(this, &VisCanvas::button1_Click_1);
 				 // 
 				 // VisCanvas
 				 // 
@@ -811,6 +890,8 @@ namespace VisCanvas {
 				 this->AutoValidate = System::Windows::Forms::AutoValidate::EnablePreventFocusChange;
 				 this->BackColor = System::Drawing::SystemColors::ButtonFace;
 				 this->ClientSize = System::Drawing::Size(1184, 689);
+				 this->Controls->Add(this->button1);
+				 this->Controls->Add(this->label2);
 				 this->Controls->Add(this->label1);
 				 this->Controls->Add(this->nSliderControl1);
 				 this->Controls->Add(this->Options);
@@ -823,6 +904,7 @@ namespace VisCanvas {
 				 this->Name = L"VisCanvas";
 				 this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 				 this->Text = L"VisCanvas";
+				 this->FormClosing += gcnew System::Windows::Forms::FormClosingEventHandler(this, &VisCanvas::VisCanvas_FormClosing);
 				 this->Load += gcnew System::EventHandler(this, &VisCanvas::VisCanvas_Load);
 				 this->Resize += gcnew System::EventHandler(this, &VisCanvas::ResizeMe);
 				 this->menubar->ResumeLayout(false);
@@ -858,21 +940,8 @@ namespace VisCanvas {
 				 adjustPanels();
 
 				 // display our OpenGL to the Parent Form
-				 try {
-					 OpenGL->Render();	
-					 OpenGL->SwapOpenGLBuffers();	
-				 } catch (...) {
-					 // display an error message
-					 ::DialogResult result = MessageBox::Show("WARNING: VisCanvas is unable to open the file. Click 'Retry' to try again.", "Trouble Opening File", MessageBoxButtons::RetryCancel, MessageBoxIcon::Warning);
-					 if (result == ::DialogResult::Retry)
-					 {
-						 this->openFile(); // reopen the file dialog
-					 }
-					 if (result == ::DialogResult::Cancel)
-					 {
-						 // don't proceed to the file dialog
-					 } 
-				 }
+				 OpenGL->Render();	
+				 OpenGL->SwapOpenGLBuffers();
 			 }
 
 			 /* THIS WILL RESIZE THE SCREEN */
@@ -1117,16 +1186,18 @@ namespace VisCanvas {
 				 // Set up the ToolTip text for the Button and Checkbox.
 				 toolTip->SetToolTip(this->label4, "hide (ctrl+alt+t)");
 				 toolTip->SetToolTip(this->label5, "hide (ctrl+alt+o)");
-				 toolTip->SetToolTip(this->sortAscend, "Sort Ascending (ctrl+alt+a)");
-				 toolTip->SetToolTip(this->sortDescend, "Sort Descending (ctrl+alt+d)");
-				 toolTip->SetToolTip(this->sortOrig, "Reset Sorted Data (ctrl+alt+s)");
+				 toolTip->SetToolTip(this->sortAscend, "Sort Dimensions Ascending (ctrl+alt+a)");
+				 toolTip->SetToolTip(this->sortDescend, "Sort Dimensions Descending (ctrl+alt+d)");
+				 toolTip->SetToolTip(this->sortOrig, "Reset Sorted Dimension Data (ctrl+alt+s)");
 				 toolTip->SetToolTip(this->hypercube, "Hypercube Analysis (ctrl+alt+h)");
-				 toolTip->SetToolTip(this->meanLevel, "Mean Level (ctrl+alt+n)");
-				 toolTip->SetToolTip(this->medianLevel, "Median Level (ctrl+alt+m)");
-				 toolTip->SetToolTip(this->origData, "Reset Leveled Data (ctrl+alt+l)");
+				 toolTip->SetToolTip(this->meanLevel, "Mean Shift to Level (ctrl+alt+n)");
+				 toolTip->SetToolTip(this->medianLevel, "Median Shift to Level (ctrl+alt+m)");
+				 toolTip->SetToolTip(this->origData, "Reset Shift to Leveled Data (ctrl+alt+l)");
 				 toolTip->SetToolTip(this->manualSort, "Manually Sort Dimensions (ctrl+alt+z)");
 				 toolTip->SetToolTip(this->manualShift, "Manually Shift Dimensions (ctrl+alt+x)");
-				 toolTip->SetToolTip(this->button2, "Toggle Cluster (ctrl+alt+r)");
+				 toolTip->SetToolTip(this->button2, "Toggle Hypercube Clusters (ctrl+alt+r)");
+				 toolTip->SetToolTip(this->button3, "Toggle Inverting Dimension on Click (ctrl+alt+i)");
+				 toolTip->SetToolTip(this->button1, "Reset Zoom/Pan");
 
 			 }
 
@@ -1152,7 +1223,8 @@ namespace VisCanvas {
 			// Options Panel
 			if  (keyData == (Keys::Control | Keys::Alt | Keys::O)) {
 				this->optionPanel();
-			}		
+			}	
+			// selected set
 			if (keyData == (Keys::W) || keyData == (Keys::Up))
 			{
 				OpenGL->incrementSelectedSet();
@@ -1161,6 +1233,17 @@ namespace VisCanvas {
 			{
 				OpenGL->decrementSelectedSet();
 			}
+			// selected class
+			if (keyData == (Keys::A) || keyData == (Keys::Left))
+			{
+				OpenGL->file->incrementSelectedClassIndex();
+			}
+			if (keyData == (Keys::D) || keyData == (Keys::Right))
+			{
+				OpenGL->file->decrementSelectedClassIndex();
+			}
+
+
 
 			// button hotkeys
 			if (keyData == (Keys::Control | Keys::Alt | Keys::H))
@@ -1174,6 +1257,10 @@ namespace VisCanvas {
 			if (keyData == (Keys::Control | Keys::Alt | Keys::X))
 			{
 				this->shiftToggle();
+			}
+			if (keyData == (Keys::Control | Keys::Alt | Keys::I))
+			{
+				this->invertToggle();
 			}
 			if (keyData == (Keys::Control | Keys::Alt | Keys::A))
 			{
@@ -1244,7 +1331,6 @@ namespace VisCanvas {
 		System::Void openFile(System::Void) {
 			// TODO: last used directory method
 			OpenFileDialog^ ofd = gcnew OpenFileDialog;
-			ofd->InitialDirectory = ""; // NOTE "c:\\" for future reference.
 			ofd->Filter = "Text Files (*.csv, *.txt, *.text)|*.csv; *.txt; *.text"; // we can add this later if needed (needs error handling if so) |All Files (*.*)|*.*";
 			ofd->FilterIndex = 1;
 			ofd->RestoreDirectory = true;
@@ -1343,8 +1429,12 @@ namespace VisCanvas {
 
 		System::Void sortToggle(System::Void) {
 			sortToggleState = (sortToggleState) ? false : true;
-			if (!OpenGL->getManualShiftToggle() && sortToggleState) {
+			if (sortToggleState) {
 				this->reorderToolStripMenuItem->Checked = true;
+				this->dimensionShiftingToolStripMenuItem->Checked = false;
+				this->toggleDimensionInvertToolStripMenuItem->Checked = false;
+				this->manualShift->BackColor = System::Drawing::SystemColors::ButtonFace;
+				this->button3->BackColor = System::Drawing::SystemColors::ButtonFace;
 				this->sortManual();
 			} else {
 				this->reorderToolStripMenuItem->Checked = false;
@@ -1357,6 +1447,7 @@ namespace VisCanvas {
 				this->manualSort->BackColor = System::Drawing::SystemColors::ButtonHighlight;
 				OpenGL->setManualSortToggle(true);
 				OpenGL->setManualShiftToggle(false);
+				OpenGL->setManualInvertToggle(false);
 			} else {
 				this->manualSort->BackColor = System::Drawing::SystemColors::ButtonFace;
 				OpenGL->setManualSortToggle(false);
@@ -1364,12 +1455,14 @@ namespace VisCanvas {
 			}
 		}
 
-
 		System::Void shiftToggle(System::Void) {
 			shifToggleState = (shifToggleState) ? false : true;
-
-			if (!OpenGL->getManualSortToggle() && shifToggleState) {
+			if (shifToggleState) {
 				this->dimensionShiftingToolStripMenuItem->Checked = true;
+				this->reorderToolStripMenuItem->Checked = false;
+				this->toggleDimensionInvertToolStripMenuItem->Checked = false;
+				this->manualSort->BackColor = System::Drawing::SystemColors::ButtonFace;
+				this->button3->BackColor = System::Drawing::SystemColors::ButtonFace;
 				this->shiftManual();
 			} else {
 				this->dimensionShiftingToolStripMenuItem->Checked = false;
@@ -1382,12 +1475,44 @@ namespace VisCanvas {
 				this->manualShift->BackColor = System::Drawing::SystemColors::ButtonHighlight;
 				OpenGL->setManualShiftToggle(true);
 				OpenGL->setManualSortToggle(false);
+				OpenGL->setManualInvertToggle(false);
 			} else {
 				this->manualShift->BackColor = System::Drawing::SystemColors::ButtonFace;
 				OpenGL->setManualShiftToggle(false);
 				this->dimensionShiftingToolStripMenuItem->Checked = false;
 			}
 		}
+
+		bool invertToggleState;
+		System::Void invertToggle(System::Void) {
+			invertToggleState = (invertToggleState) ? false : true;
+			if (invertToggleState) {
+				this->toggleDimensionInvertToolStripMenuItem->Checked = true;
+				this->dimensionShiftingToolStripMenuItem->Checked = false;
+				this->reorderToolStripMenuItem->Checked = false;
+				this->manualSort->BackColor = System::Drawing::SystemColors::ButtonFace;
+				this->manualShift->BackColor = System::Drawing::SystemColors::ButtonFace;
+				this->invertManual();
+			} else {
+				this->toggleDimensionInvertToolStripMenuItem->Checked = false;
+				this->invertManual();
+			}
+		}
+
+		System::Void invertManual(System::Void) {
+			if (this->toggleDimensionInvertToolStripMenuItem->Checked) {
+				this->button3->BackColor = System::Drawing::SystemColors::ButtonHighlight;
+				OpenGL->setManualInvertToggle(true);
+				OpenGL->setManualSortToggle(false);
+				OpenGL->setManualShiftToggle(false);
+			} else {
+				this->button3->BackColor = System::Drawing::SystemColors::ButtonFace;
+				OpenGL->setManualInvertToggle(false);
+				this->toggleDimensionInvertToolStripMenuItem->Checked = false;
+			}
+		}
+
+
 
 		// This will load the class information for the class key
 		System::Void loadClassKey(System::Void) {
@@ -1481,6 +1606,40 @@ namespace VisCanvas {
 				 AdditionalSettings^ option = gcnew AdditionalSettings(OpenGL);
 				 //option->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 				 option->ShowDialog();
+			 }
+	private: System::Void nHsbColorPickerControl1_SelectedColorChanged_1(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+				 int r = selectedColor.R;
+				 int g = selectedColor.G;
+				 int b = selectedColor.B;
+				 this->setColorBox(r, g, b);
+
+				 if (this->comboBox1->SelectedIndex > -1) {
+					 std::vector<double> *color = new std::vector<double>(4);
+					 (*color)[0] = r / 255.0;
+					 (*color)[1] = g / 255.0;
+					 (*color)[2] = b / 255.0;
+					 (*color)[3] = 255.0;
+					 OpenGL->setClassColor(this->comboBox1->SelectedIndex, color);
+
+					 this->dataGridView1->Rows[this->comboBox1->SelectedIndex]->Cells[1]->Style->BackColor = System::Drawing::Color::FromArgb((int)255, (int)r, (int)g, (int)b);
+					 this->dataGridView1->Rows[this->comboBox1->SelectedIndex]->Cells[1]->Style->ForeColor = System::Drawing::SystemColors::Window;
+
+					 delete color;
+				 }
+			 }
+	private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs^  e) {
+				 OpenGL->resetZoomPan();
+			 }
+	private: System::Void toggleDimensionInvertToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+				 this->invertToggle();
+			 }
+	private: System::Void button3_Click_1(System::Object^  sender, System::EventArgs^  e) {
+				 this->invertToggle();
+			 }
+	private: System::Void VisCanvas_FormClosing(System::Object^  sender, System::Windows::Forms::FormClosingEventArgs^  e) {
+				 GC::Collect(); // Does memory management so there are 
 			 }
 	};
 

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "VisCanvas.h"
 
-[System::STAThreadAttribute]
+[System::STAThread]
 int main(array<System::String ^> ^args)
 {
 	// Enabling visual effects before any controls are created

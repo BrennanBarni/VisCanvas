@@ -126,7 +126,11 @@ namespace VisCanvas {
 	private: System::Void linkLabel1_LinkClicked(System::Object^  sender, System::Windows::Forms::LinkLabelLinkClickedEventArgs^  e) {
 
 				 try {
-					 System::Diagnostics::Process::Start("https://github.com/BrennanBarni/VisCanvas");
+					 //System::Diagnostics::Process::Start("https://github.com/BrennanBarni/VisCanvas");
+					 //ShellExecute(GetDesktopWindow(), (LPCWSTR)"open", (LPCWSTR)"viscanvas_v1.0_user_manual.pdf", NULL, NULL, SW_SHOWNORMAL); 
+					 System::Diagnostics::ProcessStartInfo^ psi = gcnew System::Diagnostics::ProcessStartInfo("viscanvas_usermanual.pdf");
+					 psi->UseShellExecute = true;
+					 System::Diagnostics::Process::Start(psi);
 				 } catch (...) {
 					 // display an error message
 					 System::Windows::Forms::DialogResult result = MessageBox::Show("WARNING: VisCanvas is unable to open the user manual. Either it does not exist or it has gone missing.", "Trouble Opening User Manual", MessageBoxButtons::OKCancel, MessageBoxIcon::Warning);

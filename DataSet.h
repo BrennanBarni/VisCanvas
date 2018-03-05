@@ -32,6 +32,10 @@ public:
 	std::string* getName();
 	// sets the name returns previous name
 	void setName(std::string &newName);
+	// checks if the set is visible or not
+	bool isVisible();
+	// sets the set visible or not visible and returns the old visibility
+	bool setVisible(bool newVisible);
 
 
 private:
@@ -43,6 +47,8 @@ private:
 	int currentIndex;
 	// the name of the set
 	std::string name;
+	// whether the set is visible or not
+	bool visible;
 
 };
 

@@ -113,7 +113,7 @@ namespace VisCanvas {
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label3;
-	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1;
+
 	private: System::Windows::Forms::Label^  label2;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::ComboBox^  classComboBox;
@@ -153,7 +153,7 @@ namespace VisCanvas {
 	private: System::Windows::Forms::Label^  label19;
 	private: System::Windows::Forms::Label^  label20;
 	private: System::Windows::Forms::Label^  label21;
-	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl2;
+
 	private: System::Windows::Forms::Label^  label22;
 	private: System::Windows::Forms::Label^  label23;
 	private: System::Windows::Forms::ComboBox^  comboBox4;
@@ -165,7 +165,7 @@ namespace VisCanvas {
 	private: System::Windows::Forms::TextBox^  textBox2;
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::CheckBox^  checkBox1;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+
 	private: System::Windows::Forms::TabPage^  tabPage5;
 
 	private: System::Windows::Forms::Label^  label25;
@@ -177,7 +177,15 @@ namespace VisCanvas {
 	private: System::Windows::Forms::TextBox^  textBox3;
 
 	private: System::Windows::Forms::Label^  label26;
-	private: System::Windows::Forms::CheckedListBox^  checkedListBox1;
+	private: System::Windows::Forms::ListBox^  listBox1;
+	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl2;
+	private: Nevron::Nov::WinFormControls::NHsbColorPickerControl^  nHsbColorPickerControl1;
+	private: System::Windows::Forms::Label^  label27;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  Column1;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataGridViewTextBoxColumn1;
+
+
+
 
 			 OpenGLForm::COpenGL ^ OpenGL;
 
@@ -191,13 +199,13 @@ namespace VisCanvas {
 				 this->components = (gcnew System::ComponentModel::Container());
 				 System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Settings::typeid));
 				 this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+				 this->label27 = (gcnew System::Windows::Forms::Label());
 				 this->label18 = (gcnew System::Windows::Forms::Label());
 				 this->label17 = (gcnew System::Windows::Forms::Label());
 				 this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 				 this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 				 this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 				 this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
-				 this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 				 this->label9 = (gcnew System::Windows::Forms::Label());
 				 this->textBox7 = (gcnew System::Windows::Forms::TextBox());
 				 this->label10 = (gcnew System::Windows::Forms::Label());
@@ -216,6 +224,7 @@ namespace VisCanvas {
 				 this->nButtonControl5 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->nButtonControl6 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+				 this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->panel1 = (gcnew System::Windows::Forms::Panel());
 				 this->numericUpDown4 = (gcnew System::Windows::Forms::NumericUpDown());
 				 this->label14 = (gcnew System::Windows::Forms::Label());
@@ -232,13 +241,12 @@ namespace VisCanvas {
 				 this->label5 = (gcnew System::Windows::Forms::Label());
 				 this->label4 = (gcnew System::Windows::Forms::Label());
 				 this->label3 = (gcnew System::Windows::Forms::Label());
-				 this->nHsbColorPickerControl1 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->label2 = (gcnew System::Windows::Forms::Label());
 				 this->label1 = (gcnew System::Windows::Forms::Label());
 				 this->classComboBox = (gcnew System::Windows::Forms::ComboBox());
 				 this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 				 this->tabPage5 = (gcnew System::Windows::Forms::TabPage());
-				 this->checkedListBox1 = (gcnew System::Windows::Forms::CheckedListBox());
+				 this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 				 this->label26 = (gcnew System::Windows::Forms::Label());
 				 this->label25 = (gcnew System::Windows::Forms::Label());
 				 this->comboBox5 = (gcnew System::Windows::Forms::ComboBox());
@@ -246,6 +254,7 @@ namespace VisCanvas {
 				 this->nButtonControl14 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->nButtonControl15 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+				 this->nHsbColorPickerControl2 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->label24 = (gcnew System::Windows::Forms::Label());
 				 this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 				 this->label16 = (gcnew System::Windows::Forms::Label());
@@ -258,7 +267,6 @@ namespace VisCanvas {
 				 this->label19 = (gcnew System::Windows::Forms::Label());
 				 this->label20 = (gcnew System::Windows::Forms::Label());
 				 this->label21 = (gcnew System::Windows::Forms::Label());
-				 this->nHsbColorPickerControl2 = (gcnew Nevron::Nov::WinFormControls::NHsbColorPickerControl());
 				 this->label22 = (gcnew System::Windows::Forms::Label());
 				 this->label23 = (gcnew System::Windows::Forms::Label());
 				 this->comboBox4 = (gcnew System::Windows::Forms::ComboBox());
@@ -267,6 +275,8 @@ namespace VisCanvas {
 				 this->nButtonControl12 = (gcnew Nevron::Nov::WinFormControls::NButtonControl());
 				 this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 				 this->timer2 = (gcnew System::Windows::Forms::Timer(this->components));
+				 this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+				 this->dataGridViewTextBoxColumn1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 				 this->tabPage3->SuspendLayout();
 				 (cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView2))->BeginInit();
 				 this->tabPage1->SuspendLayout();
@@ -287,6 +297,7 @@ namespace VisCanvas {
 				 // tabPage3
 				 // 
 				 this->tabPage3->BackColor = System::Drawing::Color::LightGray;
+				 this->tabPage3->Controls->Add(this->label27);
 				 this->tabPage3->Controls->Add(this->label18);
 				 this->tabPage3->Controls->Add(this->label17);
 				 this->tabPage3->Controls->Add(this->textBox2);
@@ -308,11 +319,21 @@ namespace VisCanvas {
 				 this->tabPage3->Text = L"Dimension";
 				 this->tabPage3->Click += gcnew System::EventHandler(this, &Settings::tabPage3_Click);
 				 // 
+				 // label27
+				 // 
+				 this->label27->AutoSize = true;
+				 this->label27->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
+				 this->label27->Location = System::Drawing::Point(60, 113);
+				 this->label27->Name = L"label27";
+				 this->label27->Size = System::Drawing::Size(100, 15);
+				 this->label27->TabIndex = 45;
+				 this->label27->Text = L"Change Scale:";
+				 // 
 				 // label18
 				 // 
 				 this->label18->AutoSize = true;
 				 this->label18->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label18->Location = System::Drawing::Point(188, 127);
+				 this->label18->Location = System::Drawing::Point(188, 135);
 				 this->label18->Name = L"label18";
 				 this->label18->Size = System::Drawing::Size(38, 15);
 				 this->label18->TabIndex = 44;
@@ -323,7 +344,7 @@ namespace VisCanvas {
 				 // 
 				 this->label17->AutoSize = true;
 				 this->label17->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label17->Location = System::Drawing::Point(85, 127);
+				 this->label17->Location = System::Drawing::Point(85, 135);
 				 this->label17->Name = L"label17";
 				 this->label17->Size = System::Drawing::Size(35, 15);
 				 this->label17->TabIndex = 43;
@@ -333,7 +354,7 @@ namespace VisCanvas {
 				 // textBox2
 				 // 
 				 this->textBox2->Enabled = false;
-				 this->textBox2->Location = System::Drawing::Point(191, 145);
+				 this->textBox2->Location = System::Drawing::Point(191, 153);
 				 this->textBox2->Name = L"textBox2";
 				 this->textBox2->Size = System::Drawing::Size(74, 20);
 				 this->textBox2->TabIndex = 42;
@@ -343,7 +364,7 @@ namespace VisCanvas {
 				 // textBox1
 				 // 
 				 this->textBox1->Enabled = false;
-				 this->textBox1->Location = System::Drawing::Point(88, 145);
+				 this->textBox1->Location = System::Drawing::Point(88, 153);
 				 this->textBox1->Name = L"textBox1";
 				 this->textBox1->Size = System::Drawing::Size(74, 20);
 				 this->textBox1->TabIndex = 41;
@@ -353,7 +374,7 @@ namespace VisCanvas {
 				 // checkBox1
 				 // 
 				 this->checkBox1->AutoSize = true;
-				 this->checkBox1->Location = System::Drawing::Point(64, 145);
+				 this->checkBox1->Location = System::Drawing::Point(64, 153);
 				 this->checkBox1->Name = L"checkBox1";
 				 this->checkBox1->Size = System::Drawing::Size(15, 14);
 				 this->checkBox1->TabIndex = 40;
@@ -364,11 +385,11 @@ namespace VisCanvas {
 				 // 
 				 this->dataGridView2->AllowUserToAddRows = false;
 				 this->dataGridView2->AllowUserToDeleteRows = false;
-				 this->dataGridView2->AllowUserToResizeColumns = false;
 				 this->dataGridView2->AllowUserToResizeRows = false;
 				 this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-				 this->dataGridView2->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) {this->dataGridViewTextBoxColumn1});
-				 this->dataGridView2->Location = System::Drawing::Point(64, 181);
+				 this->dataGridView2->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->Column1, 
+					 this->dataGridViewTextBoxColumn1});
+				 this->dataGridView2->Location = System::Drawing::Point(64, 184);
 				 this->dataGridView2->MultiSelect = false;
 				 this->dataGridView2->Name = L"dataGridView2";
 				 this->dataGridView2->RowHeadersVisible = false;
@@ -379,21 +400,11 @@ namespace VisCanvas {
 				 this->dataGridView2->EditingControlShowing += gcnew System::Windows::Forms::DataGridViewEditingControlShowingEventHandler(this, &Settings::dataGridView1_EditingControl);
 				 this->dataGridView2->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Settings::dataGridView2_KeyPressed_State);
 				 // 
-				 // dataGridViewTextBoxColumn1
-				 // 
-				 this->dataGridViewTextBoxColumn1->FillWeight = 200;
-				 this->dataGridViewTextBoxColumn1->HeaderText = L"Set Data";
-				 this->dataGridViewTextBoxColumn1->MinimumWidth = 198;
-				 this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
-				 this->dataGridViewTextBoxColumn1->Resizable = System::Windows::Forms::DataGridViewTriState::False;
-				 this->dataGridViewTextBoxColumn1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
-				 this->dataGridViewTextBoxColumn1->Width = 198;
-				 // 
 				 // label9
 				 // 
 				 this->label9->AutoSize = true;
 				 this->label9->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label9->Location = System::Drawing::Point(60, 77);
+				 this->label9->Location = System::Drawing::Point(60, 64);
 				 this->label9->Name = L"label9";
 				 this->label9->Size = System::Drawing::Size(102, 15);
 				 this->label9->TabIndex = 38;
@@ -402,7 +413,7 @@ namespace VisCanvas {
 				 // 
 				 // textBox7
 				 // 
-				 this->textBox7->Location = System::Drawing::Point(63, 95);
+				 this->textBox7->Location = System::Drawing::Point(63, 82);
 				 this->textBox7->Name = L"textBox7";
 				 this->textBox7->Size = System::Drawing::Size(202, 20);
 				 this->textBox7->TabIndex = 37;
@@ -411,7 +422,7 @@ namespace VisCanvas {
 				 // 
 				 this->label10->AutoSize = true;
 				 this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
-				 this->label10->Location = System::Drawing::Point(60, 21);
+				 this->label10->Location = System::Drawing::Point(60, 13);
 				 this->label10->Name = L"label10";
 				 this->label10->Size = System::Drawing::Size(49, 15);
 				 this->label10->TabIndex = 36;
@@ -421,7 +432,7 @@ namespace VisCanvas {
 				 // 
 				 this->comboBox3->FormattingEnabled = true;
 				 this->comboBox3->ItemHeight = 13;
-				 this->comboBox3->Location = System::Drawing::Point(63, 39);
+				 this->comboBox3->Location = System::Drawing::Point(63, 31);
 				 this->comboBox3->Name = L"comboBox3";
 				 this->comboBox3->Size = System::Drawing::Size(202, 21);
 				 this->comboBox3->TabIndex = 35;
@@ -571,6 +582,7 @@ namespace VisCanvas {
 				 // tabPage2
 				 // 
 				 this->tabPage2->BackColor = System::Drawing::Color::LightGray;
+				 this->tabPage2->Controls->Add(this->nHsbColorPickerControl1);
 				 this->tabPage2->Controls->Add(this->panel1);
 				 this->tabPage2->Controls->Add(this->numericUpDown4);
 				 this->tabPage2->Controls->Add(this->label14);
@@ -587,7 +599,6 @@ namespace VisCanvas {
 				 this->tabPage2->Controls->Add(this->label5);
 				 this->tabPage2->Controls->Add(this->label4);
 				 this->tabPage2->Controls->Add(this->label3);
-				 this->tabPage2->Controls->Add(this->nHsbColorPickerControl1);
 				 this->tabPage2->Controls->Add(this->label2);
 				 this->tabPage2->Controls->Add(this->label1);
 				 this->tabPage2->Controls->Add(this->classComboBox);
@@ -597,6 +608,16 @@ namespace VisCanvas {
 				 this->tabPage2->Size = System::Drawing::Size(326, 385);
 				 this->tabPage2->TabIndex = 1;
 				 this->tabPage2->Text = L"Class";
+				 // 
+				 // nHsbColorPickerControl1
+				 // 
+				 this->nHsbColorPickerControl1->AutoSize = false;
+				 this->nHsbColorPickerControl1->DesignTimeState = nullptr;
+				 this->nHsbColorPickerControl1->Location = System::Drawing::Point(37, 148);
+				 this->nHsbColorPickerControl1->Name = L"nHsbColorPickerControl1";
+				 this->nHsbColorPickerControl1->Size = System::Drawing::Size(187, 147);
+				 this->nHsbColorPickerControl1->TabIndex = 37;
+				 this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &Settings::nHsbColorPickerControl1_SelectedColorChanged_1);
 				 // 
 				 // panel1
 				 // 
@@ -764,16 +785,6 @@ namespace VisCanvas {
 				 this->label3->TabIndex = 14;
 				 this->label3->Text = L"R:";
 				 // 
-				 // nHsbColorPickerControl1
-				 // 
-				 this->nHsbColorPickerControl1->AutoSize = false;
-				 this->nHsbColorPickerControl1->DesignTimeState = nullptr;
-				 this->nHsbColorPickerControl1->Location = System::Drawing::Point(37, 148);
-				 this->nHsbColorPickerControl1->Name = L"nHsbColorPickerControl1";
-				 this->nHsbColorPickerControl1->Size = System::Drawing::Size(187, 147);
-				 this->nHsbColorPickerControl1->TabIndex = 3;
-				 this->nHsbColorPickerControl1->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &Settings::nHsbColorPickerControl1_SelectedColorChanged);
-				 // 
 				 // label2
 				 // 
 				 this->label2->AutoSize = true;
@@ -822,7 +833,7 @@ namespace VisCanvas {
 				 // tabPage5
 				 // 
 				 this->tabPage5->BackColor = System::Drawing::Color::LightGray;
-				 this->tabPage5->Controls->Add(this->checkedListBox1);
+				 this->tabPage5->Controls->Add(this->listBox1);
 				 this->tabPage5->Controls->Add(this->label26);
 				 this->tabPage5->Controls->Add(this->label25);
 				 this->tabPage5->Controls->Add(this->comboBox5);
@@ -836,13 +847,14 @@ namespace VisCanvas {
 				 this->tabPage5->TabIndex = 5;
 				 this->tabPage5->Text = L"Class Set";
 				 // 
-				 // checkedListBox1
+				 // listBox1
 				 // 
-				 this->checkedListBox1->FormattingEnabled = true;
-				 this->checkedListBox1->Location = System::Drawing::Point(62, 98);
-				 this->checkedListBox1->Name = L"checkedListBox1";
-				 this->checkedListBox1->Size = System::Drawing::Size(202, 229);
-				 this->checkedListBox1->TabIndex = 50;
+				 this->listBox1->FormattingEnabled = true;
+				 this->listBox1->Location = System::Drawing::Point(62, 102);
+				 this->listBox1->Name = L"listBox1";
+				 this->listBox1->SelectionMode = System::Windows::Forms::SelectionMode::MultiExtended;
+				 this->listBox1->Size = System::Drawing::Size(202, 238);
+				 this->listBox1->TabIndex = 49;
 				 // 
 				 // label26
 				 // 
@@ -860,9 +872,9 @@ namespace VisCanvas {
 				 this->label25->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Bold));
 				 this->label25->Location = System::Drawing::Point(59, 20);
 				 this->label25->Name = L"label25";
-				 this->label25->Size = System::Drawing::Size(49, 15);
+				 this->label25->Size = System::Drawing::Size(88, 15);
 				 this->label25->TabIndex = 46;
-				 this->label25->Text = L"Name:";
+				 this->label25->Text = L"Class Name:";
 				 // 
 				 // comboBox5
 				 // 
@@ -908,6 +920,7 @@ namespace VisCanvas {
 				 // tabPage4
 				 // 
 				 this->tabPage4->BackColor = System::Drawing::Color::LightGray;
+				 this->tabPage4->Controls->Add(this->nHsbColorPickerControl2);
 				 this->tabPage4->Controls->Add(this->label24);
 				 this->tabPage4->Controls->Add(this->textBox3);
 				 this->tabPage4->Controls->Add(this->label16);
@@ -920,7 +933,6 @@ namespace VisCanvas {
 				 this->tabPage4->Controls->Add(this->label19);
 				 this->tabPage4->Controls->Add(this->label20);
 				 this->tabPage4->Controls->Add(this->label21);
-				 this->tabPage4->Controls->Add(this->nHsbColorPickerControl2);
 				 this->tabPage4->Controls->Add(this->label22);
 				 this->tabPage4->Controls->Add(this->label23);
 				 this->tabPage4->Controls->Add(this->comboBox4);
@@ -932,8 +944,18 @@ namespace VisCanvas {
 				 this->tabPage4->Padding = System::Windows::Forms::Padding(3);
 				 this->tabPage4->Size = System::Drawing::Size(326, 385);
 				 this->tabPage4->TabIndex = 4;
-				 this->tabPage4->Text = L"Cluster";
+				 this->tabPage4->Text = L"Hypercube Cluster";
 				 this->tabPage4->Click += gcnew System::EventHandler(this, &Settings::tabPage4_Click);
+				 // 
+				 // nHsbColorPickerControl2
+				 // 
+				 this->nHsbColorPickerControl2->AutoSize = false;
+				 this->nHsbColorPickerControl2->DesignTimeState = nullptr;
+				 this->nHsbColorPickerControl2->Location = System::Drawing::Point(37, 148);
+				 this->nHsbColorPickerControl2->Name = L"nHsbColorPickerControl2";
+				 this->nHsbColorPickerControl2->Size = System::Drawing::Size(187, 147);
+				 this->nHsbColorPickerControl2->TabIndex = 62;
+				 this->nHsbColorPickerControl2->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &Settings::nHsbColorPickerControl2_SelectedColorChanged_1);
 				 // 
 				 // label24
 				 // 
@@ -1056,16 +1078,6 @@ namespace VisCanvas {
 				 this->label21->TabIndex = 46;
 				 this->label21->Text = L"R:";
 				 // 
-				 // nHsbColorPickerControl2
-				 // 
-				 this->nHsbColorPickerControl2->AutoSize = false;
-				 this->nHsbColorPickerControl2->DesignTimeState = nullptr;
-				 this->nHsbColorPickerControl2->Location = System::Drawing::Point(37, 148);
-				 this->nHsbColorPickerControl2->Name = L"nHsbColorPickerControl2";
-				 this->nHsbColorPickerControl2->Size = System::Drawing::Size(187, 147);
-				 this->nHsbColorPickerControl2->TabIndex = 45;
-				 this->nHsbColorPickerControl2->SelectedColorChanged += gcnew Nevron::Nov::Function<Nevron::Nov::Dom::NValueChangeEventArgs^ >(this, &Settings::nHsbColorPickerControl2_SelectedColorChanged);
-				 // 
 				 // label22
 				 // 
 				 this->label22->AutoSize = true;
@@ -1095,6 +1107,7 @@ namespace VisCanvas {
 				 this->comboBox4->Size = System::Drawing::Size(202, 21);
 				 this->comboBox4->TabIndex = 42;
 				 this->comboBox4->Text = L"select...";
+				 this->comboBox4->SelectedIndexChanged += gcnew System::EventHandler(this, &Settings::comboBox4_SelectedIndexChanged);
 				 // 
 				 // nButtonControl10
 				 // 
@@ -1137,6 +1150,22 @@ namespace VisCanvas {
 				 this->timer2->Enabled = true;
 				 this->timer2->Interval = 20;
 				 this->timer2->Tick += gcnew System::EventHandler(this, &Settings::timer2_Tick);
+				 // 
+				 // Column1
+				 // 
+				 this->Column1->HeaderText = L"Set Name";
+				 this->Column1->Name = L"Column1";
+				 this->Column1->ReadOnly = true;
+				 this->Column1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+				 this->Column1->Width = 99;
+				 // 
+				 // dataGridViewTextBoxColumn1
+				 // 
+				 this->dataGridViewTextBoxColumn1->HeaderText = L"Set Data";
+				 this->dataGridViewTextBoxColumn1->Name = L"dataGridViewTextBoxColumn1";
+				 this->dataGridViewTextBoxColumn1->Resizable = System::Windows::Forms::DataGridViewTriState::True;
+				 this->dataGridViewTextBoxColumn1->SortMode = System::Windows::Forms::DataGridViewColumnSortMode::NotSortable;
+				 this->dataGridViewTextBoxColumn1->Width = 99;
 				 // 
 				 // Settings
 				 // 
@@ -1299,12 +1328,12 @@ namespace VisCanvas {
 				 toolTip->SetToolTip(this->label3, "Red");
 				 toolTip->SetToolTip(this->label4, "Green");
 				 toolTip->SetToolTip(this->label5, "Blue");
-				 toolTip->SetToolTip(this->label14, "Alpha");
+				 toolTip->SetToolTip(this->label14, "Alpha (Opacity)");
 				 // cluster tab
 				 toolTip->SetToolTip(this->label21, "Red");
 				 toolTip->SetToolTip(this->label20, "Green");
 				 toolTip->SetToolTip(this->label19, "Blue");
-				 toolTip->SetToolTip(this->label15, "Alpha");
+				 toolTip->SetToolTip(this->label15, "Alpha (Opacity)");
 				 // tooltip for cluster tab
 				 toolTip->SetToolTip(this->label16, "Remove");
 				 // tooltips for dimension tab
@@ -1431,7 +1460,7 @@ namespace VisCanvas {
 
 				int currentIndex = this->classComboBox->SelectedIndex;
 
-				if (!className->empty()) {
+				if (!className->empty() && currentIndex > 0) {
 					// set the new name
 					OpenGL->setClassName(currentIndex, className);
 					// reload the class
@@ -1476,6 +1505,7 @@ namespace VisCanvas {
 				if (!setName->empty()) {
 					OpenGL->setSetName(currentIndex, *setName);
 					this->loadSet();
+					this->loadSetData(this->comboBox3->SelectedIndex); // refresh the dimension names
 					this->comboBox2->SelectedIndex = currentIndex;		
 				} else {
 					this->textBox6->Text = gcnew System::String((*OpenGL->getSetName(currentIndex)).c_str());
@@ -1484,6 +1514,7 @@ namespace VisCanvas {
 				if (this->classSetSelectedIndexChanged){
 					OpenGL->setSetClass(currentIndex, currentSetIndex);
 					this->comboBox1->SelectedIndex = currentSetIndex;
+					this->comboBox5->SelectedIndex = currentSetIndex;
 					this->classSetSelectedIndexChanged = false;
 				}
 
@@ -1500,7 +1531,7 @@ namespace VisCanvas {
 				// may need to be improved because it updates every time accept or is clicked,
 				// but this is an easy way to do it
 				for (int i = 0; i < this->dataGridView2->Rows->Count; i++) {
-					std::string *str = toStandardString(this->dataGridView2->Rows[i]->Cells[0]->Value->ToString());
+					std::string *str = toStandardString(this->dataGridView2->Rows[i]->Cells[1]->Value->ToString());
 					if (!str->empty()) {
 						double newVal = std::stod(*str);
 						OpenGL->setData(i, currentIndex, newVal);
@@ -1508,13 +1539,13 @@ namespace VisCanvas {
 					delete str;
 				}
 
-
 				if (!dimensionName->empty()) {
 					OpenGL->setDimensionName(currentIndex, dimensionName);
 					this->loadDimensions();
 				} else {
 					this->textBox7->Text = gcnew System::String((*OpenGL->getDimensionName(currentIndex)).c_str());
 				}
+
 
 				if (this->checkBox1->Checked) {
 					// create temporary string variable that way we can manage them when out of scope
@@ -1563,10 +1594,24 @@ namespace VisCanvas {
 		System::Void applyCluster(System::Void) {
 			if (OpenGL->uploadedFile()) {
 
+				int currentIndex = this->comboBox4->SelectedIndex;
+
 				double r = System::Decimal::ToDouble(this->numericUpDown8->Value);
 				double g = System::Decimal::ToDouble(this->numericUpDown7->Value);
 				double b = System::Decimal::ToDouble(this->numericUpDown6->Value);
 				double a = System::Decimal::ToDouble(this->numericUpDown5->Value);
+
+				//textBox3 = cluster fatal error made by the incompitent frenchman Daniel Ortyn (yes, that's right you heard that FRENCH!)
+				std::string *clusterName = this->toStandardString(this->textBox3->Text);
+
+				if (!clusterName->empty()) {
+					OpenGL->file->setClusterName(currentIndex, clusterName);
+					this->loadClusters();
+				} else {
+					this->textBox3->Text = gcnew System::String((*OpenGL->file->getClusterName(currentIndex)).c_str());
+				}
+
+				delete clusterName;
 
 				if (this->changedClusterColor) {
 					std::vector<double> *color = new std::vector<double>(4);
@@ -1574,12 +1619,42 @@ namespace VisCanvas {
 					(*color)[1] = g / 255.0;
 					(*color)[2] = b / 255.0;
 					(*color)[3] = a / 255.0;
-					OpenGL->setClusterColor(this->comboBox4->SelectedIndex, color);
+					OpenGL->setClusterColor(currentIndex, color);
 					this->changedClusterColor = false;
 					delete color;
 				}
+
+				this->comboBox4->SelectedIndex = currentIndex;
+
 			}
 		}
+
+
+		System::Void applyClassSet(System::Void)
+		{
+			if (OpenGL->uploadedFile())
+			{
+				int currentIndex = this->comboBox5->SelectedIndex;
+				if (OpenGL->uploadedFile()) {
+					std::vector<int>* setIndexList = OpenGL->file->getSetsInClass(currentIndex);
+					for (int i = 0; i < setIndexList->size(); i++) {
+						int asdf = setIndexList->at(i);
+						if (this->listBox1->GetSelected(i))
+						{
+							OpenGL->file->setVisible(setIndexList->at(i), true);
+						} 
+						else
+						{
+							OpenGL->file->setVisible(setIndexList->at(i), false);
+						}
+
+					}
+				}
+				//this->comboBox5->SelectedIndex = currentIndex;
+			}
+		}
+
+
 
 		System::Void loadClass(System::Void) {
 			// clear the list to prevent duplicates on update
@@ -1618,10 +1693,24 @@ namespace VisCanvas {
 			this->dataGridView2->Refresh();
 			for (int i = 0; i < OpenGL->getSetAmount(); i++) {	
 				double setData = OpenGL->getOriginalData(i, currentDimensionIndex);
-				cli::array<System::Double^>^ row = gcnew cli::array<System::Double^> { setData };
-				this->dataGridView2->Rows->Add( row );	
+				this->dataGridView2->Rows->Add( gcnew System::String((*OpenGL->getSetName(i)).c_str()), (System::Double^)setData );
 			}
 		}
+
+
+		System::Void loadVisibleSets(System::Void)
+		{
+			this->listBox1->Items->Clear(); // refreshes the list
+			std::vector<int>* setIndexList = OpenGL->file->getSetsInClass(this->comboBox5->SelectedIndex);
+			int a = setIndexList->size();
+			for (int i = 0; i < setIndexList->size(); i++)
+			{
+				System::String^ temp = gcnew System::String((*OpenGL->getSetName(setIndexList->at(i))).c_str());
+				this->listBox1->Items->Add(temp);
+				this->listBox1->SetSelected(i, OpenGL->isVisible(setIndexList->at(i)));
+			}
+		}
+
 
 		System::Void loadDimensions(System::Void)
 		{
@@ -1645,7 +1734,7 @@ namespace VisCanvas {
 			// Setup of the dimensions
 			cli::array<System::Object^>^ item4 = gcnew cli::array<System::Object^>(OpenGL->getClusterAmount());
 			for (int i = 0; i < OpenGL->getClusterAmount(); i++) {
-				System::String^ mString = gcnew System::String("" + i);
+				System::String^ mString = gcnew System::String((*OpenGL->file->getClusterName(i)).c_str());
 				item4[i] = (Object^)mString;
 			}				
 			this->comboBox4->Items->AddRange( item4 ); // set the combobox to the data in items3
@@ -1690,6 +1779,7 @@ namespace VisCanvas {
 							 if (currentIndex == 0) {
 								 if (this->comboBox4->Items->Count == 0) {
 									 this->comboBox4->Text = "select..."; // if there's only one element left then show select...
+									 this->textBox3->Text = "";
 								 } else {
 									 this->comboBox4->SelectedIndex = currentIndex; // set it to the last index and shows it
 								 }
@@ -1699,6 +1789,7 @@ namespace VisCanvas {
 						 } else if (currentIndex == this->comboBox4->Items->Count) {
 							 if (this->comboBox4->Items->Count == 0) {
 								 this->comboBox4->Text = "select..."; // if there's only one element left then show select... 
+								 this->textBox3->Text = "";
 							 } else {
 								 this->comboBox4->SelectedIndex = currentIndex - 1; // set it to the last index and shows it
 							 }
@@ -1798,6 +1889,7 @@ namespace VisCanvas {
 			 }
 	private: System::Void nButtonControl4_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
 				 this->applySet();
+				 this->loadVisibleSets();
 			 }
 	private: System::Void nButtonControl6_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
 				 this->applySet();
@@ -1912,27 +2004,70 @@ namespace VisCanvas {
 			 }
 	private: System::Void classSetSelectedIndex_Changed(System::Object^  sender, System::EventArgs^  e) {
 				 if (OpenGL->uploadedFile()) {
-					 this->checkedListBox1->Items->Clear();
-					 for (int i = 0; i < OpenGL->getSetAmount(); i++) {
-						 if (!(*OpenGL->getSetOfClass(this->comboBox5->SelectedIndex, i)).empty()) 
-						 {
-							 System::String^ temp = gcnew System::String((*OpenGL->getSetOfClass(this->comboBox5->SelectedIndex, i)).c_str());
-							 this->checkedListBox1->Items->Add(temp, true);
-						 }
-					 }
+
+					 /*this->checkedListBox1->Items->Clear();
+					 std::vector<int>* setIndexList = OpenGL->file->getSetsInClass(this->comboBox5->SelectedIndex);
+					 for (int i = 0; i < setIndexList->size(); i++) {
+					 int asdf = setIndexList->at(i);
+					 System::String^ temp = gcnew System::String((*OpenGL->getSetName(setIndexList->at(i))).c_str());
+					 this->checkedListBox1->Items->Add(temp, OpenGL->isVisible(setIndexList->at(i)));
+					 }*/
+
+					 this->loadVisibleSets();
+
 				 }
 			 }
 	private: System::Void nButtonControl14_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
 				 this->Close();
 			 }
 	private: System::Void nButtonControl15_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
-				 // this->applyClassSet();
+				 this->applyClassSet();
 				 this->Close();
 			 }
 	private: System::Void nButtonControl13_Click(Nevron::Nov::Dom::NEventArgs^  arg) {
-				 // this->applyClassSet();
+				 this->applyClassSet();
 			 }
 	private: System::Void textBox5_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+			 }
+
+	private: System::Void nHsbColorPickerControl2_SelectedColorChanged_1(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+
+				 // get the values of the color from the palette
+				 int r = selectedColor.R; // red
+				 int g = selectedColor.G; // green
+				 int b = selectedColor.B; // blue
+
+				 // update the RGB values in the textbox
+				 this->numericUpDown8->Value = r;
+				 this->numericUpDown7->Value = g;
+				 this->numericUpDown6->Value = b;	
+
+				 this->changedClusterColor = true;
+
+			 }
+
+	private: System::Void nHsbColorPickerControl1_SelectedColorChanged_1(Nevron::Nov::Dom::NValueChangeEventArgs^  arg) {
+				 Nevron::Nov::Graphics::NColor selectedColor = (Nevron::Nov::Graphics::NColor)arg->NewValue;
+
+				 // get the values of the color from the palette
+				 int r = selectedColor.R; // red
+				 int g = selectedColor.G; // green
+				 int b = selectedColor.B; // blue
+
+				 // update the RGB values in the textbox
+				 this->numericUpDown1->Value = r;
+				 this->numericUpDown2->Value = g;
+				 this->numericUpDown3->Value = b;	
+
+				 this->changedColor = true;
+			 }
+	private: System::Void comboBox4_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+				 if (OpenGL->uploadedFile())
+				 {
+					 this->textBox3->Text = gcnew System::String((*OpenGL->file->getClusterName(this->comboBox4->SelectedIndex)).c_str());
+				 }
 			 }
 	};
 }

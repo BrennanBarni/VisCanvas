@@ -3,14 +3,15 @@
 #include <algorithm>    // std::sort
 
 
-
 SetCluster::SetCluster() {
 	color = ColorCustom();
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
+	medianValues = std::vector<double>();
 	maximumValues = std::vector<double>();
 	radius = 0;
+	useMean = false;
 }
 
 // creates a blank cluster
@@ -19,8 +20,10 @@ SetCluster::SetCluster(ColorCustom &clusterColor) {
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
+	medianValues = std::vector<double>();
 	maximumValues = std::vector<double>();
 	radius = 0;
+	useMean = false;
 }
 
 // creates the cluster with the passed sets
@@ -29,8 +32,10 @@ SetCluster::SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInClu
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
+	medianValues = std::vector<double>();
 	maximumValues = std::vector<double>();
 	radius = 0;
+	useMean = false;
 
 	for (int i = 0; i < newSetsInCluster->size(); i++) {
 		setsInCluster.push_back((*newSetsInCluster)[i]);
@@ -45,8 +50,10 @@ SetCluster::SetCluster(ColorCustom &clusterColor, std::vector<int>* newSetsInClu
 	setsInCluster = std::vector<int>();
 	minimumValues = std::vector<double>();
 	meanValues = std::vector<double>();
+	medianValues = std::vector<double>();
 	maximumValues = std::vector<double>();
 	radius = 0;
+	useMean = false;
 
 	// put sets into the cluster
 	for (int i = 0; i < newSetsInCluster->size(); i++) {
@@ -100,6 +107,37 @@ double SetCluster::getMeanValue(Dimension * dimension, std::vector<int>* setInde
 
 	}
 	return sum / ((double)setIndexes->size());
+}
+
+// gets the calculates the median value of dimension for the sets whose indexes are passed(setIndexes)
+double SetCluster::getMedianValue(Dimension * dimension, std::vector<int>* setIndexes) {
+	double sum = 0.0;
+	std::sort(setIndexes->begin(), setIndexes->end());
+	// check if the dimension has enough sets for the sets in the passed vector(setIndexes)
+	if ((*setIndexes)[setIndexes->size() - 1] >= dimension->size()||setIndexes->size()==0) {
+		return sum;
+	}
+	// get values
+	std::vector<double> values = std::vector<double>();
+	for (int i = 0; i < setIndexes->size(); i++) {
+		int currentIndex = setIndexes->at(i);
+		values.push_back(dimension->getData(currentIndex));
+	}
+	std::sort(values.begin(), values.end());
+
+	double median = 0.0;
+	// odd number of sets
+	if (setIndexes->size() % 2 == 1) {
+		median = values[setIndexes->size() / 2];
+	}
+	// even number of sets
+	else {
+		median = values[setIndexes->size() / 2];
+		median += values[(setIndexes->size() - 1) / 2];
+		median /= 2.0;
+	}
+
+	return median;
 }
 
 // gets the calculates the maximum value of dimension for the sets whose indexes are passed(setIndexes)
@@ -175,12 +213,16 @@ double SetCluster::getMinimum(int dimensionIndex) const {
 }
 
 // gets the mean value in the cluster for the dimension at the passed index 
-double SetCluster::getMean(int dimensionIndex) const {
+double SetCluster::getMiddle(int dimensionIndex) const {
 	if (dimensionIndex >= meanValues.size() || dimensionIndex < 0) {
 		return 0.0;
 	}
-	return meanValues[dimensionIndex];
+	if (useMean) {
+		return meanValues[dimensionIndex];
+	}
+	return medianValues[dimensionIndex];
 }
+
 
 // gets the maximum value in the cluster for the dimension at the passed index 
 double SetCluster::getMaximum(int dimensionIndex) const {
@@ -207,15 +249,18 @@ void SetCluster::calculateValues(std::vector<Dimension*>* dimensionsToCalculateW
 	else {
 		minimumValues.clear();
 		meanValues.clear();
+		medianValues.clear();
 		maximumValues.clear();
 		// there are enough sets in the dimensions to use the passed dimensions
 		// so get the data for this cluster
 		for (int i = 0; i < dimensionsToCalculateWith->size(); i++) {
 			double min = getMinimumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
 			double mean = getMeanValue((*dimensionsToCalculateWith)[i], &setsInCluster);
+			double median = getMedianValue((*dimensionsToCalculateWith)[i], &setsInCluster);
 			double max = getMaximumValue((*dimensionsToCalculateWith)[i], &setsInCluster);
 			minimumValues.push_back(min);
 			meanValues.push_back(mean);
+			medianValues.push_back(median);
 			maximumValues.push_back(max);
 		}
 	}
@@ -231,48 +276,37 @@ void SetCluster::invertValues(int dimensionToInvertValuesAt) {
 	}
 	minimumValues[dimensionToInvertValuesAt] = 1 - minimumValues[dimensionToInvertValuesAt];
 	meanValues[dimensionToInvertValuesAt] = 1 - meanValues[dimensionToInvertValuesAt];
+	medianValues[dimensionToInvertValuesAt] = 1 - medianValues[dimensionToInvertValuesAt];
 	maximumValues[dimensionToInvertValuesAt] = 1 - maximumValues[dimensionToInvertValuesAt];
 }
 
 // move the position of the values in the set(at originalIndex) to the index after indexBeforeNewIndex
-void SetCluster::moveValues(int originalIndex, int indexOfInsertion) {
-	if (originalIndex >= minimumValues.size() || originalIndex < 0) {
-		return;
+bool SetCluster::moveValues(int originalIndex, int indexOfInsertion) {
+	if (indexOfInsertion == -1 || originalIndex == -1) {
+		return false;
 	}
-	if (indexOfInsertion > minimumValues.size()) {
-		indexOfInsertion = minimumValues.size();
+	if (indexOfInsertion >= minimumValues.size() || originalIndex >= minimumValues.size()) {
+		return false;
 	}
-	if (indexOfInsertion < 0) {
-		indexOfInsertion = 0;
-	}
-	if (originalIndex == indexOfInsertion) {
-		return;
-	}
-	// check if the insertion at the end
-	if (indexOfInsertion == minimumValues.size()) {
-		minimumValues.push_back(minimumValues[originalIndex]);
-		meanValues.push_back(meanValues[originalIndex]);
-		maximumValues.push_back(maximumValues[originalIndex]);
-		minimumValues.erase(minimumValues.begin() + originalIndex);
-		meanValues.erase(meanValues.begin() + originalIndex);
-		maximumValues.erase(maximumValues.begin() + originalIndex);
-		return;
-	}
-	// place the dimension in the new position
-	minimumValues.insert(minimumValues.begin() + indexOfInsertion, minimumValues[originalIndex]);
-	meanValues.insert(meanValues.begin() + indexOfInsertion, meanValues[originalIndex]);
-	maximumValues.insert(maximumValues.begin() + indexOfInsertion, maximumValues[originalIndex]);
-	// remove the dimension from the old position
-	if (originalIndex <= indexOfInsertion) {
-		minimumValues.erase(minimumValues.begin() + originalIndex);
-		meanValues.erase(meanValues.begin() + originalIndex);
-		maximumValues.erase(maximumValues.begin() + originalIndex);
-	}
-	else {
-		minimumValues.erase(minimumValues.begin() + originalIndex + 1);
-		meanValues.erase(meanValues.begin() + originalIndex + 1);
-		maximumValues.erase(maximumValues.begin() + originalIndex + 1);
-	}
+
+	// this will swap the data 
+	double temp = minimumValues[originalIndex];
+	minimumValues[originalIndex] = minimumValues[indexOfInsertion];
+	minimumValues[indexOfInsertion] = temp;
+	
+	temp = meanValues[originalIndex];
+	meanValues[originalIndex] = meanValues[indexOfInsertion];
+	meanValues[indexOfInsertion] = temp;
+
+	temp = medianValues[originalIndex];
+	medianValues[originalIndex] = medianValues[indexOfInsertion];
+	medianValues[indexOfInsertion] = temp;
+
+	temp = maximumValues[originalIndex];
+	maximumValues[originalIndex] = maximumValues[indexOfInsertion];
+	maximumValues[indexOfInsertion] = temp;
+
+	return true;
 }
 
 // gets the color components of the cluster
@@ -328,4 +362,31 @@ int SetCluster::getOriginalSet(int newSet) {
 	int oldSet = originalSet;
 	originalSet = newSet;
 	return originalSet;
+}
+
+// gets the name of this cluster
+std::string* SetCluster::getName()
+{
+	return &name;
+}
+
+// sets the name of this cluster
+void SetCluster::setName(std::string* newName) {
+	name = (*newName);
+}
+
+// gets the sets in the cluster
+std::vector<int>* SetCluster::getSets()
+{
+	return &setsInCluster;
+}
+
+// get whether the the cluster uses the mean or median
+bool SetCluster::isUseMean() {
+	return useMean;
+}
+
+// set whether the the cluster uses the mean or median
+void SetCluster::setUseMean(bool newUseMean) {
+	useMean = newUseMean;
 }

@@ -28,11 +28,17 @@ public:
 	void setBlue(double newValue);
 	// set the alpha component value
 	void setAlpha(double newValue);
+	// checks if the color is visible or not
+	bool isVisible();
+	// sets the color visible or not visible
+	void setVisible(bool visible);
 
 	
 private:
 	// the vector holding all the color components
 	std::vector<double> colorComponents;
+	// the vector holding a copy of the color components
+	std::vector<double> copyColorComponents;
 };
 
 
